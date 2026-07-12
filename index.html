@@ -20243,6 +20243,240 @@ normCardHTML=function(a){
   document.head.appendChild(st);
 })();
 
+/* ===== CHIARIRE — le leggi in parole semplici + glossario dinamico =====
+   Strumento nel drawer di destra. Principio: non riscriviamo la legge, la
+   SMONTIAMO in parti leggibili (scopo dichiarato, tipo di atto, percorso) con
+   sezioni a comparsa/scomparsa (<details> nativi) e rendiamo TOCCABILE ogni
+   parola difficile, spiegata dal glossario giuridico Polis (curato, etichettato
+   "spiegazione Polis" \u2014 definizioni standard, mai interpretazioni della norma).
+   Il glossario \u00e8 DINAMICO: scandisce i testi realmente presenti in app
+   (atti Camera + Gazzetta scaricata) e mostra solo i termini che vi compaiono,
+   col conteggio: quando aggiorni la Gazzetta, il glossario cresce da solo. */
+
+const GLOSSARIO_LEX=[
+ {t:'recante',s:'parola-cerniera dei titoli: significa semplicemente "che contiene". "Legge recante disposizioni su X" = legge che parla di X.'},
+ {t:'disposizioni',s:'le regole concrete contenute in una legge.'},
+ {t:'comma',s:'il "paragrafo" di un articolo di legge: ogni articolo \u00e8 diviso in commi numerati.'},
+ {t:'novella',alias:['novellare','novellato'],s:'modifica di una legge esistente riscrivendone pezzi: la legge nuova "entra dentro" quella vecchia.'},
+ {t:'abrogare',alias:['abrogazione','abrogato','abrogate'],s:'cancellare una norma: da quel momento non vale pi\u00f9.'},
+ {t:'deroga',alias:['derogare','in deroga'],s:'eccezione: si permette di non seguire una regola in casi specifici.'},
+ {t:'proroga',alias:['prorogare','prorogato'],s:'spostare in avanti una scadenza.'},
+ {t:'vigente',alias:['vigenza'],s:'attualmente in vigore: la versione della norma che vale oggi.'},
+ {t:'multivigente',s:'il testo che mostra tutte le versioni nel tempo di una legge, con le modifiche via via inserite.'},
+ {t:'entrata in vigore',s:'il giorno da cui la legge inizia a valere davvero (di solito 15 giorni dopo la pubblicazione, subito per i decreti-legge).'},
+ {t:'decreto-legge',alias:['decreti-legge','decreto legge'],s:'atto d\u2019urgenza del Governo: vale SUBITO, ma muore dopo 60 giorni se il Parlamento non lo converte in legge.'},
+ {t:'decreto legislativo',alias:['decreti legislativi'],s:'legge scritta dal Governo su incarico (delega) del Parlamento, entro paletti fissati dal Parlamento stesso.'},
+ {t:'disegno di legge',alias:['ddl'],s:'proposta di legge presentata dal Governo (quella dei parlamentari si chiama "proposta di legge").'},
+ {t:'conversione in legge',alias:['conversione'],s:'il "s\u00ec" del Parlamento a un decreto-legge del Governo: senza, il decreto decade dopo 60 giorni.'},
+ {t:'emendamento',alias:['emendamenti'],s:'proposta di modifica a un testo in discussione: aggiunge, toglie o riscrive parti.'},
+ {t:'ratifica',alias:['ratificare'],s:'il Parlamento fa diventare legge italiana un accordo firmato con altri Paesi.'},
+ {t:'esecuzione',s:'nelle ratifiche: l\u2019ordine di applicare l\u2019accordo internazionale in Italia.'},
+ {t:'testo unico',s:'raccolta ordinata di tutte le norme su una materia, per non doverle cercare in dieci leggi diverse.'},
+ {t:'gazzetta ufficiale',s:'il "giornale dello Stato": una norma esiste ufficialmente solo quando \u00e8 pubblicata qui.'},
+ {t:'promulgazione',alias:['promulgare'],s:'la firma del Presidente della Repubblica che d\u00e0 il via alla pubblicazione della legge.'},
+ {t:'iter',s:'il percorso di una legge: presentazione \u2192 commissioni \u2192 voto di Camera e Senato \u2192 promulgazione \u2192 Gazzetta.'},
+ {t:'delega',alias:['legge delega'],s:'il Parlamento incarica il Governo di scrivere le norme di dettaglio, fissando principi e limiti.'},
+ {t:'attuazione',alias:['decreti attuativi','attuativo'],s:'i provvedimenti pratici che fanno funzionare una legge: senza, molte leggi restano sulla carta.'},
+ {t:'copertura finanziaria',alias:['copertura'],s:'da dove arrivano i soldi: ogni legge che spende deve dire chi paga (obbligo costituzionale, art. 81).'},
+ {t:'clausola di invarianza',s:'la formula "senza nuovi oneri per la finanza pubblica": la legge promette di non costare nulla in pi\u00f9.'},
+ {t:'salvo intese',s:'approvato "in linea di massima": il testo pu\u00f2 ancora cambiare prima della versione definitiva.'},
+ {t:'milleproroghe',s:'il decreto di fine anno che sposta in blocco decine di scadenze: un classico della politica italiana.'},
+ {t:'omnibus',s:'un provvedimento che contiene di tutto un po\u2019, spesso materie senza legame tra loro.'},
+ {t:'una tantum',s:'una volta sola: un pagamento o bonus che non si ripete.'},
+ {t:'sanatoria',s:'regolarizzare situazioni fuori norma gi\u00e0 esistenti, di solito pagando qualcosa.'},
+ {t:'onere',alias:['oneri'],s:'costo, spesa: "oneri a carico dello Stato" = paga lo Stato.'},
+ {t:'esenzione',alias:['esenzioni','esente'],s:'non dover pagare qualcosa che altri pagano (es. il ticket sanitario).'},
+ {t:'detrazione',alias:['detrazioni'],s:'sconto che riduce le TASSE da pagare (si sottrae dall\u2019imposta).'},
+ {t:'deduzione',alias:['deduzioni'],s:'sconto che riduce il REDDITO su cui si calcolano le tasse (si sottrae prima).'},
+ {t:'aliquota',alias:['aliquote'],s:'la percentuale di tassa: aliquota 23% = 23 euro ogni 100 di reddito in quella fascia.'},
+ {t:'scaglione',alias:['scaglioni'],s:'le fasce di reddito con aliquote diverse: paghi percentuali crescenti solo sulla parte che supera ogni soglia.'},
+ {t:'franchigia',s:'la parte che non conta nel calcolo: es. nell\u2019ISEE la prima casa \u00e8 esclusa fino a una certa soglia.'},
+ {t:'isee',s:'l\u2019Indicatore della Situazione Economica: fotografa redditi e patrimonio della famiglia; \u00e8 la chiave d\u2019accesso a quasi tutti i bonus.'},
+ {t:'dsu',s:'la Dichiarazione Sostitutiva Unica: il modulo che si compila per ottenere l\u2019ISEE.'},
+ {t:'lea',s:'i Livelli Essenziali di Assistenza: le cure che il Servizio sanitario deve garantire a tutti, ovunque.'},
+ {t:'fabbisogno standard',alias:['fabbisogni standard'],s:'quanto DOVREBBE costare un servizio pubblico fatto bene: il metro per confrontare i Comuni.'},
+ {t:'perequazione',s:'redistribuzione: chi ha di pi\u00f9 contribuisce a riequilibrare chi ha di meno (tra persone o territori).'},
+ {t:'rendiconto',s:'il consuntivo dello Stato: com\u2019\u00e8 andata davvero la spesa rispetto al bilancio preventivo.'},
+ {t:'stato di previsione',s:'il "capitolo" del bilancio dedicato a un ministero: quanto potr\u00e0 spendere e per cosa.'},
+ {t:'obbligazioni alimentari',s:'il dovere legale di mantenere i familiari che non possono mantenersi (figli, coniuge, genitori bisognosi).'}
+];
+
+/* corpus: tutti i testi di legge presenti in app in questo momento */
+function chiCorpus(){
+  const out=[];
+  if(typeof NORM!=='undefined'&&NORM.atti&&NORM.atti.length){
+    NORM.atti.forEach((a,i)=>out.push({id:'gz'+i,titolo:a.titolo,extra:a.descr||'',tag:'Gazzetta 2026',tipo:a.tipo||'',a}));
+  }
+  if(typeof ATTI_CAMERA!=='undefined'&&ATTI_CAMERA.atti){
+    ATTI_CAMERA.atti.slice(0,40).forEach(a=>out.push({id:'pc'+a.numero,titolo:leggeDecode(a.titolo),extra:'',tag:'Parlamento \u00b7 leg. 18',tipo:'',a}));
+  }
+  return out;
+}
+
+function chiTermRegex(g){
+  const words=[g.t].concat(g.alias||[]);
+  return new RegExp('\\b('+words.map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')\\b','gi');
+}
+
+function chiTestoCompleto(c){
+  let s=c.titolo+' '+c.extra+' '+c.tipo;
+  if(c.a&&c.a.articoli) s+=' '+c.a.articoli.map(ar=>ar.testo).join(' ');
+  return s;
+}
+
+/* glossario dinamico: solo i termini presenti nel corpus, con conteggio */
+function chiGlossarioVivo(){
+  const corpus=chiCorpus();
+  const testi=corpus.map(c=>chiTestoCompleto(c).toLowerCase());
+  return GLOSSARIO_LEX.map(g=>{
+    const re=chiTermRegex(g);
+    let n=0; testi.forEach(t=>{ const m=t.match(re); if(m) n+=m.length; });
+    return {g,n};
+  }).filter(x=>x.n>0).sort((a,b)=>b.n-a.n);
+}
+
+/* evidenzia i termini nel testo (dopo escape) rendendoli toccabili */
+function chiEvidenzia(testo){
+  let s=esc(testo);
+  GLOSSARIO_LEX.forEach((g,gi)=>{
+    s=s.replace(chiTermRegex(g), m=>`<span class="chi-term" onclick="event.stopPropagation();chiSpiega(${gi})">${m}</span>`);
+  });
+  return s;
+}
+function chiSpiega(gi){
+  const g=GLOSSARIO_LEX[gi]; if(!g) return;
+  let sh=document.getElementById('chiSheet');
+  if(!sh){ sh=document.createElement('div'); sh.id='chiSheet'; sh.className='chi-sheet'; document.body.appendChild(sh); }
+  sh.innerHTML=`<div class="chi-sheet-in"><b>${esc(g.t)}</b><p>${esc(g.s)}</p>
+    <small>spiegazione Polis \u00b7 non \u00e8 il testo di legge</small>
+    <button onclick="document.getElementById('chiSheet').classList.remove('open')">Ho capito</button></div>`;
+  sh.classList.add('open');
+}
+
+function chiLeggeHTML(c){
+  const cat=leggeCategoria({titolo:c.titolo});
+  const sc=leggeScopo({titolo:c.titolo});
+  const tp=leggeTipoInfo(c.a&&c.a.iniziativa!==undefined?c.a:{titolo:c.titolo,iniziativa:c.a?c.a.iniziativa:''});
+  const trovati=GLOSSARIO_LEX.map((g,gi)=>({g,gi})).filter(x=>chiTermRegex(x.g).test(chiTestoCompleto(c).toLowerCase()));
+  return `<details class="chi-legge" style="--cc:${cat.col}">
+    <summary>
+      <span class="chi-cat" style="background:${cat.col}1a;color:${cat.col}">${cat.ico}</span>
+      <span class="chi-sum-t">${esc(sc.frase.slice(0,110))}${sc.frase.length>110?'\u2026':''}</span>
+      <span class="chi-tag">${esc(c.tag)}</span>
+    </summary>
+    <div class="chi-parti">
+      <details class="chi-parte" open>
+        <summary>🧩 In una frase</summary>
+        <div class="chi-txt">${chiEvidenzia(sc.frase)}</div>
+        <div class="chi-src">dal titolo ufficiale \u00b7 tocca le parole sottolineate</div>
+      </details>
+      <details class="chi-parte">
+        <summary>📌 Che tipo di atto \u00e8</summary>
+        <div class="chi-txt"><b>${tp.b}</b>: ${chiEvidenzia(tp.s)}<span class="chi-src-inline"> \u00b7 spiegazione Polis</span></div>
+      </details>
+      <details class="chi-parte">
+        <summary>🛤️ Il percorso</summary>
+        <div class="chi-txt">${chiEvidenzia('Presentazione \u2192 esame in commissione \u2192 voto di Camera e Senato \u2192 promulgazione \u2192 pubblicazione in Gazzetta Ufficiale \u2192 entrata in vigore. I decreti-legge partono gi\u00e0 in vigore e attendono la conversione in legge entro 60 giorni.')}</div>
+      </details>
+      ${(c.a&&c.a.articoli&&c.a.articoli.length)?`<details class="chi-parte">
+        <summary>📖 Il testo, articolo per articolo <span class="chi-n">${c.a.articoli.length}${c.a.articoli.length===8?'+':''}</span></summary>
+        ${c.a.articoli.map(ar=>`<details class="chi-art">
+          <summary>Art. ${esc(ar.n)}</summary>
+          <div class="chi-txt">${chiEvidenzia(ar.testo)}</div>
+        </details>`).join('')}
+        <div class="chi-src">testo non ufficiale da dati.normattiva.it (IPZS), a scopo informativo \u2014 fa fede la Gazzetta Ufficiale \u00b7 tocca le parole sottolineate</div>
+      </details>`:''}
+      ${trovati.length?`<details class="chi-parte">
+        <summary>🔤 Parole difficili in questo testo <span class="chi-n">${trovati.length}</span></summary>
+        ${trovati.map(x=>`<div class="chi-gloss-row"><b>${esc(x.g.t)}</b> ${esc(x.g.s)}</div>`).join('')}
+        <div class="chi-src">spiegazioni Polis</div>
+      </details>`:''}
+    </div>
+  </details>`;
+}
+
+let chiTab='leggi';
+function chiSetTab(t){ chiTab=t; chiRender(); }
+function openChiarire(){
+  let ov=document.getElementById('chiOverlay');
+  if(!ov){ ov=document.createElement('div'); ov.id='chiOverlay'; ov.className='lev-ov'; document.body.appendChild(ov); }
+  ov.classList.add('open'); chiRender();
+}
+function closeChiarire(){ const ov=document.getElementById('chiOverlay'); if(ov) ov.classList.remove('open'); }
+
+function chiRender(){
+  const ov=document.getElementById('chiOverlay'); if(!ov) return;
+  const corpus=chiCorpus();
+  const vivo=chiGlossarioVivo();
+  ov.innerHTML=`<div class="lev-body">
+    <div class="lev-head">
+      <button class="lev-x" onclick="closeChiarire()">✕</button>
+      <div class="pol-ey">Strumenti</div>
+      <h2 class="lgd-h2">💡 Chiarire</h2>
+      <p class="lgd-intro">Le leggi smontate in parti leggibili, con le parole difficili <span class="chi-term" style="pointer-events:none">sottolineate</span> e spiegate. Il testo ufficiale non viene riscritto: le spiegazioni sono etichettate come Polis.</p>
+      <div class="ben-tabs">
+        <button class="ben-tab ${chiTab==='leggi'?'sel':''}" onclick="chiSetTab('leggi')">Leggi in chiaro <b style="opacity:.6">${corpus.length}</b></button>
+        <button class="ben-tab ${chiTab==='glossario'?'sel':''}" onclick="chiSetTab('glossario')">Glossario <b style="opacity:.6">${vivo.length}</b></button>
+      </div>
+    </div>
+    ${chiTab==='leggi'
+      ? (corpus.length?corpus.map(chiLeggeHTML).join(''):'<div class="lgd-empty">Nessuna legge in app: apri Leggi \u2192 In Gazzetta e tocca Aggiorna.</div>')
+      : `<p class="lgd-intro" style="margin:0 2px 10px">${vivo.length} termini trovati nelle ${corpus.length} leggi presenti in app: quando aggiorni la Gazzetta, il glossario cresce da solo.</p>
+         ${vivo.map(x=>`<details class="chi-parte gl"><summary><b>${esc(x.g.t)}</b><span class="chi-n">${x.n} volte</span></summary>
+           <div class="chi-txt">${esc(x.g.s)}</div><div class="chi-src">spiegazione Polis</div></details>`).join('')}`}
+  </div>`;
+}
+
+/* registrazione nello strumentario di destra */
+(function(){
+  if(typeof POLIS_TOOLS!=='undefined'&&Array.isArray(POLIS_TOOLS)&&!POLIS_TOOLS.some(t=>t.fn==='openChiarire')){
+    POLIS_TOOLS.push({ico:'💡',nome:'Chiarire',desc:'Le leggi in parole semplici, col glossario che cresce',fn:'openChiarire'});
+  }
+})();
+
+(function(){
+  const st=document.createElement('style');
+  st.textContent=`
+  .chi-term{border-bottom:2px dotted #1f6feb;cursor:pointer;color:inherit}
+  .chi-legge{background:#fff;border-radius:16px;margin-bottom:9px;box-shadow:0 1px 3px rgba(21,94,66,.08);overflow:hidden}
+  .chi-legge>summary{display:flex;align-items:center;gap:10px;padding:13px;cursor:pointer;list-style:none;min-height:52px}
+  .chi-legge>summary::-webkit-details-marker{display:none}
+  .chi-legge[open]>summary{border-bottom:1px solid #eef3ef}
+  .chi-cat{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto}
+  .chi-sum-t{flex:1;font-size:13px;font-weight:700;color:#1c2b24;line-height:1.3}
+  .chi-tag{font-size:9.5px;font-weight:700;color:#5b6b62;background:#f2f6f3;border-radius:7px;padding:3px 7px;flex:0 0 auto}
+  .chi-parti{padding:6px 13px 12px}
+  .chi-parte{border-top:1px solid #f2f6f3;padding:2px 0}
+  .chi-parte>summary{padding:10px 2px;font-size:13px;font-weight:700;color:#155e42;cursor:pointer;
+    list-style:none;display:flex;align-items:center;gap:8px;min-height:42px}
+  .chi-parte>summary::-webkit-details-marker{display:none}
+  .chi-parte>summary::after{content:'▸';margin-left:auto;color:#9fb0a6;transition:transform .15s}
+  .chi-parte[open]>summary::after{transform:rotate(90deg)}
+  .chi-txt{font-size:13px;color:#1c2b24;line-height:1.55;padding:0 2px 8px}
+  .chi-src{font-size:10.5px;color:#8a968e;font-style:italic;padding:0 2px 8px}
+  .chi-src-inline{font-size:10.5px;color:#8a968e;font-style:italic}
+  .chi-n{font-size:10px;background:#eaf4ee;color:#155e42;border-radius:8px;padding:2px 7px;font-weight:700}
+  .chi-gloss-row{font-size:12.5px;color:#5b6b62;padding:5px 2px;line-height:1.45}
+  .chi-gloss-row b{color:#1c2b24}
+  .chi-art{border-top:1px dashed #eef3ef;margin-left:4px}
+  .chi-art>summary{padding:9px 2px;font-size:12.5px;font-weight:700;color:#1c2b24;cursor:pointer;list-style:none;min-height:38px;display:flex;align-items:center}
+  .chi-art>summary::-webkit-details-marker{display:none}
+  .chi-art>summary::before{content:'§';color:#9fb0a6;margin-right:7px}
+  .chi-art .chi-txt{font-size:12.5px;white-space:pre-line}
+  .chi-parte.gl{background:#fff;border-radius:14px;margin-bottom:8px;padding:2px 13px;border-top:none;
+    box-shadow:0 1px 3px rgba(21,94,66,.06)}
+  .chi-sheet{position:fixed;inset:0;background:rgba(11,31,23,.45);z-index:360;display:none;align-items:flex-end}
+  .chi-sheet.open{display:flex}
+  .chi-sheet-in{background:#fff;color:#1c2b24;width:100%;border-radius:20px 20px 0 0;
+    padding:20px 18px calc(env(safe-area-inset-bottom) + 18px)}
+  .chi-sheet-in b{font-size:16px;text-transform:capitalize}
+  .chi-sheet-in p{font-size:13.5px;line-height:1.5;margin:8px 0}
+  .chi-sheet-in small{font-size:10.5px;color:#8a968e;font-style:italic;display:block;margin-bottom:12px}
+  .chi-sheet-in button{width:100%;background:#155e42;color:#fff;border:none;border-radius:12px;
+    padding:13px;font-size:14px;font-weight:700;min-height:46px}`;
+  document.head.appendChild(st);
+})();
+
 // allow Enter to login
 document.addEventListener('keydown',e=>{ if(e.key==='Enter' && $('#login').classList.contains('active')) doLogin(); });
 
