@@ -2440,6 +2440,63 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
 .qmix-err{background:rgba(255,255,255,.06);padding:3px 10px;border-radius:20px}
 .qmix-err.over{background:rgba(224,83,61,.25);color:#ff9d8c}
 .qmix-tag{display:inline-block;background:rgba(22,163,110,.16);color:#7fe6b4;font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:20px;margin-bottom:12px}
+
+/* ===== UPGRADE ===== */
+.upg-grid{display:flex;flex-direction:column;gap:11px;margin-top:6px}
+.upg-card{display:flex;align-items:center;gap:13px;background:var(--card,#fff);border:1px solid rgba(0,0,0,.08);
+  border-radius:16px;padding:16px;text-align:left;cursor:pointer;transition:transform .1s}
+.upg-card:active{transform:scale(.98)}
+.upg-c-ico{font-size:28px;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  background:rgba(31,111,235,.08);border-radius:12px}
+.upg-c-txt{flex:1;display:flex;flex-direction:column;gap:2px}
+.upg-c-txt b{font-size:16px}
+.upg-c-txt small{font-size:12.5px;color:var(--ink-soft,#667)}
+.upg-c-arr{font-size:22px;color:var(--ink-soft,#99a);flex:none}
+.upg-list{display:flex;flex-direction:column;gap:9px}
+.upg-item{display:flex;align-items:center;gap:10px;background:var(--card,#fff);border:1px solid rgba(0,0,0,.07);
+  border-radius:13px;padding:14px;text-align:left;cursor:pointer}
+.upg-item:active{transform:scale(.98)}
+.upg-i-txt{flex:1;display:flex;flex-direction:column;gap:3px}
+.upg-i-txt b{font-size:14.5px}
+.upg-i-txt small{font-size:12px;color:var(--ink-soft,#778);line-height:1.4}
+.upg-i-arr{font-size:20px;color:var(--ink-soft,#99a);flex:none}
+.upg-back{background:none;border:none;color:var(--accent,#1f6feb);font-size:14px;font-weight:600;
+  padding:6px 0;margin-bottom:8px;cursor:pointer}
+.upg-detail{background:var(--card,#fff);border:1px solid rgba(0,0,0,.07);border-radius:18px;padding:20px}
+.upg-d-ico{font-size:40px;margin-bottom:8px}
+.upg-d-tit{font-size:22px;margin:0 0 16px;line-height:1.2}
+.upg-sec{margin-bottom:16px}
+.upg-lab{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent,#1f6feb);margin-bottom:5px}
+.upg-sec p{margin:0;font-size:14.5px;line-height:1.55;color:var(--ink,#233)}
+.upg-steps{margin:6px 0 0;padding-left:20px}
+.upg-steps li{font-size:14px;line-height:1.5;margin-bottom:8px;padding-left:3px}
+.upg-fonte{margin-top:6px;padding:12px 14px;background:rgba(128,128,128,.07);border-radius:11px;
+  font-size:12.5px;line-height:1.5;color:var(--ink-soft,#667)}
+.upg-nota{margin-top:16px;padding:13px;background:rgba(232,163,61,.09);border-left:3px solid #e8a33d;
+  border-radius:10px;font-size:12.5px;line-height:1.55;color:var(--ink-soft,#667)}
+
+
+/* ===== NORM card cittadino ===== */
+.norm-c{padding:0;overflow:hidden}
+.norm-cbtn{display:block;width:100%;text-align:left;background:none;border:none;padding:14px;cursor:pointer}
+.norm-more{margin-left:auto;font-size:11.5px;font-weight:700;color:#155e42;opacity:.8}
+.norm-exp{padding:2px 14px 14px;border-top:1px solid rgba(0,0,0,.06)}
+.norm-badge{font-size:10.5px;font-weight:600;color:#8a6d00;background:rgba(232,163,61,.12);
+  border-radius:8px;padding:6px 9px;margin:10px 0 12px;line-height:1.4}
+.norm-f{margin-bottom:11px}
+.norm-fl{display:block;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  color:var(--ink-soft,#667);margin-bottom:3px}
+.norm-f p{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink,#233)}
+.norm-link{display:inline-block;margin-top:4px;font-size:12.5px;font-weight:600;color:#1f6feb;text-decoration:none}
+
+
+.norm-istrow{display:flex;gap:7px;margin:0 0 10px}
+.norm-istp{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  background:#eef4f0;border:1px solid #d4e4db;border-radius:11px;padding:9px 6px;
+  font-size:12.5px;font-weight:700;color:#155e42;cursor:pointer}
+.norm-istp b{font-weight:800}
+.norm-istp.on{background:#155e42;border-color:#155e42;color:#fff}
+.norm-istp:active{opacity:.85}
 </style>
 </head>
 <body>
@@ -2504,8 +2561,8 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
       </button>
       <div class="tb-logo">P</div>
       <h1 id="shellTitle">Mappa</h1>
-      <button class="tb-ico" id="casaBtn" aria-label="Casa Polis" onclick="openCasa()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7 M5 10v9h5v-6h4v6h5v-9"/></svg>
+      <button class="tb-ico" id="cercaBtn" aria-label="Cerca" onclick="CERCA.open()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       </button>
       <button class="tb-ico" id="toolsBtn" aria-label="Strumenti" onclick="openTools()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-6 6a2 2 0 1 0 2.8 2.8l6-6a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.3-2.3z"/></svg>
@@ -2549,6 +2606,11 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
     <div class="view" id="v-politica"><div class="pad" id="politicaBody"></div></div>
     <!-- ===== RAGIONERIA ===== -->
     <div class="view" id="v-ragioneria"><div class="pad" id="ragioneriaBody"></div></div>
+    <!-- ===== CONTI PUBBLICI ===== -->
+    <div class="view" id="v-conti"><div class="pad" id="contiBody"></div></div>
+
+    <!-- ===== GIUSTIZIA ===== -->
+    <div class="view" id="v-giustizia"><div class="pad" id="giustiziaBody"></div></div>
     <!-- ===== VITA ===== -->
     <div class="view" id="v-vita"><div class="pad" id="vitaBody"></div></div>
     <!-- ===== BACHECA ===== -->
@@ -4155,6 +4217,8 @@ const NAV=[
   {id:'mappa',label:'Mappa',title:'Mappa',icon:'M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3z M9 4v13 M15 7v13'},
   {id:'politica',label:'Politica',title:'Politica',icon:'M4 21V10l8-5 8 5v11 M9 21v-6h6v6 M12 3v2'},
   {id:'ragioneria',label:'Ragioneria',title:'Conti pubblici',icon:'M4 4h16v4H4z M4 10h7v10H4z M13 10h7v10h-7z'},
+  {id:'conti',label:'Conti',title:'I conti dello Stato',icon:'M4 20V10 M10 20V4 M16 20v-7 M22 20H2'},
+  {id:'giustizia',label:'Giustizia',title:'Giustizia amministrativa',icon:'M12 3v18 M5 7h14 M12 7l-4 7h8z M5 7l-3 7h6z'},
   {id:'vita',label:'Vita',title:'Il mio fascicolo',icon:'M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z M12 8v4 M10 10h4'},
   {id:'bacheca',label:'Bacheca',title:'Bacheca',icon:'M4 4h16v13H4z M4 17l4 3 M20 17l-4 3 M8 9h8 M8 12h5'},
   {id:'agisci',label:'Agisci',title:'Agisci',icon:'M13 2L4 14h6l-1 8 9-12h-6z'},
@@ -4163,6 +4227,8 @@ const NAV=[
 let renderedOnce={};
 let currentMainView=null;
 function switchView(id){
+  // tornando alla sezione Vita dalla navigazione, riparti sempre dall'hub (non dentro Upgrade)
+  if(typeof upgAmbito!=='undefined'){ upgAmbito=null; upgMetodo=null; }
   currentMainView=id;
   // modalità cerchio a tutto schermo: attiva in politica → Sedi/Istituzioni
   {
@@ -4395,24 +4461,16 @@ function assunzioniBlock(){
 };
 
 RENDER.vita=()=>{
+  // se siamo dentro la sezione Upgrade, mostra quella
+  if(upgAmbito!==null){ $('#vitaBody').innerHTML = upgradeHTML(); return; }
   $('#vitaBody').innerHTML=`
-    <div class="h-block"><div class="eyebrow">Il mio fascicolo</div>
+    <div class="h-block"><div class="eyebrow">Il mio spazio</div>
       <h2>La mia vita, in ordine</h2>
-      <p>Lavoro, salute, soldi e documenti: tutto in un posto solo, sul tuo dispositivo.</p></div>
+      <p>Salute e documenti sul tuo dispositivo. E gli strumenti per migliorare giorno per giorno.</p></div>
     <div class="fasc-hub">
-      <button class="fasc-tile" style="--ft:#1f6feb" onclick="openDetail('lavoro')">
-        <span class="ft-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v12H4z M9 7V5h6v2 M4 12h16"/></svg></span>
-        <span class="ft-txt"><b>Lavoro e carriera</b><small>Contratti, busta paga, previdenza</small></span>
-        <span class="ft-arr">›</span>
-      </button>
       <button class="fasc-tile" style="--ft:#16a36e" onclick="openDetail('salute')">
         <span class="ft-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11z M12 7v6 M9 10h6"/></svg></span>
         <span class="ft-txt"><b>Sanità</b><small>Visite, medicinali, medici, documenti</small></span>
-        <span class="ft-arr">›</span>
-      </button>
-      <button class="fasc-tile" style="--ft:#7c5cff" onclick="openATM()">
-        <span class="ft-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
-        <span class="ft-txt"><b>Finanze</b><small>Entrate, spese, obiettivi di risparmio</small></span>
         <span class="ft-arr">›</span>
       </button>
       <button class="fasc-tile" style="--ft:#3a7c9d" onclick="openCittadinanza()">
@@ -4420,9 +4478,18 @@ RENDER.vita=()=>{
         <span class="ft-txt"><b>Cittadinanza</b><small>Identità digitale, documenti, scadenze</small></span>
         <span class="ft-arr">›</span>
       </button>
+      <button class="fasc-tile" style="--ft:#e8a33d" onclick="upgOpen('finanze')">
+        <span class="ft-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg></span>
+        <span class="ft-txt"><b>Upgrade</b><small>Strategie per soldi, tempo, salute e carriera</small></span>
+        <span class="ft-arr">›</span>
+      </button>
     </div>
-    <div class="card" style="margin-top:14px"><p class="card-title">Cerchi i dati del territorio?</p>
-      <p style="font-size:14px;color:var(--ink-soft);margin:0 0 12px;line-height:1.5">Popolazione, comuni, bilanci, sanità e liste d'attesa di ogni regione ora vivono nella Mappa: tocca una regione per aprire la sua scheda con i dati e la fonte.</p>
+    <div class="card" style="margin-top:14px"><p class="card-title">Le tue finanze e il lavoro sono nella Casa Polis</p>
+      <p style="font-size:14px;color:var(--ink-soft);margin:0 0 12px;line-height:1.5">Il tuo bilancio personale e il fascicolo di lavoro e carriera ora vivono nella Casa Polis, la tua stanza civica. Il funzionamento è lo stesso, cambia solo da dove si aprono.</p>
+      <button class="btn btn-ghost" style="width:100%" onclick="openCasa()">Entra nella Casa Polis ›</button>
+    </div>
+    <div class="card" style="margin-top:12px"><p class="card-title">Cerchi i dati del territorio?</p>
+      <p style="font-size:14px;color:var(--ink-soft);margin:0 0 12px;line-height:1.5">Popolazione, comuni, bilanci, sanità e liste d'attesa di ogni regione vivono nella Mappa: tocca una regione per aprire la sua scheda con i dati e la fonte.</p>
       <button class="btn btn-ghost" style="width:100%" onclick="switchView('mappa')">Apri la mappa ›</button>
     </div>`;
 };
@@ -5211,13 +5278,15 @@ function trendChart(serie, mesi, color){
   const y=v=>h-((v-min)/(max-min))*h;
   const pts=serie.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   const area=`0,${h} `+pts+` ${w},${h}`;
+  const lab=(mesi&&mesi.length===n)?mesi:serie.map((_,i)=>'Punto '+(i+1));
+  const id=PT.reg(lab, serie, v=>(typeof v==='number'? v.toLocaleString('it-IT') : v));
   return `<div class="trend">
     <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
       <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="${color}" stop-opacity="0.28"/><stop offset="100%" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
       <polygon points="${area}" fill="url(#${gid})"/>
       <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      ${serie.map((v,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="${i===n-1?3.5:2.4}" fill="${color}"/>`).join('')}
+      ${PT.dots(id, serie.map((v,i)=>x(i)), serie.map(v=>y(v)), color, 2.4)}
     </svg>
     <div class="trend-x">${mesi.map(m=>`<span>${m}</span>`).join('')}</div>
   </div>`;
@@ -15201,7 +15270,9 @@ function casaHotspots(){
     {id:'politica',   p:[-0.72,0.12,-1.4],  emoji:'📚', label:'Politica'},
     {id:'bacheca',    p:[0.0,-0.05,-1.83],  emoji:'📺', label:'Bacheca'},
     {id:'ragioneria', p:[0.75,-0.66,-1.4],  emoji:'🖥️', label:'Ragioneria'},
-    {id:'agisci',     p:[1.2,0.3,-1.3],     emoji:'🚪', label:'Agisci'}
+    {id:'agisci',     p:[1.2,0.3,-1.3],     emoji:'🚪', label:'Agisci'},
+    {id:'finanze',    p:[0.35,0.34,-1.3],   emoji:'🏦', label:'Finanze'},
+    {id:'lavoro',     p:[-0.35,0.3,-1.35],  emoji:'💼', label:'Lavoro'}
   ];
 }
 const CASA_SCHEDE={
@@ -15209,7 +15280,9 @@ const CASA_SCHEDE={
   politica:{ico:'📚', tit:'Politica', sub:'Istituzioni e leggi', txt:'Gli scaffali della conoscenza civica: come funziona il Parlamento, chi fa cosa, le leggi in cammino. Prendi un libro e capisci lo Stato.'},
   bacheca:{ico:'📺', tit:'Bacheca', sub:'Cosa succede ora', txt:'Lo schermo di casa: i dibattiti aperti, le novità, le voci dei cittadini. Accenditi sul presente e partecipa.'},
   agisci:{ico:'🚪', tit:'Agisci', sub:'Il tuo fascicolo civico', txt:'La porta verso la vita civica attiva: documenti, scadenze, azioni concrete. Esci di casa e muoviti nella cittadinanza.'},
-  vita:{ico:'🪞', tit:'Vita', sub:'Il tuo riflesso', txt:'Guardati allo specchio: il tuo avatar, le tue competenze, il diario, le finanze personali. Conosci te stesso prima della città.'}
+  vita:{ico:'🪞', tit:'Vita', sub:'Il tuo riflesso', txt:'Guardati allo specchio: il tuo avatar, le tue competenze, il diario. Conosci te stesso prima della città.'},
+  finanze:{ico:'🏦', tit:'Finanze', sub:'Il tuo bilancio personale', txt:'Il salvadanaio di casa: entrate, spese, obiettivi di risparmio e analisi dei tuoi conti. Tutto sul tuo dispositivo, niente esce da qui.', azione:'openATM'},
+  lavoro:{ico:'💼', tit:'Lavoro e carriera', sub:'Contratti e previdenza', txt:'Il fascicolo del lavoro: contratti, busta paga, esperienze e previdenza. La tua storia professionale in ordine, sempre con te.', azione:"openDetail:lavoro"}
 };
 function casaOpenScheda(hid){
   const s=CASA_SCHEDE[hid]; if(!s) return;
@@ -15227,6 +15300,13 @@ function casaOpenScheda(hid){
 function casaSchedaClose(){ const el=document.getElementById('casaScheda'); if(el){ el.classList.remove('open'); el.innerHTML=''; } }
 function casaVai(id){
   casaSchedaClose(); closeCasa();
+  const s=CASA_SCHEDE[id];
+  if(s && s.azione){
+    // apertura di una funzionalità (Finanze, Lavoro) invece di una sezione
+    const [fn,arg]=s.azione.split(':');
+    setTimeout(()=>{ try{ arg?window[fn](arg):window[fn](); }catch(e){} }, 60);
+    return;
+  }
   if(typeof switchView==='function') switchView(id);
 }
 
@@ -15589,7 +15669,11 @@ function cartGrafico(c){
   const area=`${pl},${H-pb} ${pts} ${X(a1).toFixed(1)},${H-pb}`;
   // linea di rottura = anno legge
   const lx=X(c.annoLegge);
-  const dots=c.serie.map(p=>`<circle cx="${X(p.anno).toFixed(1)}" cy="${Y(p.val).toFixed(1)}" r="3" fill="#1f6feb"/>`).join('');
+  /* etichetta: l'anno + se è prima o dopo la legge. Mostriamo la coincidenza temporale,
+     mai un nesso di causa: il tooltip non dice che la legge ha prodotto il valore. */
+  const lab=c.serie.map(p=>p.anno+(p.anno<c.annoLegge?' · prima della legge':(p.anno>c.annoLegge?' · dopo la legge':' · anno della legge')));
+  const id=PT.reg(lab, vals, v=>v.toLocaleString('it-IT',{maximumFractionDigits:1})+(c.unita||''));
+  const dots=PT.dots(id, c.serie.map(p=>X(p.anno)), c.serie.map(p=>Y(p.val)), '#1f6feb', 3);
   const labels=c.serie.map((p,i)=>{
     if(i%2!==0 && i!==c.serie.length-1) return '';
     return `<text x="${X(p.anno).toFixed(1)}" y="${H-7}" font-size="9" fill="#8a94a6" text-anchor="middle">${p.anno}</text>`;
@@ -17824,19 +17908,6 @@ function openVoce(){
   else if(inp) setTimeout(()=>{ try{ inp.focus(); }catch(e){} },350);
 }
 
-/* ---- microfono nella barra principale, sempre a portata ---- */
-(function vocMicGlobale(){
-  try{
-    const casa=document.getElementById('casaBtn');
-    if(!casa || document.getElementById('vocGlobalBtn')) return;
-    const b=document.createElement('button');
-    b.className='tb-ico'; b.id='vocGlobalBtn'; b.setAttribute('aria-label','Comandi vocali');
-    b.textContent='\ud83c\udfa4';
-    b.style.fontSize='16px';
-    b.onclick=openVoce;
-    casa.parentNode.insertBefore(b, casa);
-  }catch(e){}
-})();
 
 /* ============================================================
    CALENDARIO DEL TELEFONO — ricorrenze e scadenze collegate
@@ -19178,7 +19249,7 @@ politicaCerchioHTML=function(){
 
 const LEGGI_CAT=[
  {k:'esteri',ico:'🌍',nome:'Rapporti internazionali',col:'#1f6feb',kw:['ratifica','accordo','convenzione','trattato','protocollo di','cooperazione tra']},
- {k:'salute',ico:'🏥',nome:'Salute',col:'#d6438a',kw:['sanitar','salute','malatt','farmac','ospedal','epidemiolog','covid','vaccin','disabilit','caregiver']},
+ {k:'salute',ico:'🏥',nome:'Salute',col:'#d6438a',kw:['sanit','salute','malatt','farmac','ospedal','epidemiolog','covid','vaccin','disabilit','caregiver','pazient','assistenza ai']},
  {k:'lavoro',ico:'💼',nome:'Lavoro e imprese',col:'#0a7d2e',kw:['lavoro','lavorator','impres','occupazion','professioni','made in italy','commercio','artigian']},
  {k:'fisco',ico:'💶',nome:'Fisco e bilancio',col:'#155e42',kw:['fiscal','tribut','bilancio','finanziari','imposta','rendiconto','pensioni','previdenz','economic']},
  {k:'giustizia',ico:'⚖️',nome:'Giustizia e diritti',col:'#7c5cff',kw:['giustizia','penal','process','magistrat','carcer','reato','reati','vittim','violenza','cittadinanza']},
@@ -19602,27 +19673,67 @@ async function normAggiorna(){
   normRender();
 }
 
-function normCardHTML(a){
+let NORM_OPEN=-1;
+function normToggle(i){ NORM_OPEN=(NORM_OPEN===i)?-1:i; normRender(); }
+function normCardHTML(a,i){
   const finto={titolo:a.titolo}; // riuso della pipeline chiarezza
   const cat=leggeCategoria(finto);
   const sc=leggeScopo(finto);
-  return `<div class="lgd-card" style="cursor:default">
-    <div class="lgd-top">
-      <span class="lgd-cat" style="background:${cat.col}1a;color:${cat.col}">${cat.ico} ${esc(cat.nome)}</span>
-      <span class="lgd-stato" style="color:#155e42">${esc(a.tipo)}${a.numero?' n. '+esc(String(a.numero)):''}</span>
-    </div>
-    <div class="lgd-scopo">${esc(sc.frase)}</div>
-    <div class="lgd-meta">
-      <span>Gazzetta Ufficiale n. ${esc(String(a.numeroGU))} del ${esc(a.gu)}</span>
-      ${a.cod?`<span>·</span><span>${esc(a.cod)}</span>`:''}
-    </div>
+  const sp=normSpiega(a);
+  const aperta=(NORM_OPEN===i);
+  // permalink ufficiale urn:nir se disponibile il codice redazionale
+  const link=a.urn?a.urn:(a.cod?`https://www.normattiva.it/eli/id/${esc(String(a.anno||'2026'))}/${esc(String(a.cod))}`:'');
+  return `<div class="lgd-card norm-c ${aperta?'op':''}">
+    <button class="norm-cbtn" onclick="normToggle(${i})">
+      <div class="lgd-top">
+        <span class="lgd-cat" style="background:${cat.col}1a;color:${cat.col}">${cat.ico} ${esc(cat.nome)}</span>
+        <span class="lgd-stato" style="color:#155e42">${esc(a.tipo)}${a.numero?' n. '+esc(String(a.numero)):''}</span>
+      </div>
+      <div class="lgd-scopo">${esc(sc.frase)}</div>
+      <div class="lgd-meta">
+        <span>Gazzetta Ufficiale n. ${esc(String(a.numeroGU))} del ${esc(a.gu)}</span>
+        ${a.cod?`<span>·</span><span>${esc(a.cod)}</span>`:''}
+        <span class="norm-more">${aperta?'chiudi ▲':'in chiaro ▾'}</span>
+      </div>
+    </button>
+    ${aperta?`<div class="norm-exp">
+      <div class="norm-badge">Lettura Polis · sintesi automatica dal titolo ufficiale, non testo di legge</div>
+      <div class="norm-f"><span class="norm-fl">${cat.ico} Ambito</span><p>${esc(cat.nome)}</p></div>
+      <div class="norm-f"><span class="norm-fl">👥 Chi riguarda</span><p>${esc(sp.chi)}</p></div>
+      <div class="norm-f"><span class="norm-fl">🔧 Come si attua</span><p>${esc(sp.come)}</p></div>
+      ${link?`<a class="norm-link" href="${link}" target="_blank" rel="noopener">Leggi il testo ufficiale su Normattiva ›</a>`:''}
+    </div>`:''}
   </div>`;
 }
+
+
+/* ===== ISTITUZIONE EMANANTE — deterministico dal tipo di atto =====
+   Parlamento = leggi (approvate dalle Camere e promulgate).
+   Governo = decreti-legge, decreti legislativi, D.P.R., regolamenti. */
+function normIstituzione(a){
+  const tp=(a.tipo||'').toLowerCase();
+  const ti=(a.titolo||'').toLowerCase();
+  // Governo: atti con forza di legge o regolamentari emanati dall'esecutivo
+  if(/decreto[- ]legge|decreto legislativo|d\.?lgs|d\.?l\.|decreto del presidente della repubblica|d\.?p\.?r|decreto ministeriale|decreto del presidente del consiglio|d\.?p\.?c\.?m|regolamento/.test(tp)) return 'governo';
+  if(/^conversione in legge|decreto-legge/.test(ti)) return 'governo'; // legge di conversione di un DL: origine governativa
+  // Parlamento: legge ordinaria, legge costituzionale
+  if(/legge costituzionale|^legge\b/.test(tp)) return 'parlamento';
+  if(tp==='legge') return 'parlamento';
+  // se il tipo è vuoto, deduco dal titolo
+  if(/^legge\b/.test(ti)) return 'parlamento';
+  return 'parlamento'; // default prudente: le pubblicazioni "legge" restano nel Parlamento
+}
+let NORM_ISTF='tutte'; // 'tutte' | 'parlamento' | 'governo'
+function normSetIst(v){ NORM_ISTF=v; NORM_OPEN=-1; normRender(); }
 
 function normHTML(){
   const agg=NORM.aggiornato?new Date(NORM.aggiornato).toLocaleString('it-IT',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}):null;
   const conteggi={};
   NORM.atti.forEach(a=>{const c=leggeCategoria({titolo:a.titolo});conteggi[c.k]=(conteggi[c.k]||0)+1;});
+  const nPar=NORM.atti.filter(a=>normIstituzione(a)==='parlamento').length;
+  const nGov=NORM.atti.filter(a=>normIstituzione(a)==='governo').length;
+  const lista=NORM.atti.filter(a=>NORM_ISTF==='tutte'||normIstituzione(a)===NORM_ISTF);
+  const istPill=(k,ico,txt,n)=>`<button class="norm-istp ${NORM_ISTF===k?'on':''}" onclick="normSetIst('${k}')">${ico} ${txt}${n!=null?` <b>${n}</b>`:''}</button>`;
   return `
     <div class="lgd-head">
       <div class="pol-ey">Gazzetta Ufficiale \u00b7 2026</div>
@@ -19634,8 +19745,13 @@ function normHTML(){
     </button>
     ${normStato==='errore'?`<div class="norm-err"><b>Aggiornamento non riuscito.</b> ${esc(normErrore)}</div>`:''}
     ${NORM.atti.length?`
-      <div class="lgd-statorow"><span class="lgd-count" style="margin-left:0">${NORM.atti.length} atti mostrati${NORM.totale>NORM.atti.length?' (i pi\u00f9 recenti di '+NORM.totale+')':''} \u00b7 fonte dati.normattiva.it</span></div>
-      ${NORM.atti.map(normCardHTML).join('')}`
+      <div class="norm-istrow">
+        ${istPill('tutte','\ud83d\udcc4','Tutti',NORM.atti.length)}
+        ${istPill('parlamento','\ud83c\udfdb\ufe0f','Parlamento',nPar)}
+        ${istPill('governo','\ud83d\udccb','Governo',nGov)}
+      </div>
+      <div class="lgd-statorow"><span class="lgd-count" style="margin-left:0">${lista.length} atti ${NORM_ISTF==='parlamento'?'del Parlamento':NORM_ISTF==='governo'?'del Governo':'mostrati'} \u00b7 fonte dati.normattiva.it</span></div>
+      ${lista.length?lista.map((a,i)=>normCardHTML(a,i)).join(''):'<div class="lgd-empty">Nessun atto di questa istituzione tra quelli scaricati.</div>'}`
       :(normStato!=='loading'&&normStato!=='errore'?'<div class="lgd-empty">Nessun dato ancora scaricato. Tocca "Aggiorna da Normattiva".</div>':'')}
   `;
 }
@@ -20476,6 +20592,1237 @@ function chiRender(){
     padding:13px;font-size:14px;font-weight:700;min-height:46px}`;
   document.head.appendChild(st);
 })();
+
+
+/* ===== GIUSTIZIA — Consiglio di Stato 2024 (Open Data) ===== */
+const CDS = {"fonte": "Consiglio di Stato · Open Data della Giustizia Amministrativa (giustizia-amministrativa.it)", "periodo": "Anno 2024 · sentenze pubblicate", "sede": "Consiglio di Stato – sede giurisdizionale di Roma", "tot": 6703, "brevi": 156, "esiti": {"Respinto": 3521, "Accolto": 1192, "Altro": 413, "Chiuso in rito": 1318, "Parziale": 259}, "durata": {"n": 6703, "mediana": 453, "media": 645, "p25": 209, "p75": 963, "p90": 1423, "min": 1, "max": 6053, "oltre1anno": 54.8, "oltre3anni": 18.6}, "sezioni": [{"n": "Sez. VII", "v": 1667, "mediana": 349, "acc": 292, "resp": 763, "tasso": 27.7}, {"n": "Sez. VI", "v": 1446, "mediana": 933, "acc": 257, "resp": 740, "tasso": 25.8}, {"n": "Sez. V", "v": 1119, "mediana": 321, "acc": 182, "resp": 681, "tasso": 21.1}, {"n": "Sez. IV", "v": 892, "mediana": 650, "acc": 139, "resp": 508, "tasso": 21.5}, {"n": "Sez. III", "v": 884, "mediana": 238, "acc": 178, "resp": 424, "tasso": 29.6}, {"n": "Sez. II", "v": 681, "mediana": 440, "acc": 144, "resp": 399, "tasso": 26.5}, {"n": "Adunanza Plenaria", "v": 14, "mediana": 493, "acc": 0, "resp": 6, "tasso": 0.0}], "temi": [{"n": "Altre materie", "v": 2040, "acc": 429, "resp": 1066, "rito": 347, "parz": 90, "tasso": 28.7, "mediana": 476}, {"n": "Edilizia e urbanistica", "v": 1384, "acc": 202, "resp": 852, "rito": 227, "parz": 35, "tasso": 19.2, "mediana": 958}, {"n": "Concorsi e pubblico impiego", "v": 984, "acc": 165, "resp": 436, "rito": 301, "parz": 22, "tasso": 27.5, "mediana": 460}, {"n": "Appalti e contratti pubblici", "v": 956, "acc": 151, "resp": 523, "rito": 187, "parz": 45, "tasso": 22.4, "mediana": 266}, {"n": "Ambiente ed energia", "v": 298, "acc": 42, "resp": 182, "rito": 58, "parz": 7, "tasso": 18.8, "mediana": 490}, {"n": "Università, scuola e ricerca", "v": 227, "acc": 36, "resp": 94, "rito": 52, "parz": 10, "tasso": 27.7, "mediana": 297}, {"n": "Spese di giudizio e procedura", "v": 192, "acc": 42, "resp": 63, "rito": 31, "parz": 16, "tasso": 40.0, "mediana": 217}, {"n": "Commercio e attività produttive", "v": 188, "acc": 30, "resp": 102, "rito": 27, "parz": 14, "tasso": 22.7, "mediana": 392}, {"n": "Sanità e farmaci", "v": 127, "acc": 11, "resp": 66, "rito": 26, "parz": 14, "tasso": 14.3, "mediana": 272}, {"n": "Immigrazione e cittadinanza", "v": 123, "acc": 53, "resp": 26, "rito": 33, "parz": 4, "tasso": 67.1, "mediana": 419}, {"n": "Antimafia e interdittive", "v": 78, "acc": 14, "resp": 42, "rito": 19, "parz": 2, "tasso": 25.0, "mediana": 246}, {"n": "Sicurezza e forze armate", "v": 72, "acc": 12, "resp": 52, "rito": 3, "parz": 0, "tasso": 18.8, "mediana": 267}, {"n": "Accesso agli atti e trasparenza", "v": 34, "acc": 5, "resp": 17, "rito": 7, "parz": 0, "tasso": 22.7, "mediana": 141}], "mensile": [{"m": "Gen", "v": 672}, {"m": "Feb", "v": 661}, {"m": "Mar", "v": 652}, {"m": "Apr", "v": 586}, {"m": "Mag", "v": 594}, {"m": "Giu", "v": 579}, {"m": "Lug", "v": 738}, {"m": "Ago", "v": 286}, {"m": "Set", "v": 309}, {"m": "Ott", "v": 509}, {"m": "Nov", "v": 477}, {"m": "Dic", "v": 640}], "tipi": [{"n": "APPELLO AVVERSO SENTENZA", "v": 4308}, {"n": "APPELLO AVVERSO SENTENZA SEMPLIFICATA", "v": 625}, {"n": "APPELLO RITO APPALTI (ex art. 120 c.p.a.)", "v": 519}, {"n": "APPELLO AVV. SENTENZA NEL RITO ABBREVIATO ex art.119 c.p.a.", "v": 352}, {"n": "REVOCAZIONE SENTENZA", "v": 207}, {"n": "OTTEMPERANZA SENTENZA CDS PASSATA IN GIUDICATO", "v": 205}, {"n": "APPELLO AVV. SENT. IN MATERIA DI MANCATA ESECUZIONE/INOTTEMP", "v": 126}, {"n": "APPELLO AVV. SENT. NEL RITO SILENZIO P.A. ex art.117 c.p.a.", "v": 99}], "udienze": [{"n": "Udienza Pubblica", "v": 5545}, {"n": "Camera Di Consiglio", "v": 805}, {"n": "Udienza Smaltimento", "v": 332}, {"n": "Up Speciale Elettorale", "v": 21}], "esempi": [{"o": "DECADENZA DAL DIRITTO ALLE TARIFFE INCENTIVANTI RICONOSCIUTE PER LA PRODUZIONE DELL'IMPIANTO TERMOELETTRICO DENOMINATO “CONFIENZA\" - RESTITUZIONE SOMME", "e": "Chiuso in rito", "s": "Sez. II", "d": "2024-12-31", "num": "202410535"}, {"o": "INAMMISSIBILITÀ DELLA RICHIESTA DI ACCESSO AGLI AIUTI AGLI INVESTIMENTI DELLE PICCOLE E MEDIE IMPRESE", "e": "Respinto", "s": "Sez. V", "d": "2024-12-31", "num": "202410552"}, {"o": "AFFIDAMENTO DEL SERVIZIO DI GESTIONE DELL’ASILO NIDO COMUNALE PER GLI ANNI EDUCATIVI 2023/2024-PERIODO SETTEMBRE 2023-GIUGNO 2024 - AGGIUDICAZIONE", "e": "Accolto", "s": "Sez. V", "d": "2024-12-31", "num": "202410547"}, {"o": "SOSPENSIONE  LICENZA PER ATTIVITÀ DI DISCOTECA A CAUSA DELLA SOMMINISTRAZIONE BEVANDE ALCOLICHE A MINORI", "e": "Chiuso in rito", "s": "Sez. V", "d": "2024-12-31", "num": "202410554"}, {"o": "DEMOLIZIONE OPERE EDILIZIE ABUSIVE REALIZZATE IN PARTE SU AREA APPARTENENTE AL DEMANIO IDRICO", "e": "Respinto", "s": "Sez. VII", "d": "2024-12-31", "num": "202410543"}, {"o": "ARCHIVIAZIONE  DELL’ISTANZA DI ACCERTAMENTO DI COMPATIBILITÀ PAESAGGISTICA DI OPERE EDILIZIE", "e": "Respinto", "s": "Sez. II", "d": "2024-12-31", "num": "202410532"}, {"o": "DINIEGO COLLOCAMENTO FUORI RUOLO PER IMPIEGO PRESSO L'AGENZIA EUROPEA DELLA GUARDIA DI FRONTIERA E COSTIERA (FRONTEX)", "e": "Accolto", "s": "Sez. II", "d": "2024-12-31", "num": "202410529"}, {"o": "AUTORIZZAZIONE PER ESERCIZIO ATTIVITA' DI SERVIZIO INTEGRATIVO ANTINCENDIO", "e": "Accolto", "s": "Sez. V", "d": "2024-12-31", "num": "202410558"}, {"o": "ORDINANZA CONTINGIBILE ED URGENTE DI MESSA IN SICUREZZA DEL COSTONE ROCCIOSO SITO SULLA SS 163 AL KM 34+050 NEL COMUNE DI MINORI", "e": "Respinto", "s": "Sez. V", "d": "2024-12-31", "num": "202410548"}, {"o": "RISARCIMENTO DANNI SUBITI A CAUSA DEL RITARDO NELLA REALIZZAZIONE DELLA CASERMA DEI CARABINIERI NEL TERRITORIO COMUNALE IN ATTUAZIONE DELL'ACCORDO DI PROGRAMMA QUADRO IN MATERIA DI SICUREZZA", "e": "Respinto", "s": "Sez. V", "d": "2024-12-31", "num": "202410555"}, {"o": "INADEMPIMENTO ALLE OBBLIGAZIONI ASSUNTE CON LA CONVENZIONE PER LA GESTIONE E L’ESERCIZIO DELL’IMPIANTO DI DEPURAZIONE", "e": "Accolto", "s": "Sez. IV", "d": "2024-12-31", "num": "202410522"}, {"o": "DINIEGO PERMESSO DI COSTRUIRE IN SANATORIA", "e": "Parziale", "s": "Sez. II", "d": "2024-12-31", "num": "202410534"}, {"o": "ACCORDO QUADRO, CON UN UNICO OPERATORE, PER LA FORNITURA DEI DISPOSITIVI DI PROTEZIONE INDIVIDUALE PER LA DIREZIONE GENERALE E GLI UFFICI TERRITORIALI DI ANAS SPA - AGGIUDICAZIONE", "e": "Respinto", "s": "Sez. V", "d": "2024-12-31", "num": "202410559"}, {"o": "APPROVAZIONE GRADUATORIA PROVVISORIA PROGRAMMA 2018 - INTERVENTI DI SOSTEGNO REGIONALE ALLE IMPRESE OPERANTI NEL SETTORE DEL TURISMO - ESCLUSIONE  - RISARCIMENTO DANNI", "e": "Respinto", "s": "Sez. V", "d": "2024-12-31", "num": "202410551"}, {"o": "AFFIDAMENTO DIRETTO DEI SERVIZI FERROVIARI DI TRASPORTO PASSEGGERI AI SENSI DEL REGOLAMENTO CE N. 1307/2007", "e": "Respinto", "s": "Sez. V", "d": "2024-12-31", "num": "202410556"}, {"o": "OTTEMPERANZA DEL GIUDICATO FORMATOSI SULLA SENTENZA N. 13974/2022 DEL TAR LAZIO ROMA SEZIONE TERZA STRALCIO - RISARCIMENTO DANNI PER TARDIVA ASSUNZIONE", "e": "Altro", "s": "Sez. IV", "d": "2024-12-31", "num": "202410519"}, {"o": "AUTORIZZAZIONE ALLA SCISSIONE DI CONCESSIONE DEMANIALE MARITTIMA", "e": "Respinto", "s": "Sez. VII", "d": "2024-12-31", "num": "202410544"}, {"o": "GRADUATORIA DI REVISIONE DEL PIANO DI ASSEGNAZIONE DELLE FREQUENZE PER IL SERVIZIO TELEVISIVO DIGITALE TERRESTRE DELLA REGIONE LAZIO  - RISARCIMENTO DANNI", "e": "Respinto", "s": "Sez. VII", "d": "2024-12-31", "num": "202410504"}, {"o": "DEMOLIZIONE OPERE REALIZZATE IN ASSENZA DEL PERMESSO DI COSTRUIRE", "e": "Respinto", "s": "Sez. VII", "d": "2024-12-31", "num": "202410526"}, {"o": "VERIFICA AGIBILITÀ DEGLI IMMOBILI CONTRADDISTINTI DAGLI INTERNI 1 E 16 DEL CONDOMINIO DI CORSO ITALIA 28", "e": "Accolto", "s": "Sez. IV", "d": "2024-12-31", "num": "202410520"}, {"o": "DINIEGO PROROGA DEL PROGRAMMA SPECIALE DI PROTEZIONE - DIFFIDA AL   RECUPERO DELLE SOMME  PERCEPITE  A TITOLO DI CAPITALIZZAZIONE", "e": "Respinto", "s": "Sez. III", "d": "2024-12-30", "num": "202410439"}, {"o": "ANNULLAMENTO DEL PERMESSO DI COSTRUIRE RILASCIATO PER L'INSTALLAZIONE DI DUE CAMPI DA PADEL COPERTI A SERVIZIO DI UNA STRUTTURA SPORTIVA", "e": "Respinto", "s": "Sez. IV", "d": "2024-12-30", "num": "202410444"}, {"o": "AFFIDAMENTO DEL SERVIZIO DI RACCOLTA E TRASPORTO DEI RIFIUTI SOLIDI URBANI", "e": "Respinto", "s": "Sez. IV", "d": "2024-12-30", "num": "202410489"}, {"o": "RILASCIO PERMESSO DI COSTRUIRE CON PRESCRIZIONI", "e": "Respinto", "s": "Sez. IV", "d": "2024-12-30", "num": "202410499"}, {"o": "RICHIESTA DI VERSAMENTO SOMME A TITOLO DI MONETIZZAZIONE DELLO STANDARD DOVUTO PER CAMBIO DESTINAZIONE D'USO DELL'IMMOBILE", "e": "Accolto", "s": "Sez. IV", "d": "2024-12-30", "num": "202410495"}, {"o": "RISARCIMENTO DANNO DA INADEMPIMENTO AGLI OBBLIGHI DELLA CONVENZIONE DI LOTTIZZAZIONE", "e": "Respinto", "s": "Sez. IV", "d": "2024-12-30", "num": "202410493"}, {"o": "RETTIFICA ED APPROVAZIONE CONONI DI LOCAZIONE EDILIZIA AGEVOLATA/CONVENZIONATA - RIS. DANNI", "e": "Respinto", "s": "Sez. V", "d": "2024-12-30", "num": "202410443"}, {"o": "DINIEGO CONCESSIONE EDILIZIA IN SANATORIA", "e": "Chiuso in rito", "s": "Sez. VII", "d": "2024-12-30", "num": "202410447"}, {"o": "AFFIDAMENTO DEL SERVIZIO DI MENSA SCOLASTICA PER GLI ALUNNI DELLE SCUOLE STATALI DELL'INFANZIA - PERIODO SCOLASTICO 2023/2024 - AGGIUDICAZIONE", "e": "Respinto", "s": "Sez. III", "d": "2024-12-30", "num": "202410477"}, {"o": "SANZIONE DELLA PERDITA DEL GRADO PER RIMOZIONE", "e": "Respinto", "s": "Sez. II", "d": "2024-12-30", "num": "202410456"}, {"o": "AFFIDAMENTO SERVIZIO INTEGRATO DI MANUTENZIONE DEL PATRIMONIO IMMOBILIARE DELLA ASL DI TARANTO - AGGIUDICAZIONE - RISARCIMENTO DANNI", "e": "Parziale", "s": "Sez. III", "d": "2024-12-30", "num": "202410473"}, {"o": "APPROVAZIONE VARIANTE AL PIANO DI GOVERNO DEL TERRITORIO (PGT) - RISARCIMENTO DANNI", "e": "Respinto", "s": "Sez. IV", "d": "2024-12-30", "num": "202410452"}, {"o": "ACCERTAMENTO DIRITTO ALLA RIPETIZIONE DELLE SOMME CORRISPOSTE A TITOLO DI CONTRIBUTI DI COSTRUZIONE E MONETIZZAZIONI CORRELATI AL TITOLO ABILITATIVO", "e": "Respinto", "s": "Sez. IV", "d": "2024-12-30", "num": "202410486"}, {"o": "RISARCIMENTO DEI DANNI DERIVATI DALL’OMESSA VOLTURAZIONE DELLA PRATICA EDILIZIA GIA' AVVIATA DAL VENDITORE DEL COMPLESSO IMMOBILIARE", "e": "Respinto", "s": "Sez. IV", "d": "2024-12-30", "num": "202410483"}, {"o": "DECADENZA ATTESTATI PER CAMBIO DESTINAZIONE D'USO DI EDIFICI AZIENDALI AGRICOLI A CIVILE ABITAZIONE (C.D. DERURALIZZAZIONE)", "e": "Respinto", "s": "Sez. IV", "d": "2024-12-30", "num": "202410492"}, {"o": "DINIEGO ACCESSO AGLI ATTI RELATIVI ALLE AUTORIZZAZIONI PER LE EMISSIONI IN ATMOSFERA RILASCIATE AD AZIENDA AGRICOLA PER L'ATTIVITÀ DI ALLEVAMENTO", "e": "Chiuso in rito", "s": "Sez. IV", "d": "2024-12-30", "num": "202410484"}, {"o": "INEFFICACIA DELLA SCIA PER LA REALIZZAZIONE DI UNA INFRASTRUTTURA DI COMUNICAZIONE ELETTRONICA PER IMPIANTI RADIOELETTRICI, OPERE RELATIVE E MICRO-IMPIANTI WIFI SU STRADA PRIVATA", "e": "Accolto", "s": "Sez. VI", "d": "2024-12-30", "num": "202410468"}, {"o": "DINIEGO DEL PERMESSO DI COSTRUIRE IN SANATORIA", "e": "Chiuso in rito", "s": "Sez. VII", "d": "2024-12-30", "num": "202410445"}, {"o": "REGOLAMENTO ATTIVITA' DIDATTICA CONTESTUALE PRESSO PIÙ ATENEI (CD \"DOPPIA AFFILIAZIONE\") - PRESCRIZIONE APPLICATIVE - CORRESPONSIONE INDENNITÀ RISARCITORIA PER ILLEGITTIMO LICENZIAMENTO", "e": "Parziale", "s": "Sez. VII", "d": "2024-12-30", "num": "202410478"}, {"o": "SGOMBERO DELL'IMPIANTO SPORTIVO POLIVALENTE PALAZZETTO DELLO SPORT ALFONSO CRISCUOLO A SEGUITO DELLA RISOLUZIONE PER GRAVI INADEMPIENZE DEL CONTRATTO DI CONCESSIONE E GESTIONE", "e": "Respinto", "s": "Sez. VII", "d": "2024-12-30", "num": "202410475"}], "limiti": ["I dati riguardano solo il Consiglio di Stato (giudice d'appello amministrativo), non i TAR, non la giustizia civile o penale.", "Le materie sono raggruppate da Polis leggendo l'oggetto del ricorso: è una classificazione nostra, non ufficiale.", "La durata è calcolata tra deposito del ricorso in appello e pubblicazione della sentenza; non include il primo grado davanti al TAR.", "Gli esiti sono raggruppati in famiglie da Polis a partire dalle diciture ufficiali."]};
+
+function gNum(n){ return (n||0).toLocaleString('it-IT'); }
+function gEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+let gTab='panorama';
+const G_TABS=[['panorama','Panorama'],['primogrado','Primo grado'],['tar','TAR Abruzzo'],['tempi','Tempi'],['materie','Materie'],['sezioni','Sezioni'],['casi','Casi reali']];
+const G_COL={'Accolto':'#1f9d6b','Respinto':'#e0533d','Chiuso in rito':'#e8a33d','Parziale':'#1f6feb','Altro':'#8d99a6'};
+
+function setGTab(t){ gTab=t; renderGiustizia(); }
+
+function gDonut(esiti,tot){
+  const order=['Accolto','Parziale','Respinto','Chiuso in rito','Altro'];
+  let acc=0, segs='';
+  const R=54, C=2*Math.PI*R;
+  order.forEach(k=>{
+    const v=esiti[k]||0; if(!v) return;
+    const frac=v/tot, len=frac*C;
+    segs+=`<circle cx="70" cy="70" r="${R}" fill="none" stroke="${G_COL[k]}" stroke-width="22"
+      stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-acc}" transform="rotate(-90 70 70)"></circle>`;
+    acc+=len;
+  });
+  const pctAcc=Math.round(100*((esiti['Accolto']||0)+(esiti['Parziale']||0))/tot);
+  return `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    <svg width="140" height="140" viewBox="0 0 140 140" style="flex:none">${segs}
+      <text x="70" y="66" text-anchor="middle" font-size="26" font-weight="700" fill="currentColor">${pctAcc}%</text>
+      <text x="70" y="84" text-anchor="middle" font-size="10" fill="currentColor" opacity=".65">dà ragione</text>
+    </svg>
+    <div style="flex:1;min-width:170px">
+      ${order.filter(k=>esiti[k]).map(k=>`<div style="display:flex;align-items:center;gap:8px;margin:5px 0;font-size:13px">
+        <span style="width:11px;height:11px;border-radius:3px;background:${G_COL[k]};flex:none"></span>
+        <span style="flex:1">${k}</span><b>${gNum(esiti[k])}</b>
+        <span style="opacity:.55;width:44px;text-align:right">${(100*esiti[k]/tot).toFixed(1)}%</span>
+      </div>`).join('')}
+    </div></div>`;
+}
+
+function gBars(items,key,max,color,fmt){
+  const M = max || Math.max(...items.map(i=>i[key]||0)) || 1;
+  return items.map(i=>{
+    const v=i[key]||0;
+    return `<div style="margin:9px 0">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+        <span>${gEsc(i.n)}</span><b>${fmt?fmt(i):gNum(v)}</b></div>
+      <div style="height:8px;background:rgba(128,128,128,.15);border-radius:5px;overflow:hidden">
+        <div style="height:100%;width:${Math.max(2,100*v/M)}%;background:${typeof color==='function'?color(i):color};border-radius:5px"></div>
+      </div></div>`;
+  }).join('');
+}
+
+function gCard(t,v,s,c){
+  return `<div style="flex:1;min-width:132px;background:var(--card,rgba(128,128,128,.07));border-radius:14px;padding:13px 14px">
+    <div style="font-size:11px;opacity:.65;margin-bottom:3px">${t}</div>
+    <div style="font-size:24px;font-weight:700;line-height:1.15;color:${c||'inherit'}">${v}</div>
+    <div style="font-size:11px;opacity:.6;margin-top:3px">${s||''}</div></div>`;
+}
+
+function renderGiustizia(){
+  const el=document.getElementById('giustiziaBody'); if(!el) return;
+  const D=CDS, tot=D.tot;
+  const sub=G_TABS.map(([id,l])=>`<button class="subtab ${gTab===id?'on':''}" onclick="setGTab('${id}')">${l}</button>`).join('');
+  let b='';
+
+  if(gTab==='panorama'){
+    const acc=(D.esiti['Accolto']||0)+(D.esiti['Parziale']||0);
+    b=`<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px">
+        ${gCard('Sentenze 2024',gNum(tot),'Consiglio di Stato')}
+        ${gCard('Chi fa appello vince',Math.round(100*acc/tot)+'%','in tutto o in parte','#1f9d6b')}
+        ${gCard('Attesa tipica',gNum(D.durata.mediana)+' gg','circa '+(D.durata.mediana/365).toFixed(1)+' anni','#e0533d')}
+      </div>
+      <h3 style="margin:14px 0 9px;font-size:15px">Com'è andata a finire</h3>
+      ${gDonut(D.esiti,tot)}
+      <div style="background:rgba(128,128,128,.07);border-radius:12px;padding:12px;margin-top:14px;font-size:13px;line-height:1.55">
+        Il Consiglio di Stato è il <b>giudice d'appello</b> della giustizia amministrativa: ci si arriva dopo il TAR,
+        quando un cittadino o un'impresa contesta una decisione della pubblica amministrazione.
+        Nel 2024 ha pubblicato <b>${gNum(tot)}</b> sentenze. In <b>${gNum(D.esiti['Chiuso in rito']||0)}</b> casi
+        il giudizio si è chiuso <i>senza decidere nel merito</i> (ricorso inammissibile, improcedibile o estinto).
+      </div>
+      <h3 style="margin:18px 0 9px;font-size:15px">Sentenze pubblicate mese per mese</h3>
+      ${gBars(D.mensile.map(m=>({n:m.m,v:m.v})),'v',null,'#1f6feb')}
+      <div style="font-size:12px;opacity:.6;margin-top:6px">Ad agosto l'attività si ferma quasi del tutto: è la sospensione feriale dei termini.</div>`;
+  }
+
+  if(gTab==='primogrado'){ b=tarView(); }
+
+  if(gTab==='tar'){ b=abView(); }
+
+  if(gTab==='tempi'){
+    const u=D.durata;
+    b=`<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px">
+        ${gCard('Metà dei casi entro',gNum(u.mediana)+' gg','valore mediano')}
+        ${gCard('Oltre 1 anno',u.oltre1anno+'%','dei ricorsi','#e8a33d')}
+        ${gCard('Oltre 3 anni',u.oltre3anni+'%','dei ricorsi','#e0533d')}
+      </div>
+      <h3 style="margin:6px 0 9px;font-size:15px">Quanto si aspetta una sentenza d'appello</h3>
+      ${gBars([
+        {n:'I più rapidi (25% dei casi)',v:u.p25},
+        {n:'Il caso tipico (metà dei casi)',v:u.mediana},
+        {n:'I più lenti (25% dei casi oltre)',v:u.p75},
+        {n:'I più lenti in assoluto (10%)',v:u.p90}
+      ],'v',u.p90,i=>i.v>1000?'#e0533d':(i.v>400?'#e8a33d':'#1f9d6b'),i=>gNum(i.v)+' gg')}
+      <div style="background:rgba(224,83,61,.09);border-left:3px solid #e0533d;border-radius:10px;padding:12px;margin-top:14px;font-size:13px;line-height:1.55">
+        Questi giorni contano <b>solo il secondo grado</b>: dal deposito del ricorso in appello alla sentenza del
+        Consiglio di Stato. Il tempo passato prima davanti al TAR <b>non è incluso</b>, quindi la durata reale di
+        una causa amministrativa vista dal cittadino è sensibilmente più lunga.
+        Il caso più lungo di questo archivio è durato <b>${gNum(u.max)} giorni</b> (${(u.max/365).toFixed(1)} anni).
+      </div>
+      <h3 style="margin:18px 0 9px;font-size:15px">Le materie più lente</h3>
+      ${gBars(D.temi.filter(t=>t.mediana&&t.n!=='Altre materie').sort((a,b)=>b.mediana-a.mediana).slice(0,8),'mediana',null,
+        i=>i.mediana>600?'#e0533d':(i.mediana>400?'#e8a33d':'#1f9d6b'),i=>gNum(i.mediana)+' gg')}
+      <h3 style="margin:18px 0 9px;font-size:15px">Come si decide</h3>
+      ${gBars(D.udienze,'v',null,'#7c5cff')}`;
+  }
+
+  if(gTab==='materie'){
+    b=`<div style="font-size:13px;opacity:.75;margin-bottom:12px;line-height:1.5">
+        Di cosa litigano cittadini e imprese con lo Stato. Il <b>tasso di successo</b> è la quota di ricorsi accolti
+        sul totale di quelli decisi nel merito (accolti + respinti).
+      </div>
+      ${D.temi.filter(t=>t.n!=='Altre materie').map(t=>{
+        const tot_m=t.acc+t.resp+t.rito+t.parz;
+        const col=t.tasso>=30?'#1f9d6b':(t.tasso>=20?'#e8a33d':'#e0533d');
+        return `<div style="background:rgba(128,128,128,.07);border-radius:13px;padding:13px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px">
+            <b style="font-size:14px">${gEsc(t.n)}</b>
+            <span style="font-size:12px;opacity:.6;flex:none">${gNum(t.v)} sentenze</span></div>
+          <div style="display:flex;height:9px;border-radius:5px;overflow:hidden;margin-bottom:8px">
+            <div style="width:${100*t.acc/tot_m}%;background:#1f9d6b"></div>
+            <div style="width:${100*t.parz/tot_m}%;background:#1f6feb"></div>
+            <div style="width:${100*t.resp/tot_m}%;background:#e0533d"></div>
+            <div style="width:${100*t.rito/tot_m}%;background:#e8a33d"></div>
+          </div>
+          <div style="display:flex;gap:14px;font-size:12px;flex-wrap:wrap">
+            <span>Successo: <b style="color:${col}">${t.tasso!=null?t.tasso+'%':'n.d.'}</b></span>
+            <span style="opacity:.7">Attesa: <b>${t.mediana?gNum(t.mediana)+' gg':'n.d.'}</b></span>
+            <span style="opacity:.7">Accolti ${gNum(t.acc)} · Respinti ${gNum(t.resp)}</span>
+          </div></div>`;}).join('')}
+      <div style="background:rgba(232,163,61,.1);border-left:3px solid #e8a33d;border-radius:10px;padding:12px;font-size:13px;line-height:1.5">
+        <b>Come leggiamo le materie.</b> Il dataset ufficiale non ha un campo "materia": Polis raggruppa le sentenze
+        cercando parole chiave nell'oggetto del ricorso. È una <b>classificazione nostra</b>, utile per orientarsi ma
+        non ufficiale. ${gNum(D.temi.find(t=>t.n==='Altre materie')?.v||0)} sentenze non rientrano in nessun gruppo
+        e restano fuori da questo elenco.
+      </div>`;
+  }
+
+  if(gTab==='sezioni'){
+    b=`<div style="font-size:13px;opacity:.75;margin-bottom:12px;line-height:1.5">
+        Il Consiglio di Stato è diviso in sezioni, ognuna specializzata. L'<b>Adunanza Plenaria</b> interviene
+        quando le sezioni hanno dato interpretazioni diverse: le sue decisioni fanno da guida a tutte le altre.
+      </div>
+      ${D.sezioni.map(s=>`<div style="background:rgba(128,128,128,.07);border-radius:13px;padding:13px;margin-bottom:9px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
+          <b style="font-size:14px">${gEsc(s.n)}</b>
+          <span style="font-size:12px;opacity:.6">${gNum(s.v)} sentenze</span></div>
+        <div style="display:flex;gap:16px;font-size:12.5px;flex-wrap:wrap">
+          <span>Successo: <b style="color:${s.tasso>=30?'#1f9d6b':(s.tasso>=20?'#e8a33d':'#e0533d')}">${s.tasso!=null?s.tasso+'%':'n.d.'}</b></span>
+          <span style="opacity:.75">Attesa: <b>${s.mediana?gNum(s.mediana)+' gg':'n.d.'}</b></span>
+        </div></div>`).join('')}
+      <h3 style="margin:18px 0 9px;font-size:15px">Come si arriva in appello</h3>
+      ${gBars(D.tipi.map(t=>({n:t.n.replace(/\s*\(ex art.*?\)/,'').replace(/ex art\.\d+ c\.p\.a\./,'').trim(),v:t.v})),'v',null,'#7c5cff')}`;
+  }
+
+  if(gTab==='casi'){
+    b=`<div style="font-size:13px;opacity:.75;margin-bottom:12px;line-height:1.5">
+        Sentenze vere, pubblicate nel 2024. L'oggetto è quello scritto dal Consiglio di Stato: nessun riassunto,
+        nessuna riscrittura da parte nostra.
+      </div>
+      ${D.esempi.slice(0,25).map(e=>`<div style="background:rgba(128,128,128,.07);border-radius:13px;padding:13px;margin-bottom:9px">
+        <div style="display:flex;gap:7px;align-items:center;margin-bottom:7px;flex-wrap:wrap">
+          <span style="background:${G_COL[e.e]}1f;color:${G_COL[e.e]};font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px">${e.e}</span>
+          <span style="font-size:11px;opacity:.6">${gEsc(e.s)} · ${gEsc(e.d)}</span>
+        </div>
+        <div style="font-size:13px;line-height:1.5">${gEsc(e.o)}</div>
+        <div style="font-size:11px;opacity:.5;margin-top:6px">Sentenza n. ${gEsc(e.num)}</div>
+      </div>`).join('')}`;
+  }
+
+  el.innerHTML=`
+    <div style="margin-bottom:12px">
+      <h2 style="margin:0 0 4px;font-size:20px">La giustizia amministrativa</h2>
+      <div style="font-size:13px;opacity:.7;line-height:1.45">Quando un cittadino o un'impresa fa causa allo Stato — e come va a finire.</div>
+    </div>
+    <div class="subtabs" style="display:flex;gap:7px;overflow-x:auto;margin-bottom:14px;padding-bottom:3px">${sub}</div>
+    ${b}
+    <div style="margin-top:20px;padding:13px;background:rgba(128,128,128,.06);border-radius:12px;font-size:12px;line-height:1.6;opacity:.85">
+      <b>Fonte:</b> ${gEsc(D.fonte)}<br>
+      <b>Periodo:</b> ${gEsc(D.periodo)} · ${gNum(D.tot)} sentenze<br>
+      <b>Cosa non c'è qui:</b>
+      <ul style="margin:6px 0 0;padding-left:17px">${D.limiti.map(l=>`<li style="margin:3px 0">${gEsc(l)}</li>`).join('')}</ul>
+    </div>`;
+}
+
+RENDER.giustizia = renderGiustizia;
+
+
+/* ===== TAR — ricorsi primo grado (Abruzzo 2024) ===== */
+const TAR = {"fonte": "Giustizia Amministrativa · Open Data — ricorsi pervenuti per classificazione (giustizia-amministrativa.it)", "periodo": "Anno 2024 · ricorsi depositati (primo grado)", "regione": "Abruzzo", "tot": 881, "sedi": [{"short": "L'Aquila", "nome": "TAR ABRUZZO - L'AQUILA", "tot": 425, "nvoci": 183, "macro": [{"n": "Edilizia", "v": 45, "pct": 10.6}, {"n": "Demanio E Patrimonio", "v": 33, "pct": 7.8}, {"n": "Stranieri", "v": 27, "pct": 6.4}, {"n": "Silenzio Della Pubblica Amministrazione", "v": 23, "pct": 5.4}, {"n": "Concorsi", "v": 19, "pct": 4.5}, {"n": "Sanità Pubblica", "v": 17, "pct": 4.0}, {"n": "Appalti Pubblici Di Servizi", "v": 16, "pct": 3.8}, {"n": "Accesso Ai Documenti", "v": 15, "pct": 3.5}, {"n": "Insegnanti", "v": 13, "pct": 3.1}, {"n": "Comuni", "v": 12, "pct": 2.8}, {"n": "Carabinieri", "v": 12, "pct": 2.8}, {"n": "Istruzione Pubblica", "v": 10, "pct": 2.4}, {"n": "Appalti Sanità", "v": 10, "pct": 2.4}, {"n": "Autorizzazioni E Concessioni Amministrative", "v": 9, "pct": 2.1}, {"n": "Urbanistica", "v": 9, "pct": 2.1}, {"n": "Polizia Di Stato", "v": 9, "pct": 2.1}, {"n": "Sicurezza Pubblica", "v": 8, "pct": 1.9}, {"n": "Pubblico Impiego", "v": 8, "pct": 1.9}, {"n": "Ambiente", "v": 8, "pct": 1.9}, {"n": "Università", "v": 7, "pct": 1.6}, {"n": "Espropriazione Per Pubblica Utilità", "v": 7, "pct": 1.6}, {"n": "Elezioni", "v": 6, "pct": 1.4}, {"n": "Servizi Pubblici", "v": 6, "pct": 1.4}, {"n": "Non Assegnata", "v": 6, "pct": 1.4}, {"n": "Armi", "v": 6, "pct": 1.4}, {"n": "Guardia Di Finanza", "v": 6, "pct": 1.4}, {"n": "Calamità Naturali", "v": 5, "pct": 1.2}, {"n": "Commercio E Artigianato", "v": 5, "pct": 1.2}, {"n": "Agricoltura", "v": 5, "pct": 1.2}, {"n": "Animali", "v": 5, "pct": 1.2}, {"n": "Polizia Penitenziaria", "v": 4, "pct": 0.9}, {"n": "Regioni", "v": 4, "pct": 0.9}, {"n": "Rifiuti", "v": 4, "pct": 0.9}, {"n": "Appalti Pubblici Di Lavori", "v": 3, "pct": 0.7}, {"n": "Caccia", "v": 3, "pct": 0.7}, {"n": "Spettacolo", "v": 3, "pct": 0.7}, {"n": "Patente Di Guida", "v": 3, "pct": 0.7}, {"n": "Appalti Pubblici Di Forniture", "v": 2, "pct": 0.5}, {"n": "Avvocati Libero Foro", "v": 2, "pct": 0.5}, {"n": "Magistrati Ordinari", "v": 2, "pct": 0.5}, {"n": "Informativa Antimafia", "v": 2, "pct": 0.5}, {"n": "Professioni E Mestieri", "v": 2, "pct": 0.5}, {"n": "Piano Nazionale Di Ripresa E Resilienza (Pnrr)", "v": 2, "pct": 0.5}, {"n": "Usi Civici", "v": 2, "pct": 0.5}, {"n": "Appalti Scuola", "v": 2, "pct": 0.5}, {"n": "Consorzi E Cooperative", "v": 2, "pct": 0.5}, {"n": "Militari", "v": 1, "pct": 0.2}, {"n": "Enti Pubblici", "v": 1, "pct": 0.2}, {"n": "Segnalazione Certificata Di Inizio Attività (Tranne In Edilizia)", "v": 1, "pct": 0.2}, {"n": "Credito E Risparmio", "v": 1, "pct": 0.2}, {"n": "Funzionario Onorario", "v": 1, "pct": 0.2}, {"n": "Beni Paesaggistici", "v": 1, "pct": 0.2}, {"n": "Ferrovie, Tranvie, Filovie", "v": 1, "pct": 0.2}, {"n": "Inquinamento", "v": 1, "pct": 0.2}, {"n": "Circolazione Stradale", "v": 1, "pct": 0.2}, {"n": "Beni Culturali", "v": 1, "pct": 0.2}, {"n": "Associazioni E Fondazioni", "v": 1, "pct": 0.2}, {"n": "Sport", "v": 1, "pct": 0.2}, {"n": "Previdenza E Assistenza", "v": 1, "pct": 0.2}, {"n": "Pesca", "v": 1, "pct": 0.2}, {"n": "Cimiteri", "v": 1, "pct": 0.2}, {"n": "Giochi, Lotterie E Scommesse", "v": 1, "pct": 0.2}], "sub": {"Edilizia": [{"n": "Abusi → Demolizione E Riduzione In Ripristino", "v": 14}, {"n": "Altro", "v": 6}, {"n": "Concessione Edilizia E Permesso Di Costruire → Annullamento", "v": 4}, {"n": "Concessione Edilizia E Permesso Di Costruire → Altro", "v": 3}, {"n": "Abusi → Acquisizione Gratuita", "v": 3}], "Demanio E Patrimonio": [{"n": "Demanio Marittimo", "v": 20}, {"n": "Concessione", "v": 9}, {"n": "Altro", "v": 3}, {"n": "Prelazione", "v": 1}], "Stranieri": [{"n": "Permesso Di Soggiorno", "v": 20}, {"n": "Visto Di Ingresso", "v": 5}, {"n": "Altro", "v": 2}], "Silenzio Della Pubblica Amministrazione": [{"n": "Edilizia", "v": 6}, {"n": "Urbanistica", "v": 5}, {"n": "Altro", "v": 2}, {"n": "Stranieri", "v": 2}, {"n": "Espropriazione Per Pubblica Utilità", "v": 1}], "Concorsi": [{"n": "Concorsi Comuni → Graduatoria", "v": 3}, {"n": "Concorsi Universitari → Graduatoria", "v": 3}, {"n": "Concorsi Sanitari → Graduatoria", "v": 2}, {"n": "Concorsi Scuola Docenti → Graduatoria", "v": 2}, {"n": "Concorsi Scuola Docenti → Esclusione", "v": 1}], "Sanità Pubblica": [{"n": "Strutture Sanitarie Private, Convenzionate O Accreditate", "v": 8}, {"n": "Accreditamento", "v": 6}, {"n": "Risarcimento Danni", "v": 2}, {"n": "Altro", "v": 1}], "Appalti Pubblici Di Servizi": [{"n": "Altro", "v": 8}, {"n": "Aggiudicazione", "v": 6}, {"n": "Esclusione", "v": 2}], "Accesso Ai Documenti": [{"n": "Accesso", "v": 10}, {"n": "Altro", "v": 5}], "Insegnanti": [{"n": "Trattamento Economico", "v": 7}, {"n": "Altro", "v": 6}], "Comuni": [{"n": "Altro", "v": 7}, {"n": "Polizia Urbana", "v": 3}, {"n": "Consiglio Comunale", "v": 1}, {"n": "Occupazione Suolo Pubblico", "v": 1}]}, "top": [{"n": "Stranieri -> Permesso Di Soggiorno", "v": 20}, {"n": "Demanio E Patrimonio -> Demanio Marittimo", "v": 20}, {"n": "Edilizia -> Abusi -> Demolizione E Riduzione In Ripristino", "v": 14}, {"n": "Accesso Ai Documenti -> Accesso", "v": 10}, {"n": "Demanio E Patrimonio -> Concessione", "v": 9}, {"n": "Appalti Pubblici Di Servizi -> Altro", "v": 8}, {"n": "Sanità Pubblica -> Strutture Sanitarie Private, Convenzionate O Accreditate", "v": 8}, {"n": "Comuni -> Altro", "v": 7}]}, {"short": "Pescara", "nome": "TAR ABRUZZO - PESCARA", "tot": 456, "nvoci": 131, "macro": [{"n": "Edilizia", "v": 95, "pct": 20.8}, {"n": "Stranieri", "v": 59, "pct": 12.9}, {"n": "Università", "v": 41, "pct": 9.0}, {"n": "Comuni", "v": 30, "pct": 6.6}, {"n": "Istruzione Pubblica", "v": 19, "pct": 4.2}, {"n": "Armi", "v": 18, "pct": 3.9}, {"n": "Sicurezza Pubblica", "v": 14, "pct": 3.1}, {"n": "Regioni", "v": 14, "pct": 3.1}, {"n": "Pubblico Impiego", "v": 10, "pct": 2.2}, {"n": "Enti Pubblici", "v": 10, "pct": 2.2}, {"n": "Demanio E Patrimonio", "v": 10, "pct": 2.2}, {"n": "Ambiente", "v": 9, "pct": 2.0}, {"n": "Urbanistica", "v": 8, "pct": 1.8}, {"n": "Previdenza E Assistenza", "v": 8, "pct": 1.8}, {"n": "Accesso Ai Documenti", "v": 7, "pct": 1.5}, {"n": "Insegnanti", "v": 7, "pct": 1.5}, {"n": "Polizia Di Stato", "v": 6, "pct": 1.3}, {"n": "Servizi Pubblici", "v": 5, "pct": 1.1}, {"n": "Concorsi", "v": 5, "pct": 1.1}, {"n": "Appalti Pubblici Di Servizi", "v": 5, "pct": 1.1}, {"n": "Silenzio Della Pubblica Amministrazione", "v": 5, "pct": 1.1}, {"n": "Militari", "v": 5, "pct": 1.1}, {"n": "Carabinieri", "v": 5, "pct": 1.1}, {"n": "Elezioni", "v": 5, "pct": 1.1}, {"n": "Non Assegnata", "v": 4, "pct": 0.9}, {"n": "Autorizzazioni E Concessioni Amministrative", "v": 4, "pct": 0.9}, {"n": "Azienda Sanitaria Locale", "v": 4, "pct": 0.9}, {"n": "Edilizia Economica E Popolare (O Residenziale Pubblica)", "v": 4, "pct": 0.9}, {"n": "Polizia Penitenziaria", "v": 4, "pct": 0.9}, {"n": "Pensioni", "v": 4, "pct": 0.9}, {"n": "Appalti Pubblici Di Lavori", "v": 4, "pct": 0.9}, {"n": "Sanità Pubblica", "v": 3, "pct": 0.7}, {"n": "Appalti Pubblici Di Forniture", "v": 3, "pct": 0.7}, {"n": "Appalti Sanità", "v": 2, "pct": 0.4}, {"n": "Piano Nazionale Di Ripresa E Resilienza (Pnrr)", "v": 2, "pct": 0.4}, {"n": "Patente Di Guida", "v": 2, "pct": 0.4}, {"n": "Caccia", "v": 2, "pct": 0.4}, {"n": "Guardia Di Finanza", "v": 2, "pct": 0.4}, {"n": "Province", "v": 2, "pct": 0.4}, {"n": "Giochi, Lotterie E Scommesse", "v": 1, "pct": 0.2}, {"n": "Beni Paesaggistici", "v": 1, "pct": 0.2}, {"n": "Antichità E Belle Arti", "v": 1, "pct": 0.2}, {"n": "Espropriazione Per Pubblica Utilità", "v": 1, "pct": 0.2}, {"n": "Beni Culturali", "v": 1, "pct": 0.2}, {"n": "Cimiteri", "v": 1, "pct": 0.2}, {"n": "Professioni E Mestieri", "v": 1, "pct": 0.2}, {"n": "Consorzi E Cooperative", "v": 1, "pct": 0.2}, {"n": "Monopoli E Dazi", "v": 1, "pct": 0.2}, {"n": "Spettacolo", "v": 1, "pct": 0.2}], "sub": {"Edilizia": [{"n": "Abusi → Sanzione Pecuniaria", "v": 58}, {"n": "Abusi → Demolizione E Riduzione In Ripristino", "v": 11}, {"n": "Concessione Edilizia E Permesso Di Costruire", "v": 7}, {"n": "Altro", "v": 5}, {"n": "Segnalazione Certificata Di Inizio Attiività", "v": 4}], "Stranieri": [{"n": "Permesso Di Soggiorno", "v": 56}, {"n": "Altro", "v": 2}, {"n": "Visto Di Ingresso", "v": 1}], "Università": [{"n": "Studenti", "v": 34}, {"n": "Altro", "v": 3}, {"n": "Professori Universitari → Concorso", "v": 2}, {"n": "Professori Universitari", "v": 1}, {"n": "Professori Universitari → Ricercatori Universitari", "v": 1}], "Comuni": [{"n": "Altro", "v": 23}, {"n": "Occupazione Suolo Pubblico → Concessione", "v": 1}, {"n": "Risarcimento Danni", "v": 1}, {"n": "Servizi Pubblici Locali", "v": 1}, {"n": "Assessore Comunale", "v": 1}], "Istruzione Pubblica": [{"n": "Altro", "v": 4}, {"n": "Studenti → Ammissione", "v": 4}, {"n": "Scuola Pubblica → Altro", "v": 3}, {"n": "Scuola Pubblica → Scuola Media (Secondaria Di Primo E Secondo Grado)", "v": 3}, {"n": "Scuola Privata", "v": 2}], "Armi": [{"n": "Porto D'Armi", "v": 11}, {"n": "Detenzione Di Armi, Munizioni E Materiale Esplodente", "v": 7}], "Sicurezza Pubblica": [{"n": "Daspo", "v": 8}, {"n": "Altro", "v": 3}, {"n": "Misure Di Prevenzione E Sicurezza", "v": 3}], "Regioni": [{"n": "Altro", "v": 12}, {"n": "Contributi E Finanziamenti", "v": 2}], "Pubblico Impiego": [{"n": "Trattamento Di Fine Rapporto", "v": 4}, {"n": "Trattamento Economico E Indennità", "v": 3}, {"n": "Altro", "v": 3}], "Enti Pubblici": [{"n": "Altro", "v": 10}]}, "top": [{"n": "Edilizia -> Abusi -> Sanzione Pecuniaria", "v": 58}, {"n": "Stranieri -> Permesso Di Soggiorno", "v": 56}, {"n": "Università -> Studenti", "v": 34}, {"n": "Comuni -> Altro", "v": 23}, {"n": "Regioni -> Altro", "v": 12}, {"n": "Edilizia -> Abusi -> Demolizione E Riduzione In Ripristino", "v": 11}, {"n": "Armi -> Porto D'Armi", "v": 11}, {"n": "Enti Pubblici -> Altro", "v": 10}]}], "macro": [{"n": "Edilizia", "v": 140, "pct": 15.9}, {"n": "Stranieri", "v": 86, "pct": 9.8}, {"n": "Università", "v": 48, "pct": 5.4}, {"n": "Demanio E Patrimonio", "v": 43, "pct": 4.9}, {"n": "Comuni", "v": 42, "pct": 4.8}, {"n": "Istruzione Pubblica", "v": 29, "pct": 3.3}, {"n": "Silenzio Della Pubblica Amministrazione", "v": 28, "pct": 3.2}, {"n": "Concorsi", "v": 24, "pct": 2.7}, {"n": "Armi", "v": 24, "pct": 2.7}, {"n": "Sicurezza Pubblica", "v": 22, "pct": 2.5}, {"n": "Accesso Ai Documenti", "v": 22, "pct": 2.5}, {"n": "Appalti Pubblici Di Servizi", "v": 21, "pct": 2.4}, {"n": "Insegnanti", "v": 20, "pct": 2.3}, {"n": "Sanità Pubblica", "v": 20, "pct": 2.3}, {"n": "Pubblico Impiego", "v": 18, "pct": 2.0}, {"n": "Regioni", "v": 18, "pct": 2.0}, {"n": "Ambiente", "v": 17, "pct": 1.9}, {"n": "Urbanistica", "v": 17, "pct": 1.9}, {"n": "Carabinieri", "v": 17, "pct": 1.9}, {"n": "Polizia Di Stato", "v": 15, "pct": 1.7}, {"n": "Autorizzazioni E Concessioni Amministrative", "v": 13, "pct": 1.5}, {"n": "Appalti Sanità", "v": 12, "pct": 1.4}, {"n": "Elezioni", "v": 11, "pct": 1.2}, {"n": "Servizi Pubblici", "v": 11, "pct": 1.2}, {"n": "Enti Pubblici", "v": 11, "pct": 1.2}, {"n": "Non Assegnata", "v": 10, "pct": 1.1}, {"n": "Previdenza E Assistenza", "v": 9, "pct": 1.0}, {"n": "Polizia Penitenziaria", "v": 8, "pct": 0.9}, {"n": "Espropriazione Per Pubblica Utilità", "v": 8, "pct": 0.9}, {"n": "Guardia Di Finanza", "v": 8, "pct": 0.9}, {"n": "Appalti Pubblici Di Lavori", "v": 7, "pct": 0.8}, {"n": "Militari", "v": 6, "pct": 0.7}, {"n": "Appalti Pubblici Di Forniture", "v": 5, "pct": 0.6}, {"n": "Calamità Naturali", "v": 5, "pct": 0.6}, {"n": "Commercio E Artigianato", "v": 5, "pct": 0.6}, {"n": "Caccia", "v": 5, "pct": 0.6}, {"n": "Agricoltura", "v": 5, "pct": 0.6}, {"n": "Animali", "v": 5, "pct": 0.6}, {"n": "Patente Di Guida", "v": 5, "pct": 0.6}, {"n": "Spettacolo", "v": 4, "pct": 0.5}, {"n": "Piano Nazionale Di Ripresa E Resilienza (Pnrr)", "v": 4, "pct": 0.5}, {"n": "Rifiuti", "v": 4, "pct": 0.5}, {"n": "Azienda Sanitaria Locale", "v": 4, "pct": 0.5}, {"n": "Edilizia Economica E Popolare (O Residenziale Pubblica)", "v": 4, "pct": 0.5}, {"n": "Pensioni", "v": 4, "pct": 0.5}, {"n": "Professioni E Mestieri", "v": 3, "pct": 0.3}, {"n": "Consorzi E Cooperative", "v": 3, "pct": 0.3}, {"n": "Avvocati Libero Foro", "v": 2, "pct": 0.2}, {"n": "Magistrati Ordinari", "v": 2, "pct": 0.2}, {"n": "Informativa Antimafia", "v": 2, "pct": 0.2}, {"n": "Beni Paesaggistici", "v": 2, "pct": 0.2}, {"n": "Usi Civici", "v": 2, "pct": 0.2}, {"n": "Appalti Scuola", "v": 2, "pct": 0.2}, {"n": "Beni Culturali", "v": 2, "pct": 0.2}, {"n": "Cimiteri", "v": 2, "pct": 0.2}, {"n": "Giochi, Lotterie E Scommesse", "v": 2, "pct": 0.2}, {"n": "Province", "v": 2, "pct": 0.2}, {"n": "Segnalazione Certificata Di Inizio Attività (Tranne In Edilizia)", "v": 1, "pct": 0.1}, {"n": "Credito E Risparmio", "v": 1, "pct": 0.1}, {"n": "Funzionario Onorario", "v": 1, "pct": 0.1}, {"n": "Ferrovie, Tranvie, Filovie", "v": 1, "pct": 0.1}, {"n": "Inquinamento", "v": 1, "pct": 0.1}, {"n": "Circolazione Stradale", "v": 1, "pct": 0.1}, {"n": "Associazioni E Fondazioni", "v": 1, "pct": 0.1}, {"n": "Sport", "v": 1, "pct": 0.1}, {"n": "Pesca", "v": 1, "pct": 0.1}, {"n": "Antichità E Belle Arti", "v": 1, "pct": 0.1}, {"n": "Monopoli E Dazi", "v": 1, "pct": 0.1}], "top": [{"n": "Stranieri -> Permesso Di Soggiorno", "v": 76}, {"n": "Edilizia -> Abusi -> Sanzione Pecuniaria", "v": 59}, {"n": "Università -> Studenti", "v": 36}, {"n": "Comuni -> Altro", "v": 30}, {"n": "Edilizia -> Abusi -> Demolizione E Riduzione In Ripristino", "v": 25}, {"n": "Demanio E Patrimonio -> Demanio Marittimo", "v": 20}, {"n": "Accesso Ai Documenti -> Accesso", "v": 16}, {"n": "Demanio E Patrimonio -> Concessione", "v": 14}, {"n": "Insegnanti -> Altro", "v": 13}, {"n": "Armi -> Porto D'Armi", "v": 13}, {"n": "Regioni -> Altro", "v": 12}, {"n": "Armi -> Detenzione Di Armi, Munizioni E Materiale Esplodente", "v": 11}], "limiti": ["Sono i ricorsi <b>depositati</b> nel 2024, non le sentenze: questi dati dicono di cosa si fa causa, non chi ha vinto.", "Copertura limitata al <b>solo Abruzzo</b> (sedi TAR di L'Aquila e Pescara). Le altre regioni non sono in questo archivio.", "La classificazione delle materie è quella <b>ufficiale</b> della giustizia amministrativa, non una nostra ricostruzione.", "Non è possibile collegare questi ricorsi alle sentenze del Consiglio di Stato: i dati non contengono un identificativo comune."]};
+
+let tarSede='tutte';
+function setTarSede(s){ tarSede=s; renderGiustizia(); }
+
+function tarView(){
+  const T=TAR;
+  const sel = tarSede==='tutte' ? null : T.sedi.find(s=>s.short===tarSede);
+  const macro = sel ? sel.macro : T.macro;
+  const top   = sel ? sel.top   : T.top;
+  const tot   = sel ? sel.tot   : T.tot;
+
+  const chips = [['tutte','Tutto l\'Abruzzo',T.tot]].concat(T.sedi.map(s=>[s.short,s.short,s.tot]))
+    .map(([id,l,v])=>`<button class="subtab ${tarSede===id?'on':''}" onclick="setTarSede('${id}')">${l} <span style="opacity:.6">${gNum(v)}</span></button>`).join('');
+
+  const ed = macro.find(m=>m.n==='Edilizia');
+  const st = macro.find(m=>m.n==='Stranieri');
+
+  return `
+  <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px">
+    ${gCard('Ricorsi depositati',gNum(tot),'primo grado, 2024')}
+    ${gCard('Materia n.1',macro[0]?macro[0].n:'—',macro[0]?gNum(macro[0].v)+' ricorsi ('+macro[0].pct+'%)':'','#1f6feb')}
+    ${gCard('Sedi TAR','2',"L'Aquila e Pescara")}
+  </div>
+
+  <div class="subtabs" style="display:flex;gap:7px;overflow-x:auto;margin-bottom:12px;padding-bottom:3px">${chips}</div>
+
+  <div style="background:rgba(128,128,128,.07);border-radius:12px;padding:12px;margin-bottom:14px;font-size:13px;line-height:1.55">
+    Il <b>TAR</b> è il primo giudice a cui ci si rivolge per contestare un atto della pubblica amministrazione:
+    una demolizione, un permesso negato, un concorso, un diniego di soggiorno. Chi perde qui può fare appello
+    al Consiglio di Stato (le altre schede di questa sezione).
+    ${ed?`In Abruzzo la causa più frequente è l'<b>edilizia</b>: ${gNum(ed.v)} ricorsi su ${gNum(tot)}, il ${ed.pct}% del totale.`:''}
+  </div>
+
+  <h3 style="margin:16px 0 9px;font-size:15px">Di cosa si fa causa allo Stato</h3>
+  ${gBars(macro.slice(0,14),'v',null,'#1f6feb',i=>gNum(i.v)+' · '+i.pct+'%')}
+
+  <h3 style="margin:18px 0 9px;font-size:15px">Le richieste più ricorrenti nel dettaglio</h3>
+  <div style="font-size:12.5px;opacity:.7;margin-bottom:9px;line-height:1.5">
+    La voce completa così come la classifica la giustizia amministrativa.
+  </div>
+  ${top.map(t=>`<div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;background:rgba(128,128,128,.07);border-radius:11px;padding:11px 12px;margin-bottom:7px">
+      <span style="font-size:13px;line-height:1.4">${gEsc(t.n)}</span>
+      <b style="flex:none">${gNum(t.v)}</b></div>`).join('')}
+
+  ${!sel?`<h3 style="margin:18px 0 9px;font-size:15px">Due sedi, due Abruzzi</h3>
+  <div style="font-size:13px;opacity:.75;margin-bottom:11px;line-height:1.5">
+    Le due sedi non si somigliano affatto: quello che si contesta a Pescara non è quello che si contesta all'Aquila.
+  </div>
+  <div style="display:flex;gap:9px;flex-wrap:wrap">
+    ${T.sedi.map(s=>`<div style="flex:1;min-width:180px;background:rgba(128,128,128,.07);border-radius:13px;padding:13px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px">
+        <b style="font-size:14px">${gEsc(s.short)}</b>
+        <span style="font-size:12px;opacity:.6">${gNum(s.tot)} ricorsi</span></div>
+      ${s.macro.slice(0,5).map(m=>`<div style="display:flex;justify-content:space-between;font-size:12.5px;margin:5px 0">
+        <span style="opacity:.85">${gEsc(m.n)}</span><b>${gNum(m.v)}</b></div>`).join('')}
+    </div>`).join('')}
+  </div>`:''}
+
+  <div style="background:rgba(232,163,61,.1);border-left:3px solid #e8a33d;border-radius:10px;padding:12px;margin-top:16px;font-size:13px;line-height:1.55">
+    <b>Attenzione a cosa misura questa scheda.</b> Sono ricorsi <b>in entrata</b>: dicono di cosa i cittadini
+    fanno causa, <b>non come è andata a finire</b> e <b>non quanto è durata</b>. Gli esiti e i tempi che vedi
+    nelle altre schede riguardano il Consiglio di Stato, cioè l'appello. I due archivi non sono collegabili
+    tra loro: nessun codice comune permette di seguire lo stesso ricorso dal TAR alla sentenza definitiva.
+  </div>
+
+  <div style="margin-top:18px;padding:13px;background:rgba(128,128,128,.06);border-radius:12px;font-size:12px;line-height:1.6;opacity:.85">
+    <b>Fonte:</b> ${gEsc(TAR.fonte)}<br>
+    <b>Periodo:</b> ${gEsc(TAR.periodo)} · ${gNum(TAR.tot)} ricorsi · solo Abruzzo<br>
+    <b>Cosa non c'è qui:</b>
+    <ul style="margin:6px 0 0;padding-left:17px">${TAR.limiti.map(l=>`<li style="margin:3px 0">${l}</li>`).join('')}</ul>
+  </div>`;
+}
+
+
+function aqLine(pts,color){
+  const vs=pts.map(p=>p.v), mx=Math.max(...vs), mn=Math.min(...vs);
+  const W=640,H=140,pad=8, rng=(mx-mn)||1;
+  const X=i=>pad+i*(W-2*pad)/(pts.length-1);
+  const Y=v=>H-pad-((v-mn)/rng)*(H-2*pad-14);
+  const dstr=pts.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+  const area=dstr+` L${X(pts.length-1).toFixed(1)},${H} L${X(0).toFixed(1)},${H} Z`;
+  const id=PT.reg(pts.map(p=>p.m), vs, v=>gNum(v)+' cause pendenti');
+  return `<svg viewBox="0 0 ${W} ${H+22}" style="width:100%;height:auto">
+    <path d="${area}" fill="${color}" opacity=".13"></path>
+    <path d="${dstr}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"></path>
+    ${PT.dots(id, pts.map((p,i)=>X(i)), pts.map(p=>Y(p.v)), color, 3)}
+    ${pts.map((p,i)=>`<text x="${X(i).toFixed(1)}" y="${H+16}" text-anchor="middle" font-size="9" fill="currentColor" opacity=".55">${p.m}</text>`).join('')}
+    <text x="${X(0).toFixed(1)}" y="${(Y(pts[0].v)-8).toFixed(1)}" font-size="10" font-weight="700" fill="${color}">${gNum(pts[0].v)}</text>
+    <text x="${X(pts.length-1).toFixed(1)}" y="${(Y(pts[pts.length-1].v)-8).toFixed(1)}" text-anchor="end" font-size="10" font-weight="700" fill="${color}">${gNum(pts[pts.length-1].v)}</text>
+  </svg>`;
+}
+
+
+/* ===== TAR ABRUZZO — due sedi a confronto ===== */
+const TARAB = {"fonte": "Giustizia Amministrativa · Open Data (giustizia-amministrativa.it)", "anno": 2024, "sedi": [{"short": "L'Aquila", "perv": 425, "def": 602, "pend": [{"m": "Gen", "k": 202401, "v": 1118}, {"m": "Feb", "k": 202402, "v": 1092}, {"m": "Mar", "k": 202403, "v": 1098}, {"m": "Apr", "k": 202404, "v": 1064}, {"m": "Mag", "k": 202405, "v": 1030}, {"m": "Giu", "k": 202406, "v": 1042}, {"m": "Lug", "k": 202407, "v": 1039}, {"m": "Ago", "k": 202408, "v": 1052}, {"m": "Set", "k": 202409, "v": 1017}, {"m": "Ott", "k": 202410, "v": 1031}, {"m": "Nov", "k": 202411, "v": 1031}, {"m": "Dic", "k": 202412, "v": 1013}], "pend_ini": 1118, "pend_fin": 1013, "sentenze": 452, "brevi": 25, "esiti": {"Accolto": 89, "Chiuso in rito": 148, "Respinto": 152, "Altro": 48, "Parziale": 15}, "tot_e": 452, "succ": 23.0, "rito_pct": 32.7, "durata": {"n": 452, "mediana": 468, "media": 1037, "p25": 160, "p75": 1916, "p90": 2266, "max": 10482, "oltre1a": 56.4, "oltre3a": 43.6, "oltre5a": 34.1}, "dur_breve": 48, "dur_ord": 585, "caut": {"n": 206, "mediana": 25}, "tipi_prov": [{"n": "Sentenza", "v": 427}, {"n": "Ordinanza Cautelare", "v": 206}, {"n": "Decreto Decisorio", "v": 109}, {"n": "Ordinanza Collegiale", "v": 84}, {"n": "Decreto Cautelare", "v": 31}, {"n": "Sentenza Breve", "v": 25}, {"n": "Decreto Presidenziale", "v": 21}, {"n": "Decreto Collegiale", "v": 16}, {"n": "Gratuito Patrocinio", "v": 2}, {"n": "Decreto Ingiuntivo", "v": 1}, {"n": "Dispositivo Di Sentenza", "v": 1}], "tipol": [{"n": "Ordinario", "v": 276}, {"n": "In Ottemperanza", "v": 45}, {"n": "Rito Appalti", "v": 33}, {"n": "Silenzio P.A.", "v": 25}, {"n": "Accesso Ai Documenti", "v": 15}, {"n": "Riassunzione Per Incompetenza", "v": 8}, {"n": "Elettorale", "v": 5}, {"n": "Trasposizione Da Ricorso Straordinario Al Capo Dello Stato", "v": 5}, {"n": "Risarcimento Danno", "v": 5}, {"n": "Rito Appalti", "v": 3}, {"n": "Opposizione Di Terzo", "v": 1}, {"n": "Rito Abbreviato", "v": 1}, {"n": "Per Ingiunzione", "v": 1}, {"n": "Rito Appalti", "v": 1}, {"n": "Elettorale", "v": 1}], "materie": [{"n": "Edilizia", "v": 164, "acc": 34, "resp": 45, "rito": 39, "parz": 0, "altro": 46, "tasso": 43.0}, {"n": "Autorizzazioni E Concessioni", "v": 96, "acc": 6, "resp": 20, "rito": 57, "parz": 1, "altro": 12, "tasso": 23.1}, {"n": "Sanità Pubblica", "v": 65, "acc": 16, "resp": 11, "rito": 16, "parz": 4, "altro": 18, "tasso": 59.3}, {"n": "Stranieri", "v": 59, "acc": 11, "resp": 18, "rito": 11, "parz": 0, "altro": 19, "tasso": 37.9}, {"n": "Appalti Pubblici Di Servizi", "v": 55, "acc": 2, "resp": 24, "rito": 15, "parz": 0, "altro": 14, "tasso": 7.7}, {"n": "Pubblico Impiego", "v": 46, "acc": 9, "resp": 6, "rito": 22, "parz": 3, "altro": 6, "tasso": 60.0}, {"n": "Professioni E Mestieri", "v": 40, "acc": 3, "resp": 7, "rito": 5, "parz": 0, "altro": 25, "tasso": 30.0}, {"n": "Istruzione Pubblica", "v": 37, "acc": 10, "resp": 8, "rito": 11, "parz": 0, "altro": 8, "tasso": 55.6}, {"n": "Accesso Ai Documenti", "v": 33, "acc": 3, "resp": 7, "rito": 15, "parz": 1, "altro": 7, "tasso": 30.0}, {"n": "Servizi Pubblici", "v": 32, "acc": 7, "resp": 20, "rito": 0, "parz": 0, "altro": 5, "tasso": 25.9}, {"n": "Concorsi", "v": 31, "acc": 5, "resp": 6, "rito": 6, "parz": 0, "altro": 14, "tasso": 45.5}, {"n": "Demanio E Patrimonio", "v": 31, "acc": 2, "resp": 6, "rito": 3, "parz": 0, "altro": 20, "tasso": 25.0}, {"n": "Comuni", "v": 29, "acc": 10, "resp": 3, "rito": 4, "parz": 1, "altro": 11, "tasso": 76.9}, {"n": "Silenzio Della Pubblica Amministrazione", "v": 25, "acc": 5, "resp": 5, "rito": 10, "parz": 1, "altro": 4, "tasso": 50.0}, {"n": "Università", "v": 24, "acc": 5, "resp": 8, "rito": 5, "parz": 0, "altro": 6, "tasso": 38.5}, {"n": "Sicurezza Pubblica", "v": 24, "acc": 2, "resp": 8, "rito": 10, "parz": 0, "altro": 4, "tasso": 20.0}, {"n": "Edilizia Ed Urbanistica", "v": 21, "acc": 0, "resp": 5, "rito": 7, "parz": 2, "altro": 7, "tasso": 0.0}, {"n": "Appalti Sanità", "v": 21, "acc": 1, "resp": 8, "rito": 5, "parz": 0, "altro": 7, "tasso": 11.1}, {"n": "Ambiente", "v": 21, "acc": 3, "resp": 3, "rito": 5, "parz": 1, "altro": 9, "tasso": 50.0}, {"n": "Comune E Provincia", "v": 20, "acc": 5, "resp": 3, "rito": 10, "parz": 1, "altro": 1, "tasso": 62.5}, {"n": "Autorizzazioni E Concessioni Amministrative", "v": 19, "acc": 4, "resp": 2, "rito": 1, "parz": 1, "altro": 11, "tasso": 66.7}, {"n": "Rifiuti", "v": 14, "acc": 4, "resp": 3, "rito": 3, "parz": 0, "altro": 4, "tasso": 57.1}, {"n": "Urbanistica", "v": 14, "acc": 2, "resp": 4, "rito": 3, "parz": 0, "altro": 5, "tasso": 33.3}, {"n": "Caccia", "v": 13, "acc": 2, "resp": 4, "rito": 5, "parz": 0, "altro": 2, "tasso": 33.3}, {"n": "Regioni", "v": 12, "acc": 1, "resp": 3, "rito": 4, "parz": 1, "altro": 3, "tasso": 25.0}, {"n": "Espropriazione Per Pubblica Utilità", "v": 10, "acc": 0, "resp": 4, "rito": 2, "parz": 1, "altro": 3, "tasso": 0.0}, {"n": "Elezioni", "v": 10, "acc": 1, "resp": 2, "rito": 1, "parz": 0, "altro": 6, "tasso": 33.3}, {"n": "Armi", "v": 9, "acc": 0, "resp": 7, "rito": 2, "parz": 0, "altro": 0, "tasso": 0.0}, {"n": "Piano Nazionale Di Ripresa E Resilienza (Pnrr)", "v": 8, "acc": 1, "resp": 2, "rito": 4, "parz": 0, "altro": 1, "tasso": 33.3}, {"n": "Agricoltura", "v": 8, "acc": 0, "resp": 1, "rito": 4, "parz": 1, "altro": 2, "tasso": 0.0}, {"n": "Patente Di Guida", "v": 7, "acc": 2, "resp": 3, "rito": 0, "parz": 0, "altro": 2, "tasso": 40.0}, {"n": "Appalti Pubblici Di Lavori", "v": 7, "acc": 0, "resp": 4, "rito": 0, "parz": 0, "altro": 3, "tasso": 0.0}, {"n": "Enti Pubblici In Generale", "v": 7, "acc": 0, "resp": 1, "rito": 6, "parz": 0, "altro": 0, "tasso": 0.0}, {"n": "Servizio Sanitario Nazionale", "v": 6, "acc": 0, "resp": 1, "rito": 5, "parz": 0, "altro": 0, "tasso": 0.0}, {"n": "Esecuzione Del Giudicato", "v": 6, "acc": 0, "resp": 0, "rito": 2, "parz": 1, "altro": 3, "tasso": null}, {"n": "Espropriazione Per Pubblica Utilita'", "v": 6, "acc": 1, "resp": 1, "rito": 0, "parz": 0, "altro": 4, "tasso": 50.0}, {"n": "Beni Paesaggistici", "v": 6, "acc": 0, "resp": 1, "rito": 0, "parz": 0, "altro": 5, "tasso": 0.0}, {"n": "Commercio E Artigianato", "v": 6, "acc": 3, "resp": 1, "rito": 0, "parz": 0, "altro": 2, "tasso": 75.0}, {"n": "Informativa Antimafia", "v": 6, "acc": 2, "resp": 0, "rito": 1, "parz": 0, "altro": 3, "tasso": 100.0}, {"n": "Polizia Di Stato", "v": 6, "acc": 2, "resp": 2, "rito": 1, "parz": 0, "altro": 1, "tasso": 50.0}, {"n": "Calamità Naturali", "v": 5, "acc": 0, "resp": 0, "rito": 2, "parz": 0, "altro": 3, "tasso": null}, {"n": "Appalti Pubblici Di Forniture", "v": 5, "acc": 0, "resp": 0, "rito": 1, "parz": 1, "altro": 3, "tasso": null}, {"n": "Guardia Di Finanza", "v": 5, "acc": 2, "resp": 2, "rito": 0, "parz": 0, "altro": 1, "tasso": 50.0}, {"n": "Usi Civici", "v": 5, "acc": 1, "resp": 1, "rito": 0, "parz": 0, "altro": 3, "tasso": 50.0}, {"n": "Agricoltura E Foreste", "v": 5, "acc": 0, "resp": 5, "rito": 0, "parz": 0, "altro": 0, "tasso": 0.0}, {"n": "Animali", "v": 5, "acc": 2, "resp": 1, "rito": 1, "parz": 0, "altro": 1, "tasso": 66.7}, {"n": "Commercio, Artigianato", "v": 5, "acc": 1, "resp": 1, "rito": 3, "parz": 0, "altro": 0, "tasso": 50.0}, {"n": "Carabinieri", "v": 5, "acc": 2, "resp": 3, "rito": 0, "parz": 0, "altro": 0, "tasso": 40.0}, {"n": "Polizia Penitenziaria", "v": 5, "acc": 0, "resp": 2, "rito": 0, "parz": 0, "altro": 3, "tasso": 0.0}, {"n": "Edilizia Economica E Popolare (O Residenziale Pubblica)", "v": 5, "acc": 2, "resp": 0, "rito": 0, "parz": 0, "altro": 3, "tasso": 100.0}, {"n": "Sport", "v": 5, "acc": 3, "resp": 0, "rito": 0, "parz": 0, "altro": 2, "tasso": 100.0}], "perv_m": [{"n": "Edilizia", "v": 45}, {"n": "Demanio E Patrimonio", "v": 33}, {"n": "Stranieri", "v": 27}, {"n": "Silenzio Della Pubblica Amministrazione", "v": 23}, {"n": "Concorsi", "v": 19}, {"n": "Sanità Pubblica", "v": 17}, {"n": "Appalti Pubblici Di Servizi", "v": 16}, {"n": "Accesso Ai Documenti", "v": 15}, {"n": "Insegnanti", "v": 13}, {"n": "Comuni", "v": 12}], "appalti": {"n": 45, "con_importo": 5, "tot_eur": 387516145}, "udienze": [{"d": "2025-07-09", "t": "Udienza Pubblica"}, {"d": "2025-07-09", "t": "Camera Di Consiglio"}, {"d": "2025-09-03", "t": "Camera Di Consiglio"}, {"d": "2025-09-17", "t": "Camera Di Consiglio"}, {"d": "2025-09-17", "t": "Udienza Pubblica"}, {"d": "2025-10-08", "t": "Camera Di Consiglio"}, {"d": "2025-10-08", "t": "Udienza Pubblica"}, {"d": "2025-10-22", "t": "Udienza Pubblica"}, {"d": "2025-10-22", "t": "Camera Di Consiglio"}, {"d": "2025-11-05", "t": "Camera Di Consiglio"}, {"d": "2025-11-05", "t": "Udienza Pubblica"}, {"d": "2025-11-19", "t": "Camera Di Consiglio"}, {"d": "2025-11-19", "t": "Udienza Pubblica"}, {"d": "2025-12-03", "t": "Udienza Pubblica"}, {"d": "2025-12-03", "t": "Camera Di Consiglio"}, {"d": "2025-12-10", "t": "Udienza Pubblica"}, {"d": "2025-12-10", "t": "Camera Di Consiglio"}]}, {"short": "Pescara", "perv": 456, "def": 370, "pend": [{"m": "Gen", "k": 202401, "v": 774}, {"m": "Feb", "k": 202402, "v": 806}, {"m": "Mar", "k": 202403, "v": 817}, {"m": "Apr", "k": 202404, "v": 805}, {"m": "Mag", "k": 202405, "v": 809}, {"m": "Giu", "k": 202406, "v": 821}, {"m": "Lug", "k": 202407, "v": 812}, {"m": "Ago", "k": 202408, "v": 842}, {"m": "Set", "k": 202409, "v": 858}, {"m": "Ott", "k": 202410, "v": 866}, {"m": "Nov", "k": 202411, "v": 928}, {"m": "Dic", "k": 202412, "v": 930}], "pend_ini": 774, "pend_fin": 930, "sentenze": 311, "brevi": 73, "esiti": {"Altro": 29, "Accolto": 127, "Respinto": 54, "Chiuso in rito": 85, "Parziale": 16}, "tot_e": 311, "succ": 46.0, "rito_pct": 27.3, "durata": {"n": 311, "mediana": 177, "media": 338, "p25": 83, "p75": 384, "p90": 956, "max": 2599, "oltre1a": 26.7, "oltre3a": 8.7, "oltre5a": 1.6}, "dur_breve": 65, "dur_ord": 227, "caut": {"n": 201, "mediana": 30}, "tipi_prov": [{"n": "Sentenza", "v": 233}, {"n": "Ordinanza Cautelare", "v": 201}, {"n": "Ordinanza Collegiale", "v": 76}, {"n": "Sentenza Breve", "v": 73}, {"n": "Decreto Cautelare", "v": 66}, {"n": "Decreto Decisorio", "v": 32}, {"n": "Gratuito Patrocinio", "v": 30}, {"n": "Decreto Collegiale", "v": 12}, {"n": "Decreto Presidenziale", "v": 9}, {"n": "Decreto Ingiuntivo", "v": 2}], "tipol": [{"n": "Ordinario", "v": 363}, {"n": "In Ottemperanza", "v": 35}, {"n": "Rito Appalti", "v": 14}, {"n": "Accesso Ai Documenti", "v": 10}, {"n": "Silenzio P.A.", "v": 9}, {"n": "Riassunzione Per Incompetenza", "v": 9}, {"n": "Rito Abbreviato", "v": 4}, {"n": "Elettorale", "v": 4}, {"n": "Trasposizione Da Ricorso Straordinario Al Capo Dello Stato", "v": 3}, {"n": "Per Ingiunzione", "v": 2}, {"n": "Elettorale", "v": 2}, {"n": "Risarcimento Danno", "v": 1}], "materie": [{"n": "Stranieri", "v": 167, "acc": 38, "resp": 46, "rito": 6, "parz": 0, "altro": 77, "tasso": 45.2}, {"n": "Edilizia", "v": 116, "acc": 40, "resp": 17, "rito": 21, "parz": 12, "altro": 26, "tasso": 70.2}, {"n": "Università", "v": 112, "acc": 37, "resp": 8, "rito": 8, "parz": 0, "altro": 59, "tasso": 82.2}, {"n": "Comuni", "v": 77, "acc": 22, "resp": 8, "rito": 14, "parz": 1, "altro": 32, "tasso": 73.3}, {"n": "Silenzio Della Pubblica Amministrazione", "v": 41, "acc": 7, "resp": 3, "rito": 17, "parz": 0, "altro": 14, "tasso": 70.0}, {"n": "Istruzione Pubblica", "v": 40, "acc": 8, "resp": 11, "rito": 8, "parz": 0, "altro": 13, "tasso": 42.1}, {"n": "Appalti Pubblici Di Servizi", "v": 38, "acc": 10, "resp": 11, "rito": 4, "parz": 0, "altro": 13, "tasso": 47.6}, {"n": "Pubblico Impiego", "v": 31, "acc": 11, "resp": 5, "rito": 8, "parz": 0, "altro": 7, "tasso": 68.8}, {"n": "Regioni", "v": 25, "acc": 3, "resp": 8, "rito": 4, "parz": 0, "altro": 10, "tasso": 27.3}, {"n": "Sicurezza Pubblica", "v": 20, "acc": 3, "resp": 11, "rito": 0, "parz": 0, "altro": 6, "tasso": 21.4}, {"n": "Concorsi", "v": 20, "acc": 3, "resp": 3, "rito": 8, "parz": 0, "altro": 6, "tasso": 50.0}, {"n": "Elezioni", "v": 20, "acc": 1, "resp": 3, "rito": 1, "parz": 0, "altro": 15, "tasso": 25.0}, {"n": "Armi", "v": 18, "acc": 3, "resp": 5, "rito": 4, "parz": 0, "altro": 6, "tasso": 37.5}, {"n": "Edilizia Economica E Popolare (O Residenziale Pubblica)", "v": 18, "acc": 4, "resp": 5, "rito": 3, "parz": 0, "altro": 6, "tasso": 44.4}, {"n": "Demanio E Patrimonio", "v": 17, "acc": 7, "resp": 2, "rito": 2, "parz": 0, "altro": 6, "tasso": 77.8}, {"n": "Servizi Pubblici", "v": 17, "acc": 2, "resp": 3, "rito": 5, "parz": 0, "altro": 7, "tasso": 40.0}, {"n": "Previdenza E Assistenza", "v": 16, "acc": 5, "resp": 5, "rito": 0, "parz": 0, "altro": 6, "tasso": 50.0}, {"n": "Autorizzazioni E Concessioni Amministrative", "v": 15, "acc": 4, "resp": 2, "rito": 0, "parz": 0, "altro": 9, "tasso": 66.7}, {"n": "Azienda Sanitaria Locale", "v": 14, "acc": 3, "resp": 1, "rito": 2, "parz": 0, "altro": 8, "tasso": 75.0}, {"n": "Enti Pubblici", "v": 13, "acc": 4, "resp": 1, "rito": 3, "parz": 0, "altro": 5, "tasso": 80.0}, {"n": "Esecuzione Del Giudicato", "v": 12, "acc": 0, "resp": 0, "rito": 3, "parz": 1, "altro": 8, "tasso": null}, {"n": "Ambiente", "v": 12, "acc": 2, "resp": 4, "rito": 2, "parz": 0, "altro": 4, "tasso": 33.3}, {"n": "Appalti Sanità", "v": 11, "acc": 6, "resp": 1, "rito": 3, "parz": 0, "altro": 1, "tasso": 85.7}, {"n": "Urbanistica", "v": 10, "acc": 3, "resp": 0, "rito": 4, "parz": 0, "altro": 3, "tasso": 100.0}, {"n": "Appalti Pubblici Di Forniture", "v": 10, "acc": 1, "resp": 4, "rito": 2, "parz": 0, "altro": 3, "tasso": 20.0}, {"n": "Insegnanti", "v": 10, "acc": 5, "resp": 0, "rito": 1, "parz": 0, "altro": 4, "tasso": 100.0}, {"n": "Autorizzazioni E Concessioni", "v": 10, "acc": 1, "resp": 1, "rito": 1, "parz": 0, "altro": 7, "tasso": 50.0}, {"n": "Comune E Provincia", "v": 8, "acc": 0, "resp": 1, "rito": 3, "parz": 1, "altro": 3, "tasso": 0.0}, {"n": "Appalti Pubblici Di Lavori", "v": 8, "acc": 1, "resp": 4, "rito": 1, "parz": 0, "altro": 2, "tasso": 20.0}, {"n": "Sanità Pubblica", "v": 8, "acc": 1, "resp": 1, "rito": 3, "parz": 0, "altro": 3, "tasso": 50.0}, {"n": "Piano Nazionale Di Ripresa E Resilienza (Pnrr)", "v": 8, "acc": 2, "resp": 0, "rito": 1, "parz": 0, "altro": 5, "tasso": 100.0}, {"n": "Militari", "v": 8, "acc": 3, "resp": 2, "rito": 1, "parz": 1, "altro": 1, "tasso": 60.0}, {"n": "Carabinieri", "v": 7, "acc": 2, "resp": 2, "rito": 1, "parz": 0, "altro": 2, "tasso": 50.0}, {"n": "Accesso Ai Documenti", "v": 7, "acc": 2, "resp": 0, "rito": 5, "parz": 0, "altro": 0, "tasso": 100.0}, {"n": "Demanio Statale, Regionale", "v": 6, "acc": 1, "resp": 0, "rito": 0, "parz": 0, "altro": 5, "tasso": 100.0}], "perv_m": [{"n": "Edilizia", "v": 95}, {"n": "Stranieri", "v": 59}, {"n": "Università", "v": 41}, {"n": "Comuni", "v": 30}, {"n": "Istruzione Pubblica", "v": 19}, {"n": "Armi", "v": 18}, {"n": "Sicurezza Pubblica", "v": 14}, {"n": "Regioni", "v": 14}, {"n": "Pubblico Impiego", "v": 10}, {"n": "Enti Pubblici", "v": 10}], "appalti": {"n": 15, "con_importo": 3, "tot_eur": 26500147}, "udienze": [{"d": "2025-07-18", "t": "Camera Di Consiglio"}, {"d": "2025-07-18", "t": "Udienza Pubblica"}, {"d": "2025-09-12", "t": "Camera Di Consiglio"}, {"d": "2025-09-26", "t": "Udienza Pubblica"}, {"d": "2025-09-26", "t": "Up Speciale Elettorale"}, {"d": "2025-09-26", "t": "Camera Di Consiglio"}, {"d": "2025-10-17", "t": "Camera Di Consiglio"}, {"d": "2025-10-17", "t": "Udienza Pubblica"}, {"d": "2025-10-31", "t": "Camera Di Consiglio"}, {"d": "2025-10-31", "t": "Udienza Pubblica"}, {"d": "2025-11-14", "t": "Udienza Pubblica"}, {"d": "2025-11-14", "t": "Camera Di Consiglio"}, {"d": "2025-11-26", "t": "Camera Di Consiglio"}, {"d": "2025-11-26", "t": "Udienza Pubblica"}, {"d": "2025-12-12", "t": "Udienza Pubblica"}, {"d": "2025-12-12", "t": "Camera Di Consiglio"}]}]};
+
+let abTab='confronto', abSede=0;
+function setAbTab(t){ abTab=t; renderGiustizia(); }
+function setAbSede(i){ abSede=i; renderGiustizia(); }
+
+function abVs(label,a,b,fmt,lowGood){
+  const A=fmt?fmt(a):gNum(a), B=fmt?fmt(b):gNum(b);
+  const mx=Math.max(a,b)||1;
+  const cA=(lowGood? a<=b : a>=b)?'#1f9d6b':'#e0533d';
+  const cB=(lowGood? b<=a : b>=a)?'#1f9d6b':'#e0533d';
+  return `<div style="margin:11px 0">
+    <div style="font-size:12.5px;opacity:.8;margin-bottom:6px">${label}</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <span style="width:58px;font-size:11px;opacity:.65;flex:none">L'Aquila</span>
+      <div style="flex:1;height:16px;background:rgba(128,128,128,.13);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${Math.max(3,100*a/mx)}%;background:${cA};border-radius:4px"></div></div>
+      <b style="width:66px;text-align:right;font-size:12.5px;color:${cA};flex:none">${A}</b></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="width:58px;font-size:11px;opacity:.65;flex:none">Pescara</span>
+      <div style="flex:1;height:16px;background:rgba(128,128,128,.13);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${Math.max(3,100*b/mx)}%;background:${cB};border-radius:4px"></div></div>
+      <b style="width:66px;text-align:right;font-size:12.5px;color:${cB};flex:none">${B}</b></div>
+  </div>`;
+}
+
+function abView(){
+  const S=TARAB.sedi, A=S[0], B=S[1];
+  const tabs=[['confronto','Confronto'],['sede','Scheda sede'],['perche','Perché differiscono']];
+  const sub=tabs.map(([id,l])=>`<button class="subtab ${abTab===id?'on':''}" onclick="setAbTab('${id}')">${l}</button>`).join('');
+  let b='';
+
+  if(abTab==='confronto'){
+    const gg=(x)=>gNum(x)+' gg', pc=(x)=>x+'%';
+    b=`<div style="background:rgba(31,111,235,.1);border-left:3px solid #1f6feb;border-radius:10px;padding:12px;margin-bottom:15px;font-size:13px;line-height:1.55">
+        Due TAR nella stessa regione, a 100 km di distanza. Nel 2024 hanno lavorato in modo
+        <b>molto diverso</b>. Prima i numeri, poi — nella scheda accanto — perché confrontarli
+        direttamente sarebbe un errore.
+      </div>
+      <h3 style="margin:4px 0 8px;font-size:15px">Quanto si aspetta</h3>
+      ${abVs('Attesa tipica per una sentenza',A.durata.mediana,B.durata.mediana,gg,true)}
+      ${abVs('Cause che superano i 3 anni',A.durata.oltre3a,B.durata.oltre3a,pc,true)}
+      ${abVs('Risposta sulla sospensione urgente',A.caut.mediana,B.caut.mediana,gg,true)}
+      <h3 style="margin:20px 0 8px;font-size:15px">Come si decide</h3>
+      ${abVs('Chi fa ricorso ottiene ragione',A.succ,B.succ,pc,false)}
+      ${abVs('Cause chiuse senza entrare nel merito',A.rito_pct,B.rito_pct,pc,true)}
+      ${abVs('Sentenze brevi (la via rapida)',A.brevi,B.brevi,null,false)}
+      <h3 style="margin:20px 0 8px;font-size:15px">Il carico di lavoro</h3>
+      ${abVs('Ricorsi arrivati nel 2024',A.perv,B.perv,null,false)}
+      ${abVs('Cause decise nel 2024',A['def'],B['def'],null,false)}
+      ${abVs('Arretrato a fine anno',A.pend_fin,B.pend_fin,null,true)}
+      <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:14px">
+        ${S.map(s=>{const dl=s.pend_fin-s.pend_ini;
+          return `<div style="flex:1;min-width:150px;background:rgba(128,128,128,.07);border-radius:13px;padding:13px">
+          <b style="font-size:14px">${gEsc(s.short)}</b>
+          <div style="font-size:22px;font-weight:700;margin-top:6px;color:${dl<0?'#1f9d6b':'#e0533d'}">${dl<0?'−':'+'}${gNum(Math.abs(dl))}</div>
+          <div style="font-size:11.5px;opacity:.7;line-height:1.4;margin-top:3px">
+            arretrato ${dl<0?'smaltito':'accumulato'}<br>${gNum(s.pend_ini)} → ${gNum(s.pend_fin)} cause</div>
+        </div>`;}).join('')}
+      </div>
+      <div style="background:rgba(224,83,61,.1);border-left:3px solid #e0533d;border-radius:10px;padding:12px;margin-top:15px;font-size:13px;line-height:1.55">
+        <b>Non leggere questa scheda come una classifica.</b> All'Aquila una causa dura quasi il triplo e si vince
+        la metà delle volte, ma questo <b>non significa che i giudici siano più lenti o più severi</b>: le due sedi
+        giudicano cause diverse. La scheda "Perché differiscono" spiega cosa c'è dietro.
+      </div>`;
+  }
+
+  if(abTab==='sede'){
+    const s=S[abSede];
+    const chips=S.map((x,i)=>`<button class="subtab ${abSede===i?'on':''}" onclick="setAbSede(${i})">${gEsc(x.short)}</button>`).join('');
+    const dl=s.pend_fin-s.pend_ini;
+    b=`<div class="subtabs" style="display:flex;gap:7px;margin-bottom:13px">${chips}</div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px">
+        ${gCard('Arrivati',gNum(s.perv),'nel 2024')}
+        ${gCard('Decisi',gNum(s['def']),'nel 2024','#1f9d6b')}
+        ${gCard('Pendenti',gNum(s.pend_fin),(dl<0?'−':'+')+gNum(Math.abs(dl))+' sull\'anno',dl<0?'#1f9d6b':'#e0533d')}
+      </div>
+      <h3 style="margin:6px 0 9px;font-size:15px">L'arretrato mese per mese</h3>
+      ${aqLine(s.pend, dl<0?'#1f9d6b':'#e0533d')}
+      <h3 style="margin:20px 0 10px;font-size:15px">Come finiscono le ${gNum(s.tot_e)} sentenze</h3>
+      ${gDonut(s.esiti,s.tot_e)}
+      <h3 style="margin:20px 0 9px;font-size:15px">I tempi</h3>
+      ${gBars([
+        {n:'I più rapidi (25%)',v:s.durata.p25},{n:'Il caso tipico',v:s.durata.mediana},
+        {n:'I più lenti (25% oltre)',v:s.durata.p75},{n:'Sentenza breve',v:s.dur_breve},
+        {n:'Risposta d\'urgenza',v:s.caut.mediana}
+      ],'v',s.durata.p75,i=>i.v>700?'#e0533d':(i.v>200?'#e8a33d':'#1f9d6b'),i=>gNum(i.v)+' gg')}
+      <div style="font-size:12.5px;opacity:.7;margin-top:7px;line-height:1.5">
+        Caso più lungo in archivio: <b>${gNum(s.durata.max)} giorni</b> (${(s.durata.max/365).toFixed(0)} anni).
+      </div>
+      <h3 style="margin:20px 0 9px;font-size:15px">Materie: quante ne arrivano</h3>
+      ${gBars(s.perv_m.slice(0,8),'v',null,'#1f6feb')}
+      <h3 style="margin:20px 0 9px;font-size:15px">Materie: chi vince</h3>
+      ${s.materie.slice(0,8).map(m=>{const col=m.tasso>=40?'#1f9d6b':(m.tasso>=25?'#e8a33d':'#e0533d');
+        return `<div style="background:rgba(128,128,128,.07);border-radius:12px;padding:12px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
+            <b style="font-size:13.5px">${gEsc(m.n)}</b><span style="font-size:11.5px;opacity:.6">${gNum(m.v)} decisioni</span></div>
+          <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;margin-bottom:7px">
+            <div style="width:${100*m.acc/m.v}%;background:#1f9d6b"></div>
+            <div style="width:${100*m.parz/m.v}%;background:#1f6feb"></div>
+            <div style="width:${100*m.resp/m.v}%;background:#e0533d"></div>
+            <div style="width:${100*m.rito/m.v}%;background:#e8a33d"></div>
+            <div style="width:${100*m.altro/m.v}%;background:#8d99a6"></div></div>
+          <div style="font-size:12px">Successo: <b style="color:${col}">${m.tasso!=null?m.tasso+'%':'n.d.'}</b>
+            <span style="opacity:.65;margin-left:10px">Accolti ${gNum(m.acc)} · Respinti ${gNum(m.resp)}</span></div>
+        </div>`;}).join('')}
+      <h3 style="margin:18px 0 9px;font-size:15px">Prossime udienze</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:7px">
+        ${s.udienze.map(u=>{const p=u.d.split('-');
+          return `<div style="flex:1;min-width:120px;background:rgba(128,128,128,.07);border-radius:11px;padding:9px 11px;border-left:3px solid #7c5cff">
+            <div style="font-size:14px;font-weight:700">${p[2]}/${p[1]}</div>
+            <div style="font-size:10.5px;opacity:.7;margin-top:2px">${gEsc(u.t)}</div></div>`;}).join('')}
+      </div>`;
+  }
+
+  if(abTab==='perche'){
+    const mA=A.perv_m.slice(0,6), mB=B.perv_m.slice(0,6);
+    b=`<div style="background:rgba(232,163,61,.1);border-left:3px solid #e8a33d;border-radius:10px;padding:13px;margin-bottom:16px;font-size:13px;line-height:1.6">
+        <b>Perché non possiamo dire quale TAR è più efficiente.</b><br>
+        La differenza nei tempi e negli esiti si spiega in buona parte con il <b>tipo di cause</b> che ogni sede
+        riceve, non con la bravura dei giudici. Ecco cosa arriva davvero sui due tavoli.
+      </div>
+      <h3 style="margin:4px 0 9px;font-size:15px">Di cosa si occupa L'Aquila</h3>
+      ${gBars(mA,'v',null,'#e0533d')}
+      <h3 style="margin:18px 0 9px;font-size:15px">Di cosa si occupa Pescara</h3>
+      ${gBars(mB,'v',null,'#1f9d6b')}
+      <div style="background:rgba(128,128,128,.07);border-radius:12px;padding:13px;margin-top:16px;font-size:13px;line-height:1.65">
+        <b>Tre fattori, tutti visibili nei dati:</b>
+        <ul style="margin:8px 0 0;padding-left:18px">
+          <li style="margin:6px 0"><b>Materie diverse.</b> A Pescara dominano <b>stranieri</b> (${gNum((B.perv_m.find(m=>m.n==='Stranieri')||{}).v||0)} ricorsi)
+            e <b>università</b> (${gNum((B.perv_m.find(m=>m.n==='Università')||{}).v||0)}): pratiche spesso seriali e ripetitive,
+            che si decidono in fretta. All'Aquila pesano <b>edilizia</b> e <b>demanio e patrimonio</b>, cause tecniche e lente.</li>
+          <li style="margin:6px 0"><b>Sentenze brevi.</b> Pescara ne usa <b>${B.brevi}</b> contro le <b>${A.brevi}</b> dell'Aquila.
+            La sentenza breve è la scorciatoia per le cause semplici: più cause semplici arrivano, più si può usare.</li>
+          <li style="margin:6px 0"><b>L'arretrato distorce la media.</b> L'Aquila sta <b>smaltendo cause vecchie</b>
+            (ha deciso ${gNum(A['def'])} ricorsi contro i ${gNum(A.perv)} arrivati): ogni vecchio fascicolo chiuso
+            fa <b>salire</b> il tempo medio, anche se il TAR sta lavorando bene. Pescara invece <b>accumula</b>
+            (${gNum(B['def'])} decisi contro ${gNum(B.perv)} arrivati) e decide soprattutto cause recenti, che risultano rapide.</li>
+        </ul>
+      </div>
+      <div style="background:rgba(224,83,61,.1);border-left:3px solid #e0533d;border-radius:10px;padding:12px;margin-top:14px;font-size:13px;line-height:1.55">
+        <b>Il confronto che ci manca.</b> Per dire davvero quale sede è più veloce servirebbe confrontare
+        <b>la stessa materia</b>: quanto dura un ricorso edilizio all'Aquila e quanto a Pescara.
+        <b>Non è possibile con questi dati</b>: il file che contiene le date non riporta la materia ufficiale,
+        e quello che riporta la materia non contiene le date. Non c'è modo di collegarli.
+        Preferiamo dirlo che costruire un confronto che sembra rigoroso e non lo è.
+      </div>`;
+  }
+
+  return `<div class="subtabs" style="display:flex;gap:7px;overflow-x:auto;margin-bottom:14px;padding-bottom:3px">${sub}</div>${b}
+    <div style="margin-top:20px;padding:13px;background:rgba(128,128,128,.06);border-radius:12px;font-size:12px;line-height:1.6;opacity:.85">
+      <b>Fonte:</b> ${gEsc(TARAB.fonte)} · TAR Abruzzo, sedi dell'Aquila e di Pescara · anno 2024<br>
+      <b>Cosa non c'è qui:</b>
+      <ul style="margin:6px 0 0;padding-left:17px">
+        <li style="margin:3px 0">La durata è <b>solo il primo grado</b>: chi fa appello aggiunge gli anni del Consiglio di Stato.</li>
+        <li style="margin:3px 0">Non è possibile confrontare le sedi <b>a parità di materia</b>: i dati non lo consentono.</li>
+        <li style="margin:3px 0">Gli esiti sono raggruppati in famiglie <b>da Polis</b> a partire dalle diciture ufficiali.</li>
+        <li style="margin:3px 0">Solo l'<b>Abruzzo</b>: gli altri TAR italiani non sono in questo archivio.</li>
+      </ul>
+    </div>`;
+}
+
+
+/* ===== CONTI PUBBLICI — ISTAT conto economico PA ===== */
+const PA = {"fonte": "ISTAT · Conto economico trimestrale delle Amministrazioni pubbliche", "edizione": "Lug-2026", "last": "2026-Q1", "primo": "2023-Q2", "nq": 12, "ent": 1094801, "usc": 1162371, "ind": -67569, "pri": 18645, "int": 86214, "ser_ent": [{"q": "2023-Q2", "v": 242712.0}, {"q": "2023-Q3", "v": 236124.0}, {"q": "2023-Q4", "v": 312666.0}, {"q": "2024-Q1", "v": 214134.0}, {"q": "2024-Q2", "v": 248929.0}, {"q": "2024-Q3", "v": 245909.0}, {"q": "2024-Q4", "v": 327053.0}, {"q": "2025-Q1", "v": 223073.0}, {"q": "2025-Q2", "v": 262101.0}, {"q": "2025-Q3", "v": 253837.0}, {"q": "2025-Q4", "v": 346916.0}, {"q": "2026-Q1", "v": 231947.0}], "ser_usc": [{"q": "2023-Q2", "v": 268916.0}, {"q": "2023-Q3", "v": 270011.0}, {"q": "2023-Q4", "v": 349954.0}, {"q": "2024-Q1", "v": 256568.0}, {"q": "2024-Q2", "v": 268761.0}, {"q": "2024-Q3", "v": 261053.0}, {"q": "2024-Q4", "v": 323422.0}, {"q": "2025-Q1", "v": 267925.0}, {"q": "2025-Q2", "v": 277152.0}, {"q": "2025-Q3", "v": 271811.0}, {"q": "2025-Q4", "v": 338421.0}, {"q": "2026-Q1", "v": 274987.0}], "ser_ind": [{"q": "2023-Q2", "v": -26204.0}, {"q": "2023-Q3", "v": -33887.0}, {"q": "2023-Q4", "v": -37289.0}, {"q": "2024-Q1", "v": -42434.0}, {"q": "2024-Q2", "v": -19833.0}, {"q": "2024-Q3", "v": -15144.0}, {"q": "2024-Q4", "v": 3630.0}, {"q": "2025-Q1", "v": -44852.0}, {"q": "2025-Q2", "v": -15051.0}, {"q": "2025-Q3", "v": -17974.0}, {"q": "2025-Q4", "v": 8496.0}, {"q": "2026-Q1", "v": -43040.0}], "ser_int": [{"q": "2023-Q2", "v": 22255.0}, {"q": "2023-Q3", "v": 18500.0}, {"q": "2023-Q4", "v": 21698.0}, {"q": "2024-Q1", "v": 18064.0}, {"q": "2024-Q2", "v": 23970.0}, {"q": "2024-Q3", "v": 21519.0}, {"q": "2024-Q4", "v": 21931.0}, {"q": "2025-Q1", "v": 19948.0}, {"q": "2025-Q2", "v": 23964.0}, {"q": "2025-Q3", "v": 21111.0}, {"q": "2025-Q4", "v": 22122.0}, {"q": "2026-Q1", "v": 19017.0}], "ent_c": [{"n": "Irpef, Ires e imposte sul reddito", "v": 347471, "calc": 1}, {"n": "IVA, accise e imposte indirette", "v": 319425}, {"n": "Contributi previdenziali", "v": 309953}, {"n": "Altre entrate correnti", "v": 100947}, {"n": "Entrate in conto capitale", "v": 17005}], "usc_c": [{"n": "Pensioni e prestazioni sociali", "v": 462104}, {"n": "Stipendi dei dipendenti pubblici", "v": 205138}, {"n": "Altre uscite correnti", "v": 139890}, {"n": "Investimenti e conto capitale", "v": 134796}, {"n": "Acquisti di beni e servizi", "v": 134228}, {"n": "Interessi sul debito", "v": 86214}], "limiti": ["I valori \"ultimi 12 mesi\" sono la somma dei <b>quattro trimestri più recenti</b>, calcolata da Polis: non sono un dato annuale ufficiale ISTAT.", "Dati <b>grezzi</b>, non destagionalizzati: i singoli trimestri non vanno confrontati tra loro (il quarto incassa sempre molto più degli altri).", "La voce <b>Irpef, Ires e imposte sul reddito</b> non è pubblicata separatamente in questa edizione: Polis la ricava <b>per differenza</b> dal totale delle entrate correnti. È una nostra stima, non un dato ISTAT diretto.", "Il rapporto <b>deficit/PIL</b> non è calcolabile: il file non contiene il PIL. Per questo mostriamo importi in euro, non percentuali.", "ISTAT rivede i dati a ogni edizione: usiamo la più recente (Lug-2026). I trimestri passati possono cambiare."]};
+
+let paTab='saldo';
+function setPaTab(t){ paTab=t; renderConti(); }
+function paMld(v){ return (v/1000).toLocaleString('it-IT',{maximumFractionDigits:1})+' mld'; }
+function paQ(q){ const [a,t]=q.split('-'); return t+' '+a.slice(2); }
+
+function paBars2(items,tot,color){
+  const mx=Math.max(...items.map(i=>i.v));
+  return items.map(i=>`<div style="margin:10px 0">
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;gap:8px">
+      <span>${gEsc(i.n)}${i.calc?' <span style="opacity:.55;font-size:11px">(stima)</span>':''}</span>
+      <b style="flex:none">€ ${paMld(i.v)} <span style="opacity:.55;font-weight:400">${(100*i.v/tot).toFixed(0)}%</span></b></div>
+    <div style="height:9px;background:rgba(128,128,128,.15);border-radius:5px;overflow:hidden">
+      <div style="height:100%;width:${Math.max(2,100*i.v/mx)}%;background:${color};border-radius:5px"></div></div>
+  </div>`).join('');
+}
+
+function paLine(series,color,neg){
+  const pts=series, vs=pts.map(p=>p.v);
+  const mx=Math.max(...vs,0), mn=Math.min(...vs,0), rng=(mx-mn)||1;
+  const W=640,H=150,pad=10;
+  const X=i=>pad+i*(W-2*pad)/(pts.length-1);
+  const Y=v=>H-pad-((v-mn)/rng)*(H-2*pad-16);
+  const zero=Y(0);
+  const dd=pts.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+  const id=PT.reg(pts.map(p=>paQ(p.q)), vs, v=>(v<0?'−€ ':'€ ')+paMld(Math.abs(v)));
+  return `<svg viewBox="0 0 ${W} ${H+24}" style="width:100%;height:auto">
+    ${neg?`<line x1="${pad}" y1="${zero.toFixed(1)}" x2="${W-pad}" y2="${zero.toFixed(1)}" stroke="currentColor" stroke-width="1" opacity=".3" stroke-dasharray="3 3"></line>`:''}
+    <path d="${dd} L${X(pts.length-1).toFixed(1)},${zero.toFixed(1)} L${X(0).toFixed(1)},${zero.toFixed(1)} Z" fill="${color}" opacity=".12"></path>
+    <path d="${dd}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"></path>
+    ${PT.dots(id, pts.map((p,i)=>X(i)), pts.map(p=>Y(p.v)), color, 2.8)}
+    ${pts.map((p,i)=>i%2===0?`<text x="${X(i).toFixed(1)}" y="${H+17}" text-anchor="middle" font-size="9" fill="currentColor" opacity=".5">${paQ(p.q)}</text>`:'').join('')}
+  </svg>`;
+}
+
+function renderConti(){
+  const el=document.getElementById('contiBody'); if(!el) return;
+  const P=PA;
+  const tabs=[['saldo','Il saldo'],['entrate','Da dove arrivano'],['uscite','Dove finiscono'],['interessi','Il debito'],['pil','Deficit e PIL'],['redditi','I redditi'],['sanita','La sanità'],['nero','Lavoro nero']];
+  const sub=tabs.map(([id,l])=>`<button class="subtab ${paTab===id?'on':''}" onclick="setPaTab('${id}')">${l}</button>`).join('');
+  let b='';
+
+  if(['pil','redditi','sanita','nero'].includes(paTab)){ isTab=paTab; b=isView(); }
+
+  if(paTab==='saldo'){
+    const gap=Math.abs(P.ind);
+    b=`<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px">
+        ${gCard('Lo Stato incassa','€ '+paMld(P.ent),'ultimi 12 mesi','#1f9d6b')}
+        ${gCard('Lo Stato spende','€ '+paMld(P.usc),'ultimi 12 mesi','#e0533d')}
+        ${gCard('Differenza','−€ '+paMld(gap),'deficit','#e0533d')}
+      </div>
+      <div style="background:rgba(224,83,61,.1);border-left:3px solid #e0533d;border-radius:10px;padding:13px;margin-bottom:16px;font-size:13px;line-height:1.6">
+        Negli ultimi dodici mesi lo Stato italiano ha speso <b>€ ${paMld(gap)} più di quanto ha incassato</b>.
+        Ogni euro speso, circa <b>${(100*gap/P.usc).toFixed(0)} centesimi</b> non è coperto dalle entrate:
+        sono presi a prestito, e vanno ad aggiungersi al debito pubblico.
+      </div>
+      <h3 style="margin:16px 0 9px;font-size:15px">Entrate e uscite, trimestre per trimestre</h3>
+      <div style="display:flex;gap:12px;font-size:12px;margin-bottom:6px">
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#1f9d6b;margin-right:5px"></span>Entrate</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#e0533d;margin-right:5px"></span>Uscite</span>
+      </div>
+      ${(()=>{const E=P.ser_ent,U=P.ser_usc;
+        const all=E.map(p=>p.v).concat(U.map(p=>p.v));
+        const mx=Math.max(...all),mn=Math.min(...all),rng=mx-mn||1;
+        const W=640,H=150,pad=10;
+        const X=i=>pad+i*(W-2*pad)/(E.length-1), Y=v=>H-pad-((v-mn)/rng)*(H-2*pad-16);
+        const path=s=>s.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+        return `<svg viewBox="0 0 ${W} ${H+24}" style="width:100%;height:auto">
+          <path d="${path(E)}" fill="none" stroke="#1f9d6b" stroke-width="2.5"></path>
+          <path d="${path(U)}" fill="none" stroke="#e0533d" stroke-width="2.5"></path>
+          ${E.map((p,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(p.v).toFixed(1)}" r="2.6" fill="#1f9d6b"></circle>
+            <circle cx="${X(i).toFixed(1)}" cy="${Y(U[i].v).toFixed(1)}" r="2.6" fill="#e0533d"></circle>
+            ${i%2===0?`<text x="${X(i).toFixed(1)}" y="${H+17}" text-anchor="middle" font-size="9" fill="currentColor" opacity=".5">${paQ(p.q)}</text>`:''}`).join('')}
+        </svg>`;})()}
+      <div style="font-size:12.5px;opacity:.7;margin-top:6px;line-height:1.5">
+        Il <b>quarto trimestre</b> di ogni anno è sempre il picco delle entrate: è quando si versano i saldi d'imposta.
+        Per questo i trimestri non vanno confrontati tra loro, ma solo con lo stesso trimestre di un altro anno.
+      </div>
+      <h3 style="margin:20px 0 9px;font-size:15px">Il saldo trimestrale</h3>
+      ${paLine(P.ser_ind,'#e0533d',true)}
+      <div style="font-size:12.5px;opacity:.7;margin-top:6px">Sotto la linea tratteggiata lo Stato è in deficit: spende più di quanto incassa.</div>`;
+  }
+
+  if(paTab==='entrate'){
+    const tot=P.ent, fisco=P.ent_c.filter(x=>/Irpef|IVA/.test(x.n)).reduce((a,x)=>a+x.v,0);
+    b=`<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px">
+        ${gCard('Totale entrate','€ '+paMld(tot),'ultimi 12 mesi','#1f9d6b')}
+        ${gCard('Solo tasse','€ '+paMld(fisco),Math.round(100*fisco/tot)+'% del totale','#1f6feb')}
+      </div>
+      <h3 style="margin:6px 0 10px;font-size:15px">Da dove arrivano i soldi dello Stato</h3>
+      ${paBars2(P.ent_c,tot,'#1f9d6b')}
+      <div style="background:rgba(232,163,61,.1);border-left:3px solid #e8a33d;border-radius:10px;padding:12px;margin-top:14px;font-size:13px;line-height:1.55">
+        <b>Una precisazione sulla prima voce.</b> ISTAT non pubblica separatamente le imposte sul reddito in questa
+        edizione: Polis le ricava <b>per differenza</b> dal totale delle entrate correnti. È una nostra stima,
+        coerente con i totali ufficiali ma non un dato ISTAT diretto. Le altre voci sono pubblicate.
+      </div>`;
+  }
+
+  if(paTab==='uscite'){
+    const tot=P.usc, welf=P.usc_c.find(x=>/Pensioni/.test(x.n));
+    b=`<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px">
+        ${gCard('Totale uscite','€ '+paMld(tot),'ultimi 12 mesi','#e0533d')}
+        ${gCard('Pensioni e welfare','€ '+paMld(welf.v),Math.round(100*welf.v/tot)+'% di tutta la spesa','#e8a33d')}
+      </div>
+      <h3 style="margin:6px 0 10px;font-size:15px">Dove finiscono i soldi dello Stato</h3>
+      ${paBars2(P.usc_c,tot,'#e0533d')}
+      <div style="background:rgba(128,128,128,.07);border-radius:12px;padding:12px;margin-top:14px;font-size:13px;line-height:1.6">
+        <b>Quasi 4 euro su 10</b> di tutta la spesa pubblica vanno in <b>pensioni e prestazioni sociali</b>.
+        Sommando gli stipendi dei dipendenti pubblici, si supera <b>il 57%</b> del totale:
+        sono le due voci che rendono difficile tagliare la spesa in fretta.
+      </div>`;
+  }
+
+  if(paTab==='interessi'){
+    const i=P.int, gap=Math.abs(P.ind);
+    b=`<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px">
+        ${gCard('Interessi sul debito','€ '+paMld(i),'ultimi 12 mesi','#e0533d')}
+        ${gCard('Saldo primario',(P.pri>=0?'+€ ':'−€ ')+paMld(Math.abs(P.pri)),'senza interessi',P.pri>=0?'#1f9d6b':'#e0533d')}
+      </div>
+      <div style="background:rgba(224,83,61,.1);border-left:3px solid #e0533d;border-radius:10px;padding:13px;margin-bottom:16px;font-size:13px;line-height:1.6">
+        <b>Questo è il punto che spiega quasi tutto il deficit.</b><br>
+        Al netto degli interessi, lo Stato è in <b>${P.pri>=0?'avanzo':'disavanzo'}</b> di
+        <b>€ ${paMld(Math.abs(P.pri))}</b>: ${P.pri>=0?'incassa più di quanto spende per far funzionare il Paese.':'spende più di quanto incassa anche senza contare il debito.'}
+        Poi però arrivano <b>€ ${paMld(i)} di interessi</b> da pagare sul debito accumulato negli anni,
+        e il conto finisce in rosso di € ${paMld(gap)}.
+        ${P.pri>=0?'<b>Il deficit italiano non nasce dalla spesa corrente: nasce dagli interessi.</b>':''}
+      </div>
+      <h3 style="margin:16px 0 9px;font-size:15px">Quanto paghiamo di interessi ogni trimestre</h3>
+      ${paLine(P.ser_int,'#e0533d',false)}
+      <div style="font-size:12.5px;opacity:.75;margin-top:8px;line-height:1.55">
+        Gli interessi sono la <b>quarta voce di spesa</b> dello Stato: più degli acquisti di beni e servizi,
+        più degli investimenti. È il prezzo del debito accumulato in passato, e va pagato prima di tutto il resto.
+      </div>`;
+  }
+
+  el.innerHTML=`
+    <div style="margin-bottom:12px">
+      <h2 style="margin:0 0 4px;font-size:20px">I conti dello Stato</h2>
+      <div style="font-size:13px;opacity:.7;line-height:1.45">Quanto incassa, quanto spende, quanto manca. Dati ISTAT aggiornati a ${gEsc(paQ(P.last))}.</div>
+    </div>
+    <div class="subtabs" style="display:flex;gap:7px;overflow-x:auto;margin-bottom:14px;padding-bottom:3px">${sub}</div>
+    ${b}
+    <div style="margin-top:20px;padding:13px;background:rgba(128,128,128,.06);border-radius:12px;font-size:12px;line-height:1.6;opacity:.85">
+      <b>Fonte:</b> ${gEsc(P.fonte)}<br>
+      <b>Edizione:</b> ${gEsc(P.edizione)} · dati dal ${gEsc(paQ(P.primo))} al ${gEsc(paQ(P.last))} · importi in milioni di euro<br>
+      <b>Cosa sapere su questi numeri:</b>
+      <ul style="margin:6px 0 0;padding-left:17px">${P.limiti.map(l=>`<li style="margin:3px 0">${l}</li>`).join('')}</ul>
+    </div>`;
+}
+
+RENDER.conti = renderConti;
+
+
+/* ===== ISTAT — PIL, redditi, sanità, lavoro irregolare ===== */
+const IST = {"pil": {"ed": "Lug-2026", "last": "2026-Q1", "primo": "2023-Q2", "deficit": -3.1, "entrate": 48.0, "uscite": 51.0, "primario": 0.7, "fisco": 42.9, "ser_def": [{"q": "2023-Q2", "v": -4.9}, {"q": "2023-Q3", "v": -6.3}, {"q": "2023-Q4", "v": -6.5}, {"q": "2024-Q1", "v": -8.1}, {"q": "2024-Q2", "v": -3.7}, {"q": "2024-Q3", "v": -2.8}, {"q": "2024-Q4", "v": 0.6}, {"q": "2025-Q1", "v": -8.4}, {"q": "2025-Q2", "v": -2.7}, {"q": "2025-Q3", "v": -3.2}, {"q": "2025-Q4", "v": 1.4}, {"q": "2026-Q1", "v": -7.8}], "ser_fisco": [{"q": "2023-Q2", "v": 40.4}, {"q": "2023-Q3", "v": 39.3}, {"q": "2023-Q4", "v": 48.7}, {"q": "2024-Q1", "v": 36.5}, {"q": "2024-Q2", "v": 41.2}, {"q": "2024-Q3", "v": 40.3}, {"q": "2024-Q4", "v": 50.6}, {"q": "2025-Q1", "v": 37.3}, {"q": "2025-Q2", "v": 42.2}, {"q": "2025-Q3", "v": 40.5}, {"q": "2025-Q4", "v": 51.4}, {"q": "2026-Q1", "v": 37.6}]}, "reddito": {"it": 31704, "regioni": [{"n": "Provincia Autonoma Bolzano / Bozen", "v": 45571}, {"n": "Emilia-Romagna", "v": 39498}, {"n": "Provincia Autonoma Trento", "v": 37720}, {"n": "Lombardia", "v": 36875}, {"n": "Toscana", "v": 35607}, {"n": "Veneto", "v": 35458}, {"n": "Marche", "v": 35301}, {"n": "Valle dAosta / Vallée dAoste", "v": 33710}, {"n": "Umbria", "v": 33570}, {"n": "Centro area metropolitana", "v": 33536}, {"n": "Area metropolitana", "v": 33452}, {"n": "Friuli-Venezia Giulia", "v": 33369}, {"n": "Grandi comuni", "v": 33170}, {"n": "Piemonte", "v": 33043}, {"n": "Liguria", "v": 32093}, {"n": "Lazio", "v": 31558}, {"n": "Fino a 2.000 ab.", "v": 30730}, {"n": "Periferia area metropolitana", "v": 30648}, {"n": "Basilicata", "v": 30204}, {"n": "Piccoli comuni", "v": 29911}, {"n": "Abruzzo", "v": 29358}, {"n": "Puglia", "v": 27898}, {"n": "Molise", "v": 27090}, {"n": "Sardegna", "v": 26774}, {"n": "Campania", "v": 26385}, {"n": "Calabria", "v": 25690}, {"n": "Sicilia", "v": 24904}], "macro": [{"n": "Nord-ovest", "v": 35020}, {"n": "Nord-est", "v": 37086}, {"n": "Centro", "v": 32910}, {"n": "Sud", "v": 27147}, {"n": "Isole", "v": 25619}], "fonti": [{"n": "Lavoro autonomo", "v": 39541}, {"n": "Lavoro dipendente", "v": 38277}, {"n": "Pensioni e trasferimenti pubblici", "v": 25682}, {"n": "Altro", "v": 10869}], "gini_it": 0.288, "gini": [{"n": "Campania", "v": 0.312}, {"n": "Sicilia", "v": 0.311}, {"n": "Calabria", "v": 0.3}, {"n": "Lazio", "v": 0.289}, {"n": "Puglia", "v": 0.288}, {"n": "Liguria", "v": 0.285}, {"n": "Sardegna", "v": 0.278}, {"n": "Piemonte", "v": 0.276}, {"n": "Molise", "v": 0.271}, {"n": "Toscana", "v": 0.267}, {"n": "Lombardia", "v": 0.265}, {"n": "Veneto", "v": 0.264}, {"n": "Valle dAosta / Vallée dAoste", "v": 0.262}, {"n": "Umbria", "v": 0.259}, {"n": "Friuli-Venezia Giulia", "v": 0.258}, {"n": "Abruzzo", "v": 0.258}, {"n": "Marche", "v": 0.254}, {"n": "Emilia-Romagna", "v": 0.249}, {"n": "Provincia Autonoma Trento", "v": 0.238}, {"n": "Trentino Alto Adige / Südtirol", "v": 0.237}, {"n": "Provincia Autonoma Bolzano / Bozen", "v": 0.235}, {"n": "Basilicata", "v": 0.231}], "anno": 2024}, "irregolare": {"anno": "2023", "tot": 10.0, "settori": [{"n": "Costruzioni", "v": 11.8}, {"n": "Servizi", "v": 10.5}], "serie": [{"y": "2014", "v": 11.6}, {"y": "2015", "v": 11.8}, {"y": "2016", "v": 11.5}, {"y": "2017", "v": 11.5}, {"y": "2018", "v": 11.2}, {"y": "2019", "v": 11.0}, {"y": "2020", "v": 10.5}, {"y": "2021", "v": 9.9}, {"y": "2022", "v": 9.7}, {"y": "2023", "v": 10.0}]}, "sanita": {"ed": "Mag-2026", "anno": "2025", "tot": 190117, "fin": [{"n": "Servizio sanitario pubblico", "v": 140789}, {"n": "Spesa diretta delle famiglie", "v": 42357}, {"n": "Assicurazioni e fondi volontari", "v": 6971}], "fun": [{"n": "Cure e riabilitazione", "v": 102599}, {"n": "Farmaci e apparecchi", "v": 39446}, {"n": "Assistenza di lunga durata", "v": 19800}, {"n": "Servizi ausiliari (analisi, trasporto)", "v": 15813}, {"n": "Prevenzione", "v": 8560}, {"n": "Governance e amministrazione", "v": 3899}], "serie": [{"y": "2012", "tot": 143668.0, "fam": 32397.0}, {"y": "2013", "tot": 142505.0, "fam": 32409.0}, {"y": "2014", "tot": 144924.0, "fam": 33269.0}, {"y": "2015", "tot": 147133.0, "fam": 35012.0}, {"y": "2016", "tot": 148671.0, "fam": 35226.0}, {"y": "2017", "tot": 151607.0, "fam": 36579.0}, {"y": "2018", "tot": 153858.0, "fam": 36873.0}, {"y": "2019", "tot": 155427.0, "fam": 37108.0}, {"y": "2020", "tot": 159725.0, "fam": 34315.0}, {"y": "2021", "tot": 171015.0, "fam": 39015.0}, {"y": "2022", "tot": 176834.0, "fam": 41239.0}, {"y": "2023", "tot": 179252.0, "fam": 42480.0}, {"y": "2024", "tot": 186228.0, "fam": 42791.0}, {"y": "2025", "tot": 190117.0, "fam": 42357.0}], "tasca_pct": 22.3}};
+
+let isTab='pil';
+function setIsTab(t){ isTab=t; paTab=t; renderConti(); }
+function isMld(v){ return (v/1000).toLocaleString('it-IT',{maximumFractionDigits:1})+' mld'; }
+function isEur(v){ return '€ '+Math.round(v).toLocaleString('it-IT'); }
+
+function isSpark(pts,color,fmt,zero){
+  const vs=pts.map(p=>p.v), mx=Math.max(...vs,zero?0:-1e9), mn=Math.min(...vs,zero?0:1e9), rng=(mx-mn)||1;
+  const W=640,H=120,pad=10;
+  const X=i=>pad+i*(W-2*pad)/(pts.length-1), Y=v=>H-pad-((v-mn)/rng)*(H-2*pad-14);
+  const dd=pts.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+  const z=Y(0);
+  const lab=pts.map(p=>{const s=(p.q||p.y||'').toString(); return s.includes('-Q')?paQ(s):s;});
+  const id=PT.reg(lab, vs, fmt);
+  return `<svg viewBox="0 0 ${W} ${H+22}" style="width:100%;height:auto">
+    ${zero?`<line x1="${pad}" y1="${z.toFixed(1)}" x2="${W-pad}" y2="${z.toFixed(1)}" stroke="currentColor" opacity=".28" stroke-dasharray="3 3"></line>`:''}
+    <path d="${dd} L${X(pts.length-1).toFixed(1)},${zero?z.toFixed(1):H-pad} L${X(0).toFixed(1)},${zero?z.toFixed(1):H-pad} Z" fill="${color}" opacity=".12"></path>
+    <path d="${dd}" fill="none" stroke="${color}" stroke-width="2.5"></path>
+    ${PT.dots(id, pts.map((p,i)=>X(i)), pts.map(p=>Y(p.v)), color, 2.6)}
+    ${pts.map((p,i)=>(i===0||i===pts.length-1||i%3===0)?`<text x="${X(i).toFixed(1)}" y="${H+16}" text-anchor="middle" font-size="9" fill="currentColor" opacity=".5">${gEsc(lab[i].slice(0,5))}</text>`:'').join('')}
+    <text x="${X(pts.length-1).toFixed(1)}" y="${(Y(pts[pts.length-1].v)-9).toFixed(1)}" text-anchor="end" font-size="11" font-weight="700" fill="${color}">${fmt(pts[pts.length-1].v)}</text>
+  </svg>`;
+}
+
+function isRank(items,fmt,color,rev){
+  const mx=Math.max(...items.map(i=>i.v));
+  return items.map((i,k)=>`<div style="display:flex;align-items:center;gap:9px;margin:6px 0">
+    <span style="width:18px;font-size:11px;opacity:.5;flex:none">${k+1}</span>
+    <span style="width:112px;font-size:12.5px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${gEsc(i.n)}</span>
+    <div style="flex:1;height:14px;background:rgba(128,128,128,.13);border-radius:4px;overflow:hidden">
+      <div style="height:100%;width:${Math.max(3,100*i.v/mx)}%;background:${typeof color==='function'?color(i,k):color};border-radius:4px"></div></div>
+    <b style="width:66px;text-align:right;font-size:12px;flex:none">${fmt(i.v)}</b></div>`).join('');
+}
+
+function isView(){
+  const P=IST.pil, R=IST.reddito, S=IST.sanita, I=IST.irregolare;
+  let b='';
+
+  if(isTab==='pil'){
+    b=`<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px">
+        ${gCard('Deficit / PIL',P.deficit+'%','media 4 trimestri',P.deficit<-3?'#e0533d':'#e8a33d')}
+        ${gCard('Pressione fiscale',P.fisco+'%','del PIL','#1f6feb')}
+        ${gCard('Spesa pubblica',P.uscite+'%','del PIL')}
+      </div>
+      <div style="background:rgba(31,111,235,.1);border-left:3px solid #1f6feb;border-radius:10px;padding:13px;margin-bottom:16px;font-size:13px;line-height:1.6">
+        Sono le due percentuali di cui si discute di più in politica. Il <b>deficit al ${Math.abs(P.deficit)}%</b>
+        è il parametro che l'Europa tiene d'occhio (la soglia è il 3%). La <b>pressione fiscale al ${P.fisco}%</b>
+        misura quanto pesano tasse e contributi sulla ricchezza prodotta dal Paese.
+      </div>
+      <h3 style="margin:16px 0 9px;font-size:15px">Il deficit trimestre per trimestre</h3>
+      ${isSpark(P.ser_def,'#e0533d',v=>v.toFixed(1)+'%',true)}
+      <div style="font-size:12.5px;opacity:.7;margin-top:6px;line-height:1.5">
+        I singoli trimestri oscillano molto (nel quarto lo Stato incassa i saldi d'imposta e va quasi in pari).
+        Il dato che conta è la <b>media sui 12 mesi: ${P.deficit}%</b>.
+      </div>
+      <h3 style="margin:20px 0 9px;font-size:15px">La pressione fiscale</h3>
+      ${isSpark(P.ser_fisco,'#1f6feb',v=>v.toFixed(1)+'%',false)}`;
+  }
+
+  if(isTab==='redditi'){
+    const top=R.regioni[0], bot=R.regioni[R.regioni.length-1];
+    const gap=(top.v/bot.v);
+    b=`<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px">
+        ${gCard('Reddito familiare',isEur(R.it),'mediano, '+R.anno)}
+        ${gCard('Più ricca',gEsc(top.n.split('/')[0].trim()),isEur(top.v),'#1f9d6b')}
+        ${gCard('Più povera',gEsc(bot.n),isEur(bot.v),'#e0533d')}
+      </div>
+      <div style="background:rgba(224,83,61,.1);border-left:3px solid #e0533d;border-radius:10px;padding:13px;margin-bottom:16px;font-size:13px;line-height:1.6">
+        Una famiglia a <b>${gEsc(top.n.split('/')[0].trim())}</b> guadagna <b>${gap.toFixed(1)} volte</b> quella
+        di una famiglia in <b>${gEsc(bot.n)}</b>: ${isEur(top.v)} contro ${isEur(bot.v)} all'anno.
+        È il divario più grande d'Italia, e non è una media distorta dai ricchi: è il valore <b>mediano</b>,
+        quello della famiglia esattamente a metà classifica.
+      </div>
+      <h3 style="margin:16px 0 9px;font-size:15px">Reddito mediano per regione</h3>
+      ${isRank(R.regioni,isEur,(i)=>i.v>=R.it?'#1f9d6b':'#e0533d')}
+      <div style="font-size:12px;opacity:.6;margin-top:6px">In verde le regioni sopra la mediana nazionale (${isEur(R.it)}), in rosso quelle sotto.</div>
+      <h3 style="margin:20px 0 9px;font-size:15px">Da dove viene il reddito delle famiglie</h3>
+      ${gBars(R.fonti,'v',null,'#1f6feb',i=>isEur(i.v))}
+      <div style="font-size:12.5px;opacity:.75;margin-top:8px;line-height:1.55">
+        Reddito mediano a seconda di <b>cosa mantiene la famiglia</b>. Chi vive di pensioni e trasferimenti
+        pubblici sta sensibilmente sotto chi vive di lavoro.
+      </div>
+      <h3 style="margin:20px 0 9px;font-size:15px">Dove il reddito è distribuito in modo più diseguale</h3>
+      <div style="font-size:12.5px;opacity:.75;margin-bottom:10px;line-height:1.5">
+        Indice di Gini: 0 = tutti guadagnano uguale, 1 = uno solo ha tutto. Italia: <b>${R.gini_it}</b>.
+      </div>
+      ${isRank(R.gini.slice(0,10),v=>v.toFixed(3),(i)=>i.v>R.gini_it?'#e0533d':'#e8a33d')}`;
+  }
+
+  if(isTab==='sanita'){
+    const fam=S.fin.find(f=>/famiglie/.test(f.n));
+    b=`<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px">
+        ${gCard('Spesa sanitaria','€ '+isMld(S.tot),'totale '+S.anno)}
+        ${gCard('Paga il pubblico','€ '+isMld(S.fin[0].v),Math.round(100*S.fin[0].v/S.tot)+'% del totale','#1f9d6b')}
+        ${gCard('Pagano le famiglie','€ '+isMld(fam.v),S.tasca_pct+'% di tasca propria','#e0533d')}
+      </div>
+      <div style="background:rgba(224,83,61,.1);border-left:3px solid #e0533d;border-radius:10px;padding:13px;margin-bottom:16px;font-size:13px;line-height:1.6">
+        <b>Più di un euro su cinque della sanità italiana lo pagano direttamente i cittadini</b>, di tasca propria:
+        ticket, visite private, dentista, farmaci non rimborsati. Sono <b>€ ${isMld(fam.v)}</b> l'anno che non
+        passano dal servizio sanitario pubblico.
+      </div>
+      <h3 style="margin:16px 0 9px;font-size:15px">Chi paga la sanità</h3>
+      ${gBars(S.fin,'v',null,i=>/famiglie/.test(i.n)?'#e0533d':(/pubblico/.test(i.n)?'#1f9d6b':'#e8a33d'),i=>'€ '+isMld(i.v))}
+      <h3 style="margin:20px 0 9px;font-size:15px">Per cosa si spende</h3>
+      ${gBars(S.fun,'v',null,'#1f6feb',i=>'€ '+isMld(i.v))}
+      <h3 style="margin:20px 0 9px;font-size:15px">Come è cresciuta nel tempo</h3>
+      ${isSpark(S.serie.map(x=>({y:x.y,v:x.tot})),'#1f6feb',v=>'€ '+isMld(v),false)}
+      <div style="font-size:12.5px;opacity:.7;margin-top:6px">Spesa sanitaria totale, ${S.serie[0].y}–${S.serie[S.serie.length-1].y}.</div>`;
+  }
+
+  if(isTab==='nero'){
+    b=`<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px">
+        ${gCard('Lavoro irregolare',I.tot+'%','degli occupati, '+I.anno,'#e0533d')}
+        ${gCard('Settore peggiore',gEsc(I.settori[0].n),I.settori[0].v+'%','#e0533d')}
+      </div>
+      <div style="background:rgba(224,83,61,.1);border-left:3px solid #e0533d;border-radius:10px;padding:13px;margin-bottom:16px;font-size:13px;line-height:1.6">
+        <b>Un lavoratore su dieci in Italia è irregolare</b>: lavora senza contratto, o con un contratto che
+        non riflette quello che fa davvero. Non paga contributi, non matura pensione, non ha tutele.
+      </div>
+      <h3 style="margin:16px 0 9px;font-size:15px">Dove si concentra</h3>
+      ${gBars(I.settori,'v',null,'#e0533d',i=>i.v+'%')}
+      <div style="font-size:12.5px;opacity:.7;margin-top:8px;line-height:1.5">
+        ISTAT pubblica il dettaglio solo per <b>${I.settori.length} settori</b> in questa serie: agricoltura e
+        industria non sono disponibili. Il dato totale (${I.tot}%) copre invece tutta l'economia.
+      </div>
+      <h3 style="margin:20px 0 9px;font-size:15px">L'andamento nel tempo</h3>
+      ${isSpark(I.serie,'#e0533d',v=>v.toFixed(1)+'%',false)}
+      <div style="font-size:12.5px;opacity:.7;margin-top:6px">Tasso di irregolarità sul totale degli occupati, ${I.serie[0].y}–${I.serie[I.serie.length-1].y}.</div>`;
+  }
+
+  return `${b}
+    <div style="margin-top:20px;padding:13px;background:rgba(128,128,128,.06);border-radius:12px;font-size:12px;line-height:1.6;opacity:.85">
+      <b>Fonte:</b> ISTAT · finanza pubblica (${gEsc(P.ed)}), redditi delle famiglie (${R.anno}),
+      conti della sanità (${gEsc(S.ed)}), occupazione non regolare (${I.anno})<br>
+      <b>Cosa sapere:</b>
+      <ul style="margin:6px 0 0;padding-left:17px">
+        <li style="margin:3px 0">Deficit e pressione fiscale sono <b>medie dei quattro trimestri</b> più recenti, calcolate da Polis: non un dato annuale ufficiale.</li>
+        <li style="margin:3px 0">Il reddito è <b>mediano</b>, non medio: descrive la famiglia a metà classifica, non la media aritmetica.</li>
+        <li style="margin:3px 0">Il lavoro irregolare è disaggregato solo per <b>due settori</b>: gli altri non sono pubblicati in questa serie.</li>
+        <li style="margin:3px 0">Anni di riferimento diversi tra loro: non vanno confrontati come se fossero la stessa fotografia.</li>
+      </ul>
+    </div>`;
+}
+
+
+/* ===== PT — tooltip condiviso: tap sui pallini dei grafici ===== */
+const PT={ n:0, cur:null };
+
+/* registra una serie e restituisce l'id da usare nei data-attr */
+PT.reg=function(labels,values,fmt){
+  const id='pt'+(++PT.n);
+  PT[id]={l:labels,v:values,f:fmt||(x=>x)};
+  return id;
+};
+
+/* genera i <circle> tappabili di una serie.
+   cx/cy = array di coordinate già calcolate dal chiamante */
+PT.dots=function(id,cx,cy,color,r){
+  const S=PT[id]; if(!S) return '';
+  const rr=r||3;
+  return cx.map((x,i)=>{
+    const X=(+x).toFixed(1), Y=(+cy[i]).toFixed(1);
+    return `<circle cx="${X}" cy="${Y}" r="${rr}" fill="${color}"></circle>`+
+      /* area di tocco invisibile e generosa: su mobile un pallino da 3px non si prende */
+      `<circle cx="${X}" cy="${Y}" r="13" fill="transparent" style="cursor:pointer"
+        onclick="PT.tap(event,'${id}',${i})"></circle>`;
+  }).join('');
+};
+
+PT.hide=function(){
+  const t=document.getElementById('ptTip');
+  if(t) t.style.display='none';
+  PT.cur=null;
+};
+
+PT.tap=function(ev,id,i){
+  if(ev&&ev.stopPropagation) ev.stopPropagation();
+  const S=PT[id]; if(!S) return;
+  const key=id+':'+i;
+  if(PT.cur===key){ PT.hide(); return; }   // secondo tap sullo stesso pallino: chiude
+  PT.cur=key;
+
+  let t=document.getElementById('ptTip');
+  if(!t){
+    t=document.createElement('div');
+    t.id='ptTip';
+    t.style.cssText='position:fixed;z-index:9999;pointer-events:none;background:#0b1f17;color:#fff;'+
+      'padding:8px 11px;border-radius:9px;font-size:12.5px;line-height:1.45;'+
+      'box-shadow:0 6px 22px rgba(0,0,0,.32);max-width:190px;display:none';
+    document.body.appendChild(t);
+  }
+
+  const v=S.v[i], prev=(i>0?S.v[i-1]:null);
+  let delta='';
+  if(prev!=null && prev!==0){
+    const d=100*(v-prev)/Math.abs(prev);
+    const up=d>=0;
+    delta=`<div style="margin-top:3px;font-size:11.5px;color:${up?'#5fd3a0':'#ff8a75'}">
+      ${up?'▲':'▼'} ${Math.abs(d).toFixed(1)}% sul periodo prima</div>`;
+  }
+  t.innerHTML=`<div style="opacity:.7;font-size:11px">${S.l[i]}</div>
+    <div style="font-weight:700;font-size:14px;margin-top:1px">${S.f(v)}</div>${delta}`;
+  t.style.display='block';
+
+  // posiziono vicino al tocco, tenendolo dentro lo schermo
+  const src=(ev.touches&&ev.touches[0])||ev.changedTouches&&ev.changedTouches[0]||ev;
+  const px=src.clientX||0, py=src.clientY||0;
+  const w=t.offsetWidth, h=t.offsetHeight;
+  let L=px-w/2, T=py-h-14;
+  L=Math.max(8,Math.min(L,window.innerWidth-w-8));
+  if(T<8) T=py+18;
+  t.style.left=L+'px';
+  t.style.top=T+'px';
+};
+
+/* un tap fuori chiude il tooltip */
+document.addEventListener('click',function(e){
+  if(PT.cur && !(e.target&&e.target.getAttribute&&e.target.getAttribute('onclick'))) PT.hide();
+},true);
+
+
+/* ===== CERCA — ricerca globale deterministica (nessun dato inventato) =====
+   Indicizza SOLO dati già presenti nell'app. Ogni voce dichiara:
+   - k: parole chiave e sinonimi che il cittadino potrebbe scrivere
+   - t: titolo leggibile del dato
+   - val: funzione che legge il valore ATTUALE dai dataset in memoria (mai un valore fisso copiato)
+   - fonte: la fonte ufficiale
+   - go: funzione che porta l'utente alla scheda dove il dato è mostrato
+   Il motore trova e mostra. Non genera testo descrittivo né numeri: legge quelli esistenti. */
+
+const CERCA = { idx:null };
+
+/* normalizza: minuscolo, senza accenti, senza punteggiatura */
+CERCA.norm = function(s){
+  return (s||'').toString().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+};
+
+/* costruisce l'indice al primo uso, leggendo i dataset realmente caricati */
+CERCA.build = function(){
+  const I = [];
+  const safe = (fn, d) => { try { const v = fn(); return (v==null?d:v); } catch(e){ return d; } };
+  const has = (o) => typeof o !== 'undefined' && o;
+
+  /* ---------- CONTI DELLO STATO (ISTAT / PA) ---------- */
+  if (has(typeof PA!=='undefined' && PA)) {
+    I.push({
+      k:'deficit disavanzo saldo negativo stato spende piu di quanto incassa buco bilancio',
+      t:'Deficit dello Stato (ultimi 12 mesi)',
+      val:()=> '−€ '+paMld(Math.abs(PA.ind)),
+      fonte:'ISTAT · conto economico PA', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setPaTab('saldo')])
+    });
+    I.push({
+      k:'entrate incassi tasse gettito quanto incassa lo stato ricavi',
+      t:'Entrate totali dello Stato (ultimi 12 mesi)',
+      val:()=> '€ '+paMld(PA.ent),
+      fonte:'ISTAT · conto economico PA', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setPaTab('entrate')])
+    });
+    I.push({
+      k:'uscite spesa pubblica quanto spende lo stato costi',
+      t:'Uscite totali dello Stato (ultimi 12 mesi)',
+      val:()=> '€ '+paMld(PA.usc),
+      fonte:'ISTAT · conto economico PA', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setPaTab('uscite')])
+    });
+    I.push({
+      k:'interessi debito quanto paghiamo di interessi costo del debito spread',
+      t:'Interessi sul debito (ultimi 12 mesi)',
+      val:()=> '€ '+paMld(PA.int),
+      fonte:'ISTAT · conto economico PA', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setPaTab('interessi')])
+    });
+    I.push({
+      k:'pensioni prestazioni sociali welfare spesa sociale',
+      t:'Spesa per pensioni e prestazioni sociali',
+      val:()=>{ const w=PA.usc_c.find(x=>/Pensioni/.test(x.n)); return w?'€ '+paMld(w.v):null; },
+      fonte:'ISTAT · conto economico PA', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setPaTab('uscite')])
+    });
+    I.push({
+      k:'stipendi dipendenti pubblici statali costo personale pubblico impiego',
+      t:'Spesa per gli stipendi pubblici',
+      val:()=>{ const w=PA.usc_c.find(x=>/Stipendi/.test(x.n)); return w?'€ '+paMld(w.v):null; },
+      fonte:'ISTAT · conto economico PA', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setPaTab('uscite')])
+    });
+  }
+
+  if (has(typeof IST!=='undefined' && IST)) {
+    I.push({
+      k:'deficit pil rapporto deficit pil parametro europeo maastricht tre per cento',
+      t:'Deficit in rapporto al PIL',
+      val:()=> IST.pil.deficit+'%',
+      fonte:'ISTAT · finanza pubblica', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setIsTab('pil')])
+    });
+    I.push({
+      k:'pressione fiscale tasse sul pil quanto pesano le tasse carico fiscale',
+      t:'Pressione fiscale',
+      val:()=> IST.pil.fisco+'% del PIL',
+      fonte:'ISTAT · finanza pubblica', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setIsTab('pil')])
+    });
+    I.push({
+      k:'reddito famiglie reddito familiare quanto guadagna una famiglia reddito mediano italiano',
+      t:'Reddito familiare mediano in Italia',
+      val:()=> isEur(IST.reddito.it)+' l\u2019anno',
+      fonte:'ISTAT · redditi delle famiglie', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setIsTab('redditi')])
+    });
+    I.push({
+      k:'disuguaglianza gini divario ricchi poveri differenza reddito regioni',
+      t:'Disuguaglianza dei redditi (indice di Gini)',
+      val:()=> IST.reddito.gini_it,
+      fonte:'ISTAT · redditi delle famiglie', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setIsTab('redditi')])
+    });
+    I.push({
+      k:'spesa sanitaria sanita salute quanto spende in sanita servizio sanitario',
+      t:'Spesa sanitaria totale',
+      val:()=> '€ '+isMld(IST.sanita.tot),
+      fonte:'ISTAT · conti della sanità', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setIsTab('sanita')])
+    });
+    I.push({
+      k:'sanita di tasca propria spesa privata famiglie ticket visite private dentista quanto pagano i cittadini',
+      t:'Sanità pagata di tasca propria dalle famiglie',
+      val:()=> IST.sanita.tasca_pct+'% della spesa sanitaria',
+      fonte:'ISTAT · conti della sanità', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setIsTab('sanita')])
+    });
+    I.push({
+      k:'lavoro nero irregolare sommerso senza contratto occupazione irregolare',
+      t:'Tasso di lavoro irregolare',
+      val:()=> IST.irregolare.tot+'% degli occupati',
+      fonte:'ISTAT · occupazione', sez:'Conti',
+      go:()=>CERCA.nav('conti',[()=>setIsTab('nero')])
+    });
+  }
+
+  /* ---------- GIUSTIZIA — Consiglio di Stato ---------- */
+  if (has(typeof CDS!=='undefined' && CDS)) {
+    I.push({
+      k:'consiglio di stato appello quanto dura una causa amministrativa tempi giustizia amministrativa attesa sentenza',
+      t:'Durata di un appello al Consiglio di Stato',
+      val:()=> gNum(CDS.durata.mediana)+' giorni (mediana)',
+      fonte:'Consiglio di Stato · open data', sez:'Giustizia',
+      go:()=>CERCA.nav('giustizia',[()=>setGTab('tempi')])
+    });
+    I.push({
+      k:'consiglio di stato quante sentenze appello ricorsi decisi',
+      t:'Sentenze del Consiglio di Stato (2024)',
+      val:()=> gNum(CDS.tot),
+      fonte:'Consiglio di Stato · open data', sez:'Giustizia',
+      go:()=>CERCA.nav('giustizia',[()=>setGTab('panorama')])
+    });
+  }
+
+  /* ---------- GIUSTIZIA — TAR Abruzzo ---------- */
+  if (has(typeof TARAB!=='undefined' && TARAB)) {
+    TARAB.sedi.forEach((s, idx)=>{
+      I.push({
+        k:'tar '+CERCA.norm(s.short)+' primo grado quanto dura causa attesa sentenza tempi tribunale amministrativo abruzzo',
+        t:'Durata di una causa al TAR di '+s.short+' (primo grado)',
+        val:()=> gNum(s.durata.mediana)+' giorni (mediana)',
+        fonte:'Giustizia amministrativa · open data', sez:'Giustizia',
+        go:()=>CERCA.nav('giustizia',[()=>setGTab('tar'),()=>setAbTab('sede'),()=>setAbSede(idx)])
+      });
+      I.push({
+        k:'tar '+CERCA.norm(s.short)+' chi vince ricorso accolto successo probabilita vittoria',
+        t:'Ricorsi accolti al TAR di '+s.short,
+        val:()=> s.succ+'% (in tutto o in parte)',
+        fonte:'Giustizia amministrativa · open data', sez:'Giustizia',
+        go:()=>CERCA.nav('giustizia',[()=>setGTab('tar'),()=>setAbTab('sede'),()=>setAbSede(idx)])
+      });
+    });
+    I.push({
+      k:'tar abruzzo confronto laquila pescara differenza sedi',
+      t:'Confronto tra i TAR di L\u2019Aquila e Pescara',
+      val:()=> TARAB.sedi.map(s=>s.short+': '+gNum(s.durata.mediana)+'gg').join(' · '),
+      fonte:'Giustizia amministrativa · open data', sez:'Giustizia',
+      go:()=>CERCA.nav('giustizia',[()=>setGTab('tar'),()=>setAbTab('confronto')])
+    });
+  }
+
+  CERCA.idx = I;
+  return I;
+};
+
+/* punteggio di rilevanza: quante parole della query compaiono nelle keyword/titolo */
+CERCA.STOP = {'di':1,'a':1,'da':1,'in':1,'il':1,'la':1,'lo':1,'le':1,'i':1,'gli':1,'un':1,'una':1,
+  'e':1,'o':1,'per':1,'con':1,'su':1,'del':1,'della':1,'dei':1,'delle':1,'al':1,'alla':1,'che':1,
+  'quanto':1,'quanti':1,'quante':1,'come':1,'cosa':1,'mi':1,'si':1,'ci':1,'lo':1,'ho':1,'sono':1};
+
+CERCA.score = function(entry, qwords){
+  const hay = CERCA.norm(entry.k + ' ' + entry.t + ' ' + entry.sez);
+  let sc = 0, strong = 0;
+  qwords.forEach(w=>{
+    if(!w || CERCA.STOP[w]) return;              // ignora parole vuote
+    if(w.length < 3) return;                      // ignora frammenti troppo corti
+    if(hay.includes(' '+w+' ') || hay.startsWith(w+' ') || hay.endsWith(' '+w) || hay===w){ sc += 3; strong++; }
+    else if(hay.includes(w)){ sc += 1; }          // match parziale (prefisso/interno)
+  });
+  // serve almeno UN match forte (parola intera): evita falsi positivi da soli match parziali
+  return strong > 0 ? sc : 0;
+};
+
+/* naviga in modo robusto: cambia sezione, poi applica i passi di sotto-scheda
+   dopo un tick, quando i router interni sono stati definiti dal render */
+CERCA.nav = function(view, steps){
+  try { switchView(view); } catch(e){}
+  const apply = ()=>{ (steps||[]).forEach(fn=>{ try{ fn(); }catch(e){} }); };
+  apply();                 // molte sezioni sono già renderizzate: primo tentativo subito
+  setTimeout(apply, 40);   // secondo tentativo dopo il render, per i router creati al volo
+};
+
+CERCA.run = function(query){
+  if(!CERCA.idx) CERCA.build();
+  const q = CERCA.norm(query);
+  if(q.length < 2) return [];
+  const qwords = q.split(' ');
+  return CERCA.idx
+    .map(e=>({ e, s:CERCA.score(e, qwords) }))
+    .filter(x=> x.s > 0)
+    .sort((a,b)=> b.s - a.s)
+    .slice(0, 8)
+    .map(x=> x.e);
+};
+
+/* ---------- UI ---------- */
+CERCA.open = function(){
+  let ov = document.getElementById('cercaOverlay');
+  if(!ov){
+    ov = document.createElement('div');
+    ov.id = 'cercaOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:9998;background:#0b1f17;display:flex;flex-direction:column';
+    ov.innerHTML = `
+      <div style="padding:14px 14px 10px;display:flex;gap:10px;align-items:center;border-bottom:1px solid rgba(255,255,255,.08)">
+        <input id="cercaInput" type="search" inputmode="search" autocomplete="off"
+          placeholder="Cerca un dato: deficit, reddito, TAR Pescara\u2026"
+          style="flex:1;background:rgba(255,255,255,.08);border:none;border-radius:11px;padding:12px 14px;
+            font-size:15px;color:#fff;outline:none">
+        <button onclick="CERCA.close()" style="background:none;border:none;color:#fff;font-size:15px;padding:6px 4px;opacity:.8">Chiudi</button>
+      </div>
+      <div id="cercaResults" style="flex:1;overflow-y:auto;padding:14px;-webkit-overflow-scrolling:touch"></div>`;
+    document.body.appendChild(ov);
+    const inp = document.getElementById('cercaInput');
+    inp.addEventListener('input', ()=> CERCA.render(inp.value));
+  } else {
+    ov.style.display = 'flex';
+  }
+  CERCA.render('');
+  setTimeout(()=>{ const i=document.getElementById('cercaInput'); if(i){ i.focus(); } }, 60);
+};
+
+CERCA.close = function(){
+  const ov = document.getElementById('cercaOverlay');
+  if(ov) ov.style.display = 'none';
+};
+
+CERCA.goto = function(i){
+  const r = CERCA._last && CERCA._last[i];
+  if(!r) return;
+  CERCA.close();
+  try { r.go(); } catch(e){}
+};
+
+CERCA.render = function(query){
+  const box = document.getElementById('cercaResults');
+  if(!box) return;
+  if(CERCA.norm(query).length < 2){
+    const esempi = ['deficit','reddito famiglie','sanità','TAR Pescara','lavoro nero','pressione fiscale'];
+    box.innerHTML = `
+      <div style="color:rgba(255,255,255,.55);font-size:13px;line-height:1.6">
+        Scrivi cosa vuoi sapere. Polis cerca <b style="color:rgba(255,255,255,.8)">solo tra i dati che ha</b>,
+        da fonti ufficiali, e ti porta alla scheda giusta. Non inventa nulla.
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px">
+        ${esempi.map(e=>`<button onclick="document.getElementById('cercaInput').value='${e}';CERCA.render('${e}')"
+          style="background:rgba(255,255,255,.09);border:none;color:#fff;border-radius:20px;padding:8px 14px;font-size:13px">${e}</button>`).join('')}
+      </div>`;
+    return;
+  }
+  const res = CERCA.run(query);
+  CERCA._last = res;
+  if(!res.length){
+    box.innerHTML = `<div style="color:rgba(255,255,255,.6);font-size:14px;line-height:1.6;padding-top:8px">
+      Nessun dato trovato per <b style="color:#fff">\u201c${(query||'').replace(/</g,'')}\u201d</b>.<br><br>
+      Polis mostra solo dati che ha caricato da fonti ufficiali. Prova con un termine più generale
+      (es. <i>deficit</i>, <i>sanità</i>, <i>reddito</i>), oppure il dato non è ancora in Polis.</div>`;
+    return;
+  }
+  box.innerHTML = res.map((r,i)=>{
+    let v; try { v = r.val(); } catch(e){ v = null; }
+    return `<button onclick="CERCA.goto(${i})" style="display:block;width:100%;text-align:left;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:14px;
+      padding:14px;margin-bottom:10px;color:#fff">
+      <div style="font-size:11px;color:#5fd3a0;font-weight:600;margin-bottom:5px">${r.sez.toUpperCase()}</div>
+      <div style="font-size:14px;opacity:.85;line-height:1.35;margin-bottom:6px">${r.t}</div>
+      ${v!=null?`<div style="font-size:22px;font-weight:700;line-height:1.15">${v}</div>`:''}
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+        <span style="font-size:11px;opacity:.5">${r.fonte}</span>
+        <span style="font-size:12px;color:#5fd3a0">vedi nel dettaglio \u203a</span>
+      </div>
+    </button>`;
+  }).join('');
+};
+
+
+/* ===== UPGRADE — strategie per migliorare la vita (contenuti da fonti autorevoli) ===== */
+const UPGRADE = {"finanze": {"ico": "💶", "nome": "Finanze", "tit": "Gestire i soldi", "intro": "Metodi concreti per fare un budget, risparmiare e gestire i debiti. Ogni metodo cita la fonte originale.", "metodi": [{"n": "Regola 50/30/20", "cosa": "Divide lo stipendio netto in tre parti: 50% bisogni, 30% desideri, 20% risparmio e debiti. Semplice perché usa solo tre categorie.", "chi": "Chi inizia a fare budget e vuole una regola facile da ricordare.", "step": ["Calcola il reddito netto mensile (quello che arriva sul conto).", "50% ai bisogni: casa, bollette, spesa, trasporti, assicurazioni.", "30% ai desideri: ristoranti, hobby, viaggi, abbonamenti.", "20% a risparmio, fondo di emergenza e debiti.", "Dove la vita costa molto, adatta le quote (es. 60/30/10)."], "fonte": "Elizabeth Warren e Amelia Warren Tyagi, libro «All Your Worth» (2005)"}, {"n": "Bilancio a base zero", "cosa": "Ogni euro riceve un compito preciso, finché entrate meno spese fa esattamente zero. Si riparte da zero ogni mese.", "chi": "Chi vuole il massimo controllo o punta ad azzerare i debiti.", "step": ["Calcola il reddito netto del mese.", "Elenca tutte le categorie di spesa, dalle essenziali.", "Assegna un importo a ciascuna, incluse risparmio e debiti.", "Continua finché reddito meno spese = 0.", "Traccia le spese e sposta fondi se sconfini."], "fonte": "Peter Pyhrr; divulgato per le finanze personali da Dave Ramsey"}, {"n": "Metodo delle buste", "cosa": "Metti contanti in buste etichettate per categoria. Quando una busta è vuota, ti fermi. Pagare in contanti crea un attrito che frena gli acquisti d'impulso.", "chi": "Chi spende d'impulso e preferisce un metodo visivo e concreto.", "step": ["Fai prima un budget guardando 1-3 mesi di spese.", "Scegli 5-10 categorie e l'importo di ciascuna.", "Etichetta una busta per categoria con l'importo.", "Riempi ogni busta di contante.", "Spendi solo dalla busta giusta; se è vuota, fermati.", "Ogni mese ricarica e aggiusta."], "fonte": "NerdWallet; Ramsey Solutions; Fidelity"}, {"n": "Pagati per primo", "cosa": "Appena arriva lo stipendio, la prima persona da pagare sei tu: metti da parte una quota per il risparmio prima di ogni altra spesa, in automatico.", "chi": "Chi non riesce a rispettare un budget e vuole risparmiare senza forza di volontà.", "step": ["Decidi una percentuale da risparmiare (Bach suggerisce ~12,5%).", "Apri un conto di risparmio dedicato.", "Imposta un bonifico automatico appena ricevi lo stipendio.", "Vivi con ciò che resta.", "Aumenta la percentuale col tempo."], "fonte": "David Bach, libro «The Automatic Millionaire» (2004)"}, {"n": "Kakebo (metodo giapponese)", "cosa": "Un quaderno delle spese: annoti a mano entrate e uscite e rifletti. Punta alla consapevolezza più che al controllo rigido.", "chi": "Chi vuole diventare consapevole delle spese e preferisce carta e penna.", "step": ["A inizio mese scrivi quanto guadagni e quanto vuoi risparmiare.", "Ogni giorno annota a mano ogni spesa, per categoria.", "A fine mese rispondi: quanti soldi ho, quanto volevo risparmiare, quanto ho speso, come miglioro.", "Aggiusta il piano del mese dopo."], "fonte": "Ideato nel 1904 da Hani Motoko; libro di Fumiko Chiba (2017)"}, {"n": "Fondo di emergenza", "cosa": "Una riserva di denaro liquido da usare solo per imprevisti: perdita del lavoro, spese mediche, riparazioni.", "chi": "Tutti, come primo obiettivo prima di investire.", "step": ["Punta a 3-6 mesi di spese essenziali.", "Parti da un piccolo traguardo (es. 1.000 €).", "Tieni il fondo su un conto separato e accessibile.", "Alimentalo con versamenti automatici."], "fonte": "Consulenti e istituzioni finanziarie (Fidelity, Transamerica)"}, {"n": "Debito: valanga o palla di neve", "cosa": "Due modi per estinguere più debiti. La valanga parte dal tasso più alto (risparmi di più). La palla di neve parte dal saldo più piccolo (motivazione con vittorie rapide).", "chi": "Valanga per i pazienti; palla di neve per chi ha bisogno di risultati subito.", "step": ["Valanga: ordina i debiti dal tasso più alto; versa l'extra su quello.", "Palla di neve: ordina dal saldo più piccolo; versa l'extra su quello.", "In entrambi: paga il minimo sugli altri.", "Estinto il primo, sposti l'importo sul successivo."], "fonte": "Fidelity, Wells Fargo; efficacia motivazionale: Gal & McShane (2012), Journal of Marketing Research"}, {"n": "Automazione del risparmio", "cosa": "Imposti bonifici e pagamenti automatici, così il risparmio avviene senza decisioni ripetute.", "chi": "Tutti, specie chi tende a dimenticare o rimandare.", "step": ["Bonifico ricorrente dal conto al risparmio dopo lo stipendio.", "Automatizza le bollette per evitare more.", "Automatizza i versamenti previdenziali."], "fonte": "David Bach, «The Automatic Millionaire»"}]}, "produttivita": {"ico": "⏱️", "nome": "Produttività", "tit": "Tempo e procrastinazione", "intro": "Perché rimandiamo e come smettere: tecniche per concentrarsi, dare priorità e passare all'azione.", "metodi": [{"n": "Perché procrastiniamo", "cosa": "La procrastinazione non è pigrizia: è soprattutto un modo per evitare un'emozione sgradevole legata a un compito. Cediamo per stare bene subito, ma il costo ricade sul nostro «io futuro».", "chi": "Chiunque voglia capire la radice prima di applicare le tecniche.", "step": ["Rendi i compiti più concreti e vicini nel tempo.", "Ricorda: sei a disagio col compito, non sei pigro.", "Perdonati per aver rimandato: riduce il senso di colpa che alimenta la procrastinazione.", "Non aspettare la voglia: non «fallo» ma «inizia e basta», con un piccolo passo."], "fonte": "Piers Steel, Psychological Bulletin (2007); Sirois & Pychyl (2013)"}, {"n": "Tecnica del Pomodoro", "cosa": "Lavori in blocchi da 25 minuti separati da pause brevi, per tenere alta la concentrazione e ridurre l'ansia da tempo.", "chi": "Chi si distrae facilmente e chi rimanda compiti lunghi.", "step": ["Scegli un compito e scrivilo.", "Timer su 25 minuti: lavora senza interruzioni.", "Quando suona, 3-5 minuti di pausa.", "Ogni quattro pomodori, pausa lunga di 15-30 minuti.", "Annota le interruzioni per gestirle."], "fonte": "Francesco Cirillo, fine anni '80 («The Pomodoro Technique»)"}, {"n": "Metodo GTD", "cosa": "Svuoti la mente mettendo tutti gli impegni in un sistema esterno affidabile, e li trasformi in azioni concrete. Cinque fasi.", "chi": "Chi si sente sopraffatto da troppi impegni e vuole ridurre lo stress.", "step": ["Raccogli: metti tutto in una casella di raccolta.", "Chiarisci: se un'azione richiede meno di 2 minuti, falla subito.", "Organizza: smista in liste (Azioni, Calendario, Progetti, In attesa).", "Rifletti: revisione settimanale di tutte le liste.", "Agisci: scegli in base a contesto, tempo, energia, priorità."], "fonte": "David Allen, libro «Getting Things Done» (2001)"}, {"n": "Matrice di Eisenhower", "cosa": "Una griglia che ordina i compiti per urgenza e importanza, e dice cosa fare di ciascuno.", "chi": "Chi fatica a stabilire le priorità e passa il tempo a spegnere incendi.", "step": ["Elenca i compiti da fare.", "Per ognuno chiediti: è importante? è urgente?", "Urgente + importante → fallo subito.", "Importante non urgente → pianifica (il quadrante da privilegiare).", "Urgente non importante → delega.", "Né urgente né importante → elimina."], "fonte": "Attribuita a D. Eisenhower; formalizzata da Stephen Covey (1989)"}, {"n": "Blocchi di tempo", "cosa": "Assegni blocchi di tempo definiti sul calendario a compiti specifici, così ogni attività ha il suo momento.", "chi": "Chi ha molte attività diverse e tende a lasciarle indefinite.", "step": ["Elenca i compiti della giornata o settimana.", "Assegna a ciascuno un blocco orario preciso.", "Durante il blocco lavora solo su quel compito.", "Includi blocchi per pause e imprevisti."], "fonte": "Tecnica di time management collegata a Eisenhower e Pomodoro"}, {"n": "Regola dei 2 minuti", "cosa": "Se un'azione richiede meno di due minuti, falla subito invece di annotarla o rimandarla.", "chi": "Chi accumula tante piccole attività.", "step": ["Quando arriva un compito, stima se richiede meno di 2 minuti.", "Se sì, fallo subito.", "Se no, mettilo in lista o in calendario."], "fonte": "David Allen, dentro il metodo GTD"}, {"n": "Regola dei 5 secondi", "cosa": "Quando senti l'istinto di agire, conta 5-4-3-2-1 e muoviti prima che il cervello ti fermi con dubbi e scuse.", "chi": "Chi esita, rimugina o fatica a iniziare.", "step": ["Nota il momento di esitazione.", "Conta 5-4-3-2-1.", "Al «1» compi subito una piccola azione fisica."], "fonte": "Mel Robbins (2017). Strumento pratico, evidenza scientifica diretta limitata"}, {"n": "Mangia la rana", "cosa": "Affronti per primo, appena inizi la giornata, il compito più importante e difficile: quello che tenderesti a rimandare.", "chi": "Chi rimanda i compiti impegnativi facendo prima quelli piccoli.", "step": ["La sera prima, individua la tua «rana»: il compito a maggiore impatto.", "Se ne hai due, inizia dalla peggiore.", "Falla per prima, prima di ogni altra cosa.", "Non fermarti finché non l'hai finita."], "fonte": "Brian Tracy, libro «Eat That Frog!»"}, {"n": "Abbinare piacere e dovere", "cosa": "Abbini un'attività che ti piace (un «voglio») a una utile che eviti (un «dovrei»), concedendoti il piacere solo mentre fai il dovere.", "chi": "Chi fatica a mantenere abitudini utili come l'attività fisica.", "step": ["Individua un «voglio» (es. un audiolibro avvincente).", "Individua un «dovrei» (es. andare in palestra).", "Concediti il «voglio» solo durante il «dovrei»."], "fonte": "Katherine Milkman, Management Science (2014): +51% frequenza in palestra"}, {"n": "Non spezzare la catena", "cosa": "Segni una X sul calendario ogni giorno in cui fai l'attività che vuoi rendere abitudine. L'obiettivo è non spezzare mai la catena.", "chi": "Chi vuole costruire un'abitudine con costanza quotidiana.", "step": ["Scegli un'attività da fare ogni giorno.", "Ogni giorno che la fai, segna una X.", "Il tuo unico compito: non spezzare la catena."], "fonte": "Metodo attribuito a Jerry Seinfeld"}, {"n": "Piani «se-allora»", "cosa": "Piani nel formato «Se succede X, allora faccio Y», che legano un'azione a un momento o luogo preciso e la rendono quasi automatica.", "chi": "Chi ha buoni obiettivi ma non riesce a passare all'azione.", "step": ["Definisci l'obiettivo (es. fare attività fisica).", "Formulalo come se-allora: «Se sono le 7 di un feriale, allora 15 minuti di yoga».", "Ripeti finché il collegamento diventa automatico."], "fonte": "Peter Gollwitzer; meta-analisi Gollwitzer & Sheeran (2006), effetto d=.65"}]}, "salute": {"ico": "💤", "nome": "Salute e sonno", "tit": "Dormire e stare bene", "intro": "Raccomandazioni da enti pubblici (OMS, CDC, Harvard) per dormire meglio e vivere più sani. Non sostituiscono il parere di un medico.", "metodi": [{"n": "Quante ore dormire", "cosa": "Le ore di sonno raccomandate cambiano con l'età.", "chi": "Chiunque voglia capire di quanto sonno ha bisogno.", "step": ["Adulti 18-60 anni: almeno 7 ore a notte.", "Adulti 61-64 anni: 7-9 ore.", "Adulti 65+: 7-8 ore.", "Adolescenti: 8-10 ore.", "Bambini in età prescolare: 10-13 ore."], "fonte": "CDC, basato sul consenso dell'American Academy of Sleep Medicine"}, {"n": "Igiene del sonno", "cosa": "L'insieme di abitudini che favoriscono un sonno di qualità.", "chi": "Chi ha difficoltà a dormire o vuole riposare meglio.", "step": ["Vai a letto e alzati alla stessa ora, anche nei weekend.", "Camera silenziosa, buia e fresca (~18-20°C).", "Spegni gli schermi almeno 30 minuti prima (la luce blu riduce la melatonina).", "Evita caffeina nel pomeriggio e sera.", "Evita pasti abbondanti e alcol prima di dormire.", "Attività fisica di giorno, non nelle 3 ore prima di dormire."], "fonte": "CDC; Harvard Health Publishing; Sleep Foundation"}, {"n": "Respirazione 4-7-8", "cosa": "Inspiri per 4 secondi, trattieni per 7, espiri per 8. Attiva il sistema nervoso del riposo e aiuta a rilassarsi.", "chi": "Chi fatica ad addormentarsi o è in ansia.", "step": ["Metti la punta della lingua dietro i denti anteriori superiori.", "Inspira dal naso contando fino a 4.", "Trattieni contando fino a 7.", "Espira dalla bocca contando fino a 8.", "Ripeti per alcuni cicli, ogni giorno."], "fonte": "Dr. Andrew Weil (2015). Radici nel pranayama; evidenza diretta limitata"}, {"n": "Rilassamento muscolare", "cosa": "Contrai e poi rilasci in sequenza i muscoli del corpo per sciogliere la tensione e favorire il sonno.", "chi": "Chi ha tensione fisica o fatica a staccare la sera.", "step": ["Sdraiati in un luogo comodo.", "Parti dai piedi: contrai qualche secondo, poi rilascia.", "Risali: polpacci, cosce, addome, mani, braccia, spalle, viso.", "Concentrati sul rilascio a ogni passaggio."], "fonte": "Tecnica riconosciuta (Cleveland Clinic); si abbina alla 4-7-8"}, {"n": "Quanto muoversi", "cosa": "La quantità di movimento settimanale raccomandata per la salute.", "chi": "Tutti gli adulti.", "step": ["150-300 minuti a settimana di attività moderata, oppure 75-150 di vigorosa.", "Rafforzamento muscolare almeno 2 giorni a settimana.", "Anziani: aggiungi equilibrio 3 volte a settimana.", "Inizia poco e aumenta gradualmente. Un po' è meglio di niente."], "fonte": "OMS, Linee guida su attività fisica (2020)"}, {"n": "Idratazione e pause", "cosa": "Bere a sufficienza e interrompere le lunghe sessioni da seduti.", "chi": "Chi lavora a lungo alla scrivania.", "step": ["Bevi acqua regolarmente durante il giorno.", "Alzati e muoviti a intervalli regolari.", "Anche 10 minuti di camminata migliorano salute e sonno.", "Riduci il tempo totale da seduto."], "fonte": "OMS; CDC/NIOSH"}]}, "carriera": {"ico": "💼", "nome": "Carriera e lavoro", "tit": "Crescere nel lavoro", "intro": "Strategie per definire obiettivi, crescere, negoziare ed evitare il burnout, da fonti come Harvard e OMS.", "metodi": [{"n": "Obiettivi SMART", "cosa": "Un modo per scrivere obiettivi chiari: Specifici, Misurabili, Raggiungibili, Rilevanti, con una scadenza.", "chi": "Chi ha obiettivi vaghi e vuole renderli concreti.", "step": ["Specifico: definisci con precisione cosa vuoi.", "Misurabile: stabilisci come misurerai il progresso.", "Raggiungibile: verifica che sia realistico.", "Rilevante: collegalo a un motivo importante.", "Temporizzato: fissa una scadenza."], "fonte": "George T. Doran, articolo del 1981"}, {"n": "OKR", "cosa": "Colleghi un Obiettivo ambizioso a 3-5 Risultati Chiave misurabili che ne monitorano il progresso.", "chi": "Chi vuole obiettivi ambiziosi e allineare le attività a una visione.", "step": ["Definisci un Obiettivo chiaro e ispirante.", "Definisci 3-5 Risultati Chiave misurabili.", "Punta in alto: raggiungerli al 70% è già un successo.", "A fine ciclo (di solito trimestrale) valuta i risultati."], "fonte": "Andy Grove (Intel); portato in Google da John Doerr, «Measure What Matters» (2018)"}, {"n": "Networking professionale", "cosa": "Costruire e mantenere relazioni professionali utili alla crescita.", "chi": "Chi cerca opportunità, mentori o crescita.", "step": ["Individua persone e settori con cui connetterti.", "Partecipa a eventi e comunità professionali.", "Offri valore prima di chiedere.", "Coltiva le relazioni nel tempo, non solo quando ti servono."], "fonte": "Principi di sviluppo di carriera (Harvard Division of Continuing Education)"}, {"n": "Apprendimento continuo", "cosa": "Continuare ad acquisire nuove competenze (upskilling) o riconvertirsi (reskilling) per tutta la vita lavorativa.", "chi": "Chi vuole restare rilevante in un lavoro che cambia.", "step": ["Individua le competenze chiave del tuo ruolo e valutati da 1 a 10.", "Scegli quella che, migliorata, avrebbe più impatto.", "Definisci un piano (corsi, letture, pratica).", "Dedica tempo regolare e non fermarti mai."], "fonte": "Brian Tracy; principi condivisi di sviluppo professionale"}, {"n": "Prevenire il burnout", "cosa": "Il burnout è stress lavorativo cronico non gestito: esaurimento, cinismo verso il lavoro, calo di efficacia.", "chi": "Chi è sotto forte pressione lavorativa.", "step": ["Riconosci i segnali: stanchezza insolita, cinismo, calo di rendimento.", "Stabilisci confini tra lavoro e vita privata.", "Fai pause dalla tecnologia; inizia la giornata con un rituale rilassante.", "Cura sonno, alimentazione ed esercizio.", "Fissa obiettivi raggiungibili e chiedi supporto."], "fonte": "OMS (definizione ICD-11, 2019); Gallup"}, {"n": "Chiedere un aumento", "cosa": "Un approccio strutturato alla negoziazione salariale, basato su valore, tempismo e preparazione.", "chi": "Chi ritiene di essere sottopagato o pronto per una promozione.", "step": ["Auto-valutati: hai davvero guadagnato l'aumento?", "Cerca i dati di mercato per il tuo ruolo e zona.", "Prepara il caso: documenta risultati e valore, non i bisogni personali.", "Scegli il momento giusto (dopo una valutazione positiva).", "Negozia con sicurezza ma collaborando; evita ultimatum.", "Fai pratica simulando la conversazione."], "fonte": "Program on Negotiation, Harvard Law School; Harvard Business School Online"}, {"n": "Equilibrio vita-lavoro", "cosa": "Bilanciare impegni di lavoro e vita personale: è un fattore chiave contro il burnout.", "chi": "Chiunque senta di lavorare troppo.", "step": ["Definisci orari chiari di inizio e fine lavoro.", "Proteggi il tempo personale e le relazioni.", "Impara a delegare e a dire di no.", "Usa Pomodoro ed Eisenhower per non portarti il lavoro a casa.", "Prendi pause dalla tecnologia."], "fonte": "Ricerca su burnout e work-life balance; OMS"}]}};
+
+let upgAmbito=null, upgMetodo=null;
+function upgOpen(a){ upgAmbito=a; upgMetodo=null; RENDER.vita(); window.scrollTo(0,0); }
+function upgMet(i){ upgMetodo=i; RENDER.vita(); window.scrollTo(0,0); }
+function upgBack(){ if(upgMetodo!=null){ upgMetodo=null; } else { upgAmbito=null; } RENDER.vita(); }
+
+function upgradeHTML(){
+  const AMB=Object.keys(UPGRADE);
+
+  // livello 3: dettaglio di un metodo
+  if(upgAmbito && upgMetodo!=null){
+    const a=UPGRADE[upgAmbito], m=a.metodi[upgMetodo];
+    return `
+      <button class="upg-back" onclick="upgBack()">‹ ${gEsc(a.nome)}</button>
+      <div class="upg-detail">
+        <div class="upg-d-ico">${a.ico}</div>
+        <h2 class="upg-d-tit">${gEsc(m.n)}</h2>
+        <div class="upg-sec"><div class="upg-lab">Cos'è</div><p>${gEsc(m.cosa)}</p></div>
+        <div class="upg-sec"><div class="upg-lab">A chi serve</div><p>${gEsc(m.chi)}</p></div>
+        <div class="upg-sec"><div class="upg-lab">Come si fa, passo per passo</div>
+          <ol class="upg-steps">${m.step.map(s=>`<li>${gEsc(s)}</li>`).join('')}</ol></div>
+        <div class="upg-fonte"><b>Fonte:</b> ${gEsc(m.fonte)}</div>
+      </div>`;
+  }
+
+  // livello 2: elenco metodi di un ambito
+  if(upgAmbito){
+    const a=UPGRADE[upgAmbito];
+    return `
+      <button class="upg-back" onclick="upgBack()">‹ Upgrade</button>
+      <div class="h-block"><div class="eyebrow">${a.ico} ${gEsc(a.nome)}</div>
+        <h2>${gEsc(a.tit)}</h2><p>${gEsc(a.intro)}</p></div>
+      <div class="upg-list">
+        ${a.metodi.map((m,i)=>`
+          <button class="upg-item" onclick="upgMet(${i})">
+            <span class="upg-i-txt"><b>${gEsc(m.n)}</b><small>${gEsc(m.cosa.slice(0,72))}${m.cosa.length>72?'…':''}</small></span>
+            <span class="upg-i-arr">›</span>
+          </button>`).join('')}
+      </div>`;
+  }
+
+  // livello 1: i quattro ambiti
+  return `
+    <div class="h-block"><div class="eyebrow">Upgrade</div>
+      <h2>Migliora la tua vita</h2>
+      <p>Metodi concreti e verificati per gestire soldi, tempo, salute e carriera. Ogni strategia è spiegata passo per passo e cita la fonte autorevole da cui proviene.</p></div>
+    <div class="upg-grid">
+      ${AMB.map(k=>{const a=UPGRADE[k];
+        return `<button class="upg-card" onclick="upgOpen('${k}')">
+          <span class="upg-c-ico">${a.ico}</span>
+          <span class="upg-c-txt"><b>${gEsc(a.nome)}</b><small>${a.metodi.length} strategie</small></span>
+          <span class="upg-c-arr">›</span>
+        </button>`;}).join('')}
+    </div>
+    <div class="upg-nota">I contenuti hanno scopo informativo e non sostituiscono il parere di un professionista (medico, consulente finanziario). Le fonti sono citate in ogni scheda.</div>`;
+}
+
+
+/* ===== SPIEGAZIONE CITTADINO — 3 campi deterministici dal SOLO titolo ufficiale =====
+   Rispetta "nessun dato inventato": non interpreta il merito dell'atto, ma applica
+   regole trasparenti su tipo-atto e categoria (già ricavati dal titolo Normattiva).
+   I tre campi sono esplicitamente etichettati come lettura Polis, non testo ufficiale. */
+
+/* CHI è toccato: mappa deterministica categoria → platea tipica, in parole semplici */
+const NORM_CHI_MAP={
+  esteri:'Riguarda soprattutto lo Stato e i rapporti con altri Paesi; ricadute indirette su cittadini e imprese che operano con l\u2019estero.',
+  salute:'Pazienti, persone con patologie o disabilità, e chi lavora nella sanità.',
+  lavoro:'Lavoratori, imprese e professionisti del settore interessato.',
+  fisco:'Contribuenti, famiglie e imprese, per tasse, bilancio o previdenza.',
+  giustizia:'Chi entra in contatto con la giustizia: cittadini, vittime, imputati, operatori del diritto.',
+  ambiente:'Comunità del territorio interessato, agricoltori, imprese e cittadini per ambiente ed energia.',
+  scuola:'Studenti, famiglie, personale della scuola, università e mondo della cultura.',
+  trasporti:'Chi usa strade, ferrovie e trasporti, e i territori toccati dalle opere.',
+  sicurezza:'Cittadini per la sicurezza pubblica, forze dell\u2019ordine e difesa; a volte persone migranti.',
+  istituzioni:'Pubbliche amministrazioni, enti e, per le regole elettorali o costituzionali, tutti i cittadini.',
+  altro:'La platea dipende dal contenuto specifico dell\u2019atto.'
+};
+
+/* COME si attua: mappa deterministica tipo-atto → meccanismo pratico */
+function normComeSiAttua(a){
+  const t=(a.titolo||'').toLowerCase();
+  const tipo=(a.tipo||'').toLowerCase();
+  if(t.startsWith('ratifica')||/accordo|convenzione|trattato|protocollo/.test(t))
+    return 'È un\u2019intesa con altri Paesi resa legge in Italia: da quando entra in vigore, le sue regole valgono anche nel nostro ordinamento.';
+  if(t.startsWith('conversione in legge')||/decreto-legge/.test(t))
+    return 'Nasce da un decreto del Governo già in vigore per urgenza: il Parlamento lo conferma (con eventuali modifiche) entro 60 giorni, altrimenti decade.';
+  if(/decreto legislativo/.test(tipo)||t.startsWith('attuazione')||/in attuazione della delega/.test(t))
+    return 'Il Governo scrive le norme di dettaglio su delega del Parlamento: diventano operative con la pubblicazione e i successivi decreti attuativi.';
+  if(/decreto del presidente|d\.p\.r|regolamento/.test(tipo)||/regolamento/.test(t))
+    return 'È una norma di attuazione o organizzazione: precisa come si applicano regole già esistenti, spesso tramite gli uffici pubblici competenti.';
+  if(t.startsWith('bilancio')||t.startsWith('rendiconto')||/legge di bilancio/.test(t))
+    return 'Fissa o verifica come lo Stato incassa e spende: gli effetti pratici arrivano attraverso le singole misure di spesa e le regole collegate.';
+  return 'Una volta in vigore, si applica tramite gli enti competenti; gli effetti concreti dipendono dai provvedimenti attuativi e dagli uffici incaricati.';
+}
+
+/* costruisce i 3 campi. NON inventa: usa categoria e tipo già estratti dal titolo. */
+function normSpiega(a){
+  const cat=leggeCategoria({titolo:a.titolo});
+  return {
+    ambito: cat,
+    chi: NORM_CHI_MAP[cat.k]||NORM_CHI_MAP.altro,
+    come: normComeSiAttua(a)
+  };
+}
 
 // allow Enter to login
 document.addEventListener('keydown',e=>{ if(e.key==='Enter' && $('#login').classList.contains('active')) doLogin(); });
