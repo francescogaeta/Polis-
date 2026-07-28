@@ -1,0 +1,57 @@
+name: ETL sedute Assemblea (Camera)
+
+# Ogni notte alle 04:30 UTC (~06:30 in Italia d'estate): i resoconti del giorno
+# prima sono già pubblicati. Una seconda passata alle 14:00 riconcilia le
+# versioni definitive e gli allegati che arrivano più tardi.
+on:
+  schedule:
+    - cron: "30 4 * * *"
+    - cron: "0 14 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# evita che due esecuzioni si sovrappongano e si pestino i piedi sul commit
+concurrency:
+  group: etl-assemblea
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa dipendenze
+        run: pip install --quiet requests cloudscraper
+
+      - name: Esegui ETL
+        id: etl
+        run: python etl_assemblea.py
+        continue-on-error: true    # l'endpoint può essere giù: non falliamo il repo
+
+      - name: Commit dei dati aggiornati
+        run: |
+          git config user.name  "polis-bot"
+          git config user.email "polis-bot@users.noreply.github.com"
+          git add dati/assemblea.json state_assemblea.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "Nessun aggiornamento: normale nei giorni senza sedute."
+            exit 0
+          fi
+          # il branch può essere avanzato da altri workflow: riallineo prima di spingere
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git commit -m "Sedute Assemblea: aggiornamento $(date -u +%F)"
+          git push
+
+      - name: Segnala se l'ETL è fallito
+        if: steps.etl.outcome == 'failure'
+        run: |
+          echo "::warning::ETL non riuscito (endpoint SPARQL irraggiungibile o anti-bot)."
+          echo "I dati precedenti restano invariati: l'app continua a funzionare."
