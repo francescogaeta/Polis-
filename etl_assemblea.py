@@ -106,16 +106,30 @@ def test_raggiungibilita(sess):
     buoni = []
     for nome, u in prove:
         st, cont = scarica(sess, u, timeout=40)
+        testa = cont[:300].decode("utf-8", "ignore").replace("\n", " ").strip()
+        # capisco DAVVERO cosa è arrivato, non mi fido della dimensione
         if st == 0:
-            esito = f"NON RAGGIUNGIBILE ({cont[:70].decode('utf-8','ignore')})"
+            esito, buono = f"NON RAGGIUNGIBILE ({testa[:70]})", False
         elif anti_robot(cont):
-            esito = "BLOCCATO dal sistema anti-robot"
-        elif st == 200:
-            esito = f"OK — {len(cont)//1024} KB ricevuti"
-            buoni.append(nome)
+            esito, buono = "BLOCCATO dal sistema anti-robot", False
+        elif st != 200:
+            esito, buono = f"risposta {st}", False
+        elif cont.lstrip()[:5] == b"<?xml" or cont.lstrip()[:1] == b"<" and b"<html" not in cont[:400].lower():
+            esito, buono = f"OK — documento XML, {len(cont)} byte", True
+        elif b"<html" in cont[:400].lower():
+            titolo = re.search(rb"<title[^>]*>(.{0,90}?)</title>", cont[:4000], re.I|re.S)
+            t = titolo.group(1).decode("utf-8","ignore").strip() if titolo else "senza titolo"
+            atteso_html = u.endswith(".htm") or "/207" in u
+            esito = f"pagina web \u00ab{t}\u00bb, {len(cont)} byte"
+            buono = atteso_html and len(cont) > 8000
+            if not buono:
+                esito += "  <-- NON e' il dato che serve"
         else:
-            esito = f"risposta {st}"
-        print(f"\n  {nome}\n    {u[:88]}\n    -> {esito}", flush=True)
+            esito, buono = f"contenuto non riconosciuto, {len(cont)} byte", False
+        print(f"\n  {nome}\n    -> {esito}")
+        print(f"    inizio: {testa[:150]}", flush=True)
+        if buono:
+            buoni.append(nome)
         time.sleep(PAUSA)
 
     print("\n" + "=" * 56)
