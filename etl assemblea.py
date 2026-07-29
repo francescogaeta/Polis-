@@ -91,33 +91,85 @@ def righe(res):
 
 # ---------------------------------------------------------------- fase 0
 def introspezione(sess):
-    """Stampa i predicati reali di una seduta e di una votazione.
-    Serve a confermare i nomi prima di fidarsi delle query."""
-    print("=== PREDICATI DI UNA SEDUTA ===")
-    q = """
-    PREFIX ocd: <http://dati.camera.it/ocd/>
-    SELECT DISTINCT ?p (SAMPLE(?o) AS ?esempio) WHERE {
-      ?s a ocd:seduta ; ?p ?o .
-    } GROUP BY ?p LIMIT 60
-    """
-    try:
-        for r in righe(sparql(sess, q)):
-            print(f"  {r.get('p','')}\n      es: {str(r.get('esempio',''))[:90]}")
-    except Exception as e:
-        print("  errore:", e)
+    """Diagnosi passo per passo. Stampa SEMPRE qualcosa, anche quando fallisce:
+    un log muto non permette di capire dove si è fermato."""
+    esiti = []
 
-    print("\n=== PREDICATI DI UNA VOTAZIONE ===")
-    q2 = """
-    PREFIX ocd: <http://dati.camera.it/ocd/>
-    SELECT DISTINCT ?p (SAMPLE(?o) AS ?esempio) WHERE {
-      ?v a ocd:votazione ; ?p ?o .
-    } GROUP BY ?p LIMIT 60
-    """
-    try:
-        for r in righe(sparql(sess, q2)):
-            print(f"  {r.get('p','')}\n      es: {str(r.get('esempio',''))[:90]}")
-    except Exception as e:
-        print("  errore:", e)
+    def prova(titolo, query, timeout=60):
+        print("\n" + "-"*54)
+        print("PROVA:", titolo)
+        print("-"*54, flush=True)
+        try:
+            res = sparql(sess, query, timeout=timeout)
+            r = list(righe(res))
+            if not r:
+                print("  Risposta ricevuta, ma NESSUN risultato.")
+                esiti.append((titolo, "vuoto"))
+                return []
+            print(f"  OK — {len(r)} risultati:")
+            for x in r[:45]:
+                riga = " | ".join(f"{k}={str(v)[:70]}" for k, v in x.items())
+                print("   ", riga)
+            esiti.append((titolo, "ok"))
+            return r
+        except Exception as e:
+            msg = str(e)[:200].replace("\n", " ")
+            print(f"  FALLITA: {type(e).__name__}: {msg}")
+            esiti.append((titolo, "errore"))
+            return []
+
+    print("=" * 54)
+    print("DIAGNOSI CONNESSIONE A dati.camera.it")
+    print("=" * 54, flush=True)
+
+    # 1. l'endpoint risponde?
+    prova("L'endpoint risponde a una domanda banale",
+          "SELECT ?x WHERE { BIND(1 AS ?x) }", timeout=45)
+
+    # 2. esiste la classe seduta e quante ne vede?
+    prova("Quante sedute esistono in archivio",
+          """PREFIX ocd: <http://dati.camera.it/ocd/>
+             SELECT (COUNT(?s) AS ?quante) WHERE { ?s a ocd:seduta }""", timeout=60)
+
+    # 3. predicati di UNA seduta precisa (leggera: non scandisce tutto l'archivio)
+    prova("Come è fatta una seduta (campi disponibili)",
+          """SELECT ?campo ?valore WHERE {
+               <http://dati.camera.it/ocd/seduta.rdf/s18_376> ?campo ?valore
+             } LIMIT 45""", timeout=60)
+
+    # 4. predicati di UNA votazione precisa
+    prova("Come è fatta una votazione (campi disponibili)",
+          """SELECT ?campo ?valore WHERE {
+               <http://dati.camera.it/ocd/votazione.rdf/vs18_376_073> ?campo ?valore
+             } LIMIT 45""", timeout=60)
+
+    # 5. esiste la legislatura 19?
+    prova("Sedute della legislatura in corso (prime 5)",
+          f"""PREFIX ocd: <http://dati.camera.it/ocd/>
+             SELECT ?seduta WHERE {{
+               ?seduta a ocd:seduta ; ocd:rif_leg <{LEG_URI}>
+             }} LIMIT 5""", timeout=60)
+
+    # riepilogo finale, sempre stampato
+    print("\n" + "=" * 54)
+    print("RIEPILOGO")
+    print("=" * 54)
+    for t, e in esiti:
+        segno = {"ok": "OK   ", "vuoto": "VUOTO", "errore": "ERRORE"}[e]
+        print(f"  {segno}  {t}")
+    ok_n = sum(1 for _, e in esiti if e == "ok")
+    print()
+    if ok_n == 0:
+        print("CONCLUSIONE: la Camera non risponde a nessuna richiesta.")
+        print("Probabile blocco degli accessi automatici dagli indirizzi di GitHub.")
+        print("Serve cambiare metodo: leggere i file pubblicati invece dell'endpoint.")
+    elif ok_n < len(esiti):
+        print(f"CONCLUSIONE: {ok_n} prove su {len(esiti)} riuscite.")
+        print("L'endpoint funziona ma alcuni campi hanno nomi diversi da quelli previsti.")
+        print("Manda questo elenco a chi sviluppa: bastano piccole correzioni.")
+    else:
+        print("CONCLUSIONE: tutto funziona. Copia i campi qui sopra e mandali.")
+    print("=" * 54, flush=True)
 
 
 # ---------------------------------------------------------------- query
