@@ -3069,6 +3069,14 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
   color:var(--ink);margin:4px 0 11px;letter-spacing:.02em}
 .ver-b{width:100%;background:#155e42;color:#fff;border:none;border-radius:10px;
   padding:11px;font-size:13px;font-weight:700;cursor:pointer}
+
+.diag{display:block;border-radius:10px;padding:12px;margin:0 0 11px;font-size:12.5px;line-height:1.55}
+.diag b{display:block;font-size:13.5px;margin-bottom:5px}
+.diag span{display:block}
+.diag code{display:block;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;
+  opacity:.7;margin-top:9px}
+.diag-ok{background:rgba(22,199,154,.13);color:#0B7A5A}
+.diag-ko{background:rgba(224,83,61,.12);color:#9A3626}
 </style>
 </head>
 <body>
@@ -24226,9 +24234,11 @@ function assembleaLiveHTML(){
    mostrando la versione nuova o una copia salvata in precedenza. */
 const POLIS_VERSIONE = "2026.07.30-1804";
 function versioneHTML(){
+  const diag = (typeof diagnosiHTML==='function') ? diagnosiHTML() : '';
   return `<div class="ver-box">
     <div class="ver-l">Versione installata</div>
     <div class="ver-v">${POLIS_VERSIONE}</div>
+    ${diag}
     <button class="ver-b" onclick="forzaAggiornamento()">Scarica la versione più recente</button>
   </div>`;
 }
@@ -24244,6 +24254,60 @@ async function forzaAggiornamento(){
     }
   }catch(e){}
   location.reload(true);
+}
+
+
+/* Verifica che il telefono permetta davvero di salvare i dati.
+   Se il salvataggio non funziona, l'app riparte da zero ogni volta:
+   meglio dirlo apertamente che lasciare l'utente a indovinare. */
+function provaSalvataggio(){
+  try{
+    const k='polis_prova_'+Date.now();
+    localStorage.setItem(k,'1');
+    const ok = localStorage.getItem(k)==='1';
+    localStorage.removeItem(k);
+    if(!ok) return {ok:false, causa:'scrive ma non rilegge'};
+    return {ok:true};
+  }catch(e){
+    return {ok:false, causa:(e&&e.name)||'bloccato'};
+  }
+}
+function comeApertaApp(){
+  try{
+    const p = location.protocol;
+    if(p==='file:') return 'file';           // aperta come file dal telefono
+    const standalone = window.navigator.standalone===true ||
+      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+    if(standalone) return 'installata';       // icona in home, modo corretto
+    return 'browser';
+  }catch(e){ return 'sconosciuto'; }
+}
+function diagnosiHTML(){
+  const s = provaSalvataggio();
+  const modo = comeApertaApp();
+  if(s.ok){
+    return `<div class="diag diag-ok">
+      <b>I dati vengono salvati correttamente.</b>
+      <span>Tutorial e informazioni inserite restano al loro posto.</span>
+    </div>`;
+  }
+  let spiega;
+  if(modo==='file'){
+    spiega = `L'app è stata aperta come <b>file salvato sul telefono</b>. In questo
+      modo il telefono non le permette di salvare niente, quindi ricomincia
+      sempre da capo.<br><br><b>Come risolvere:</b> aprila dall'indirizzo del sito
+      (quello di GitHub Pages), poi tocca Condividi e "Aggiungi a Home".`;
+  } else {
+    spiega = `Il telefono sta impedendo il salvataggio. Le cause più comuni sono
+      la <b>navigazione privata</b> oppure l'apertura dentro l'anteprima di
+      un'altra app.<br><br><b>Come risolvere:</b> apri l'indirizzo del sito in
+      Safari (non in privata), poi Condividi e "Aggiungi a Home".`;
+  }
+  return `<div class="diag diag-ko">
+    <b>I dati non vengono salvati</b>
+    <span>${spiega}</span>
+    <code>modo: ${modo} · ${s.causa||''}</code>
+  </div>`;
 }
 
 // allow Enter to login
