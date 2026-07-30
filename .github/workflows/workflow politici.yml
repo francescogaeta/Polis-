@@ -1,0 +1,87 @@
+name: Aggiorna politici (Governo, Senato, Camera)
+
+# Settimanale: cambi di gruppo e subentri non sono quotidiani.
+# Il pulsante manuale serve per i rimpasti di governo.
+on:
+  schedule:
+    - cron: "0 4 * * 1"      # ogni lunedì alle 04:00 UTC
+  workflow_dispatch:
+    inputs:
+      modalita:
+        description: "Cosa vuoi fare"
+        required: true
+        default: "normale"
+        type: choice
+        options:
+          - normale
+          - test        # controlla solo se le fonti rispondono
+
+permissions:
+  contents: write
+
+concurrency:
+  group: etl-politici
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Controlla che lo script sia al suo posto
+        run: |
+          if [ ! -f "etl_politici.py" ]; then
+            echo "::error::etl_politici.py non è nella cartella principale."
+            ls -la
+            exit 1
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa le librerie
+        run: pip install --quiet requests rdflib
+
+      - name: Prova le fonti
+        if: github.event.inputs.modalita == 'test'
+        run: python etl_politici.py --test
+
+      - name: Scarica i dati
+        id: etl
+        if: github.event.inputs.modalita != 'test'
+        run: |
+          set +e
+          python etl_politici.py
+          echo "codice=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+        continue-on-error: true
+
+      - name: Spiega cosa è successo
+        if: github.event.inputs.modalita != 'test'
+        run: |
+          C="${{ steps.etl.outputs.codice }}"
+          case "$C" in
+            0) echo "Aggiornamento riuscito." ;;
+            1) echo "::warning::Dati incompleti o fonte irraggiungibile. I dati precedenti restano invariati: l'app continua a funzionare. Vedi il passaggio qui sopra per il motivo." ;;
+            2) echo "::error::Python non ha trovato lo script, oppure c'è un errore nel file." ;;
+            *) echo "::warning::Interrotto con codice $C." ;;
+          esac
+
+      # Salva SOLO se lo scarico è andato a buon fine: meglio dati vecchi
+      # che dati parziali.
+      - name: Salva
+        if: github.event.inputs.modalita != 'test' && steps.etl.outputs.codice == '0'
+        run: |
+          git config user.name  "polis-bot"
+          git config user.email "polis-bot@users.noreply.github.com"
+          git add dati/politici.json
+          if git diff --cached --quiet; then
+            echo "Nessun cambiamento rispetto alla settimana scorsa."
+            exit 0
+          fi
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git commit -m "Politici: aggiornamento $(date -u +%F)"
+          git push
