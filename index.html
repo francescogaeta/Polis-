@@ -3059,6 +3059,16 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
 .asml-attesa p{font-size:13px;line-height:1.55;color:var(--ink-soft);margin:8px 0 14px}
 .asml-ric{background:#155e42;color:#fff;border:none;border-radius:11px;padding:11px 22px;
   font-size:14px;font-weight:700;cursor:pointer}
+
+/* indicatore di versione */
+.ver-box{margin:18px 14px 26px;padding:14px;background:rgba(128,128,128,.07);
+  border-radius:12px}
+.ver-l{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--ink-soft);opacity:.8}
+.ver-v{font-family:ui-monospace,Menlo,monospace;font-size:15px;font-weight:600;
+  color:var(--ink);margin:4px 0 11px;letter-spacing:.02em}
+.ver-b{width:100%;background:#155e42;color:#fff;border:none;border-radius:10px;
+  padding:11px;font-size:13px;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
@@ -7831,6 +7841,13 @@ function renderDrawer(){
     Notifiche${nNotif?`<span class="di-badge">${nNotif}</span>`:''}</div>`;
 
   html+='<div class="drawer-sec">App</div>';
+  // la versione va in fondo alla sezione App
+  setTimeout(()=>{ try{
+    const d=document.getElementById('drawerBody')||document.querySelector('.drawer-body');
+    if(d && !d.querySelector('.ver-box') && typeof versioneHTML==='function'){
+      d.insertAdjacentHTML('beforeend', versioneHTML());
+    }
+  }catch(e){} },60);
   html+=`<div class="drawer-item" onclick="closeDrawer();setTimeout(()=>{if(typeof tutStart==='function')tutStart();},200)">
     <span class="di-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3 M12 17h.01"/></svg></span>
     Come si usa Polis</div>`;
@@ -24202,6 +24219,31 @@ function assembleaLiveHTML(){
       <div class="asml-fonte-f">Licenza dei dati: CC-BY 4.0 — Camera dei deputati.</div>
     </div>
   </div>`;
+}
+
+
+/* Indicatore di versione: serve a capire con certezza se il telefono sta
+   mostrando la versione nuova o una copia salvata in precedenza. */
+const POLIS_VERSIONE = "2026.07.30-1804";
+function versioneHTML(){
+  return `<div class="ver-box">
+    <div class="ver-l">Versione installata</div>
+    <div class="ver-v">${POLIS_VERSIONE}</div>
+    <button class="ver-b" onclick="forzaAggiornamento()">Scarica la versione più recente</button>
+  </div>`;
+}
+async function forzaAggiornamento(){
+  try{
+    if('serviceWorker' in navigator){
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for(const r of regs) await r.unregister();
+    }
+    if(window.caches){
+      const chiavi = await caches.keys();
+      for(const k of chiavi) await caches.delete(k);
+    }
+  }catch(e){}
+  location.reload(true);
 }
 
 // allow Enter to login
