@@ -3,49 +3,45 @@
 """
 etl_comuni.py — ETL Polis per i dati comunali di Cruscotto Italia (AgID).
 
+=====================  USO RESPONSABILE DELLA FONTE  =====================
+Il server di Cruscotto Italia è pubblico ma ha limiti espliciti, e superarli
+fa bloccare l'indirizzo IP per un'ora. Questo script li rispetta:
+
+  * almeno 0,5 s fra una richiesta e l'altra          (MIN_INTERVAL)
+  * al massimo 12 comuni distinti ogni 600 s          (MAX_COMUNI / WINDOW)
+  * se il server risponde 403 o 429, si FERMA subito e lo dichiara:
+    non ritenta, non aggira, non cambia indirizzo.
+
+Questi valori NON vanno alzati per andare più veloci. Se servono più comuni,
+si fanno più esecuzioni distanziate nel tempo: lo script tiene un segnalibro
+(cursore) e riprende da dove era rimasto.
+
+Non ricostruisce aggregati territoriali (medie regionali, classifiche) con
+scaricamenti di massa: la fonte non li pubblica e non vanno stimati.
+==========================================================================
+
 Cosa fa
 -------
-1. Legge l'indice ufficiale dei comuni da Cruscotto Italia.
-2. Per una lista di comuni (di default i 107 capoluoghi), scarica lo shard
-   dashboard e ne estrae:
-     - un blocco KPI sintetico (per la scheda comune dell'app);
-     - il blocco "Iniziative della PA" (PNRR + Opere BDAP + Appalti ANAC).
-3. Salva per ogni comune un file `comuni/<istat>.json` (dati correnti).
-4. Mantiene uno STORICO versionato in `comuni/storico/<istat>/<data>.json`,
-   scrivendo un nuovo snapshot solo quando i dati sono cambiati rispetto
-   all'ultimo (confronto sul campo `_generated_at` della fonte + hash dei KPI).
-5. Rigenera `comuni/index.json` (indice leggero per la ricerca nell'app) e
-   `comuni/_meta.json` (quando è girato l'ETL, quante fonti, ecc.).
-
-Principi (allineati a Polis)
-----------------------------
-- NESSUN DATO INVENTATO: si copiano solo i valori pubblicati dalla fonte.
-  Nessuna stima, nessun ricalcolo, nessun aggregato territoriale.
-- Le fonti sono sempre citate nel JSON prodotto.
-- Rispetto del server: throttle configurabile, backoff sugli errori,
-  nessun download di massa oltre la lista dichiarata.
-- Idempotente e incrementale: rilanciarlo non duplica lo storico.
+1. Legge l'indice ufficiale dei comuni.
+2. Per un LOTTO di comuni (default 12, cioè una finestra) scarica lo shard ed
+   estrae KPI + Iniziative della PA (PNRR, opere BDAP, appalti ANAC).
+3. Salva `comuni/<istat>.json` e aggiorna lo STORICO versionato
+   `comuni/storico/<istat>/<data>.json`, solo se i dati sono cambiati.
+4. Aggiorna `comuni/index.json`, `comuni/_meta.json` e il cursore.
 
 Uso
 ---
-    # tutti i capoluoghi (default), sorgente pubblica
-    python3 etl_comuni.py
+    # un lotto conforme (12 comuni) e poi si ferma: adatto al run notturno
+    python3 etl_comuni.py --out ../app/data/comuni
 
-    # solo alcuni comuni per codice ISTAT
-    python3 etl_comuni.py --istat 075035 058091 015146
+    # comuni specifici (max 12 per esecuzione)
+    python3 etl_comuni.py --out ../app/data/comuni --istat 048017 058091
 
-    # da file lista (una riga = un codice ISTAT o "istat;nome;regione")
-    python3 etl_comuni.py --lista capoluoghi.txt
+    # tutti i capoluoghi in una sola esecuzione: LENTO PER SCELTA
+    # (si mette in pausa da solo, ~50 s per comune, circa 90 minuti)
+    python3 etl_comuni.py --out ../app/data/comuni --tutti
 
-    # cambiare cartella di output e intervallo fra richieste
-    python3 etl_comuni.py --out ../app/data --sleep 1.5
-
-Variabili d'ambiente
---------------------
-    CRUSCOTTO_BASE   base URL degli shard
-                     (default https://cruscotto-italia.dati.gov.it/data)
-
-Dipendenze: solo standard library.
+Dipendenze: solo standard library (certifi se disponibile).
 """
 
 import argparse
@@ -57,12 +53,56 @@ import sys
 import time
 import urllib.request
 import urllib.error
+from collections import deque
 from datetime import datetime, timezone
 
 BASE = os.environ.get("CRUSCOTTO_BASE", "https://cruscotto-italia.dati.gov.it/data")
-UA = "polis-etl/1.0 (+https://github.com/) civic-tech"
+UA = "polis-etl/2.0 (civic-tech; rispetta i limiti della fonte)"
 
-# ------------------------------------------------------------------ rete
+# --- limiti della fonte: non modificare per aggirare un blocco ---
+MIN_INTERVAL = 0.5      # secondi minimi fra due richieste
+MAX_COMUNI = 12         # comuni distinti per finestra
+WINDOW = 600            # ampiezza della finestra, in secondi
+
+
+class LimiteFonte(Exception):
+    """Il server ha segnalato un blocco (403/429): ci fermiamo."""
+
+
+class Throttle:
+    """Fa rispettare i due limiti: intervallo minimo e comuni per finestra."""
+
+    def __init__(self, min_interval=MIN_INTERVAL, max_comuni=MAX_COMUNI,
+                 window=WINDOW, verbose=True):
+        self.min_interval = min_interval
+        self.max_comuni = max_comuni
+        self.window = window
+        self.verbose = verbose
+        self.ultimo = None      # None, non 0.0: monotonic() può valere 0
+        self.finestra = deque()
+        self.visti = set()
+
+    def attendi(self, istat):
+        ora = time.monotonic()
+        delta = ora - (self.ultimo if self.ultimo is not None else -1e9)
+        if self.ultimo is not None and delta < self.min_interval:
+            time.sleep(self.min_interval - delta)
+        if istat not in self.visti:
+            while True:
+                ora = time.monotonic()
+                while self.finestra and (ora - self.finestra[0]) >= self.window:
+                    self.finestra.popleft()
+                if len(self.finestra) < self.max_comuni:
+                    break
+                pausa = self.window - (ora - self.finestra[0]) + 0.5
+                if self.verbose:
+                    print("    [limite fonte] %d comuni in %ds: attendo %.0f s"
+                          % (self.max_comuni, self.window, pausa), flush=True)
+                time.sleep(max(1.0, pausa))
+            self.finestra.append(time.monotonic())
+            self.visti.add(istat)
+        self.ultimo = time.monotonic()
+
 
 def _ctx():
     ctx = ssl.create_default_context()
@@ -75,41 +115,42 @@ def _ctx():
     return ctx
 
 
-def fetch_json(path, retries=3, backoff=2.0):
-    """Scarica uno shard JSON. Ritorna (obj, None) o (None, motivo)."""
+def fetch_json(path, throttle=None, istat=None, retries=2):
+    """Scarica uno shard. Ritorna (obj, None) o (None, motivo).
+    Solleva LimiteFonte su 403/429: in quel caso ci si ferma."""
     if BASE.startswith("/"):
         fp = os.path.join(BASE, path)
         if not os.path.exists(fp):
-            return None, "file locale assente: " + fp
+            return None, "file locale assente"
         with open(fp, encoding="utf-8") as f:
             return json.load(f), None
+
     url = BASE.rstrip("/") + "/" + path
     last = None
-    for attempt in range(retries):
+    for tentativo in range(retries):
+        if throttle and istat:
+            throttle.attendi(istat)
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA})
             with urllib.request.urlopen(req, timeout=45, context=_ctx()) as r:
                 return json.loads(r.read().decode("utf-8")), None
         except urllib.error.HTTPError as e:
+            if e.code in (403, 429):
+                raise LimiteFonte(
+                    "il server ha risposto %s: probabile blocco per eccesso di "
+                    "richieste. Lo script si ferma. Riprovare più tardi (il "
+                    "blocco dura circa un'ora). NON alzare i limiti." % e.code)
             if e.code == 404:
-                return None, "404 (fonte assente per questo comune)"
+                return None, "404 (nessun dato per questo comune)"
             last = "HTTP %s" % e.code
-            # 403/429: probabile throttle → backoff progressivo
-            time.sleep(backoff * (attempt + 1))
+            time.sleep(2.0 * (tentativo + 1))
         except Exception as e:
             last = str(e)
-            time.sleep(backoff * (attempt + 1))
-    return None, last or "errore rete"
-
-
-# ------------------------------------------------------------------ estrazione
-
-def _num(v):
-    return v if isinstance(v, (int, float)) else None
+            time.sleep(2.0 * (tentativo + 1))
+    return None, last or "errore di rete"
 
 
 def build_kpi(dash):
-    """Sottoinsieme KPI usato dalla scheda comune. Solo valori pubblicati."""
     g = dash.get("kpi_summary") or {}
     ana = g.get("anagrafica") or dash.get("anagrafica") or {}
     out = {
@@ -141,85 +182,65 @@ def build_kpi(dash):
 
 
 def build_iniziative_pa(dash):
-    """PNRR + Opere BDAP + Appalti ANAC: le iniziative della PA sul territorio."""
     pnrr = dash.get("pnrr") or {}
     opere = dash.get("opere") or {}
     anac = dash.get("anac") or {}
-
-    # PNRR: top 20 progetti per finanziamento, + riepilogo per missione
-    pnrr_prj = sorted(
-        pnrr.get("progetti", []),
-        key=lambda x: -(x.get("finanziamento_pnrr") or 0),
-    )[:20]
-    pnrr_out = {
-        "per_missione": pnrr.get("per_missione", []),
-        "progetti": [{
-            "cup": p.get("cup"),
-            "titolo": p.get("titolo"),
-            "missione": p.get("missione"),
-            "missione_desc": p.get("missione_descrizione"),
-            "importo": p.get("finanziamento_pnrr"),
-            "stato": p.get("stato_avanzamento"),
-            "fase": p.get("fase_iter"),
-            "fine_prevista": p.get("data_fine_prevista"),
-        } for p in pnrr_prj],
-        "fonte": pnrr.get("fonte") or "ReGiS / OpenPNRR",
-        "fonte_url": pnrr.get("fonte_url"),
-        "data_estrazione": pnrr.get("data_estrazione"),
-    } if pnrr else None
-
-    # Opere BDAP: top 20 per costo
-    opere_prj = sorted(
-        opere.get("progetti", []),
-        key=lambda x: -((x.get("costo_eff") or x.get("costo_prev")) or 0),
-    )[:20]
-    opere_out = {
-        "n_progetti": opere.get("n_progetti"),
-        "progetti": [{
-            "cup": p.get("cup"),
-            "descrizione": p.get("descrizione"),
-            "stato": p.get("stato"),
-            "settore": p.get("settore"),
-            "costo": p.get("costo_eff") or p.get("costo_prev"),
-            "fin_statali": p.get("fin_statali"),
-            "fin_europei": p.get("fin_europei"),
-            "data_inizio": p.get("data_inizio"),
-        } for p in opere_prj],
-        "fonte": "BDAP-MOP · Monitoraggio Opere Pubbliche (RGS-MEF)",
-    } if opere else None
-
-    # ANAC: aggregato per categoria CPV
-    anac_out = {
-        "buyer": anac.get("buyer_name"),
-        "count": anac.get("count"),
-        "importo_totale": anac.get("importo_totale"),
-        "first": anac.get("first_award_date"),
-        "last": anac.get("last_award_date"),
-        "top_cpv": [{
-            "desc": c.get("desc"),
-            "count": c.get("count"),
-            "importo": c.get("importo"),
-        } for c in (anac.get("top_cpv") or [])[:10]],
-        "fonte": "ANAC · Banca Dati Nazionale dei Contratti Pubblici",
-    } if anac else None
-
     out = {}
-    if pnrr_out:
-        out["pnrr"] = pnrr_out
-    if opere_out:
-        out["opere"] = opere_out
-    if anac_out:
-        out["anac"] = anac_out
+
+    if pnrr.get("progetti") is not None:
+        prj = sorted(pnrr.get("progetti", []),
+                     key=lambda x: -(x.get("finanziamento_pnrr") or 0))[:20]
+        out["pnrr"] = {
+            "per_missione": pnrr.get("per_missione", []),
+            "progetti": [{
+                "cup": p.get("cup"), "titolo": p.get("titolo"),
+                "missione": p.get("missione"),
+                "missione_desc": p.get("missione_descrizione"),
+                "importo": p.get("finanziamento_pnrr"),
+                "stato": p.get("stato_avanzamento"),
+                "fase": p.get("fase_iter"),
+                "fine_prevista": p.get("data_fine_prevista"),
+            } for p in prj],
+            "fonte": pnrr.get("fonte") or "ReGiS / OpenPNRR",
+            "fonte_url": pnrr.get("fonte_url"),
+            "data_estrazione": pnrr.get("data_estrazione"),
+        }
+
+    if opere.get("progetti") is not None:
+        prj = sorted(opere.get("progetti", []),
+                     key=lambda x: -((x.get("costo_eff") or x.get("costo_prev")) or 0))[:20]
+        out["opere"] = {
+            "n_progetti": opere.get("n_progetti"),
+            "progetti": [{
+                "cup": p.get("cup"), "descrizione": p.get("descrizione"),
+                "stato": p.get("stato"), "settore": p.get("settore"),
+                "costo": p.get("costo_eff") or p.get("costo_prev"),
+                "fin_statali": p.get("fin_statali"),
+                "fin_europei": p.get("fin_europei"),
+                "data_inizio": p.get("data_inizio"),
+            } for p in prj],
+            "fonte": "BDAP-MOP · Monitoraggio Opere Pubbliche (RGS-MEF)",
+        }
+
+    if anac.get("count") is not None:
+        out["anac"] = {
+            "buyer": anac.get("buyer_name"),
+            "count": anac.get("count"),
+            "importo_totale": anac.get("importo_totale"),
+            "first": anac.get("first_award_date"),
+            "last": anac.get("last_award_date"),
+            "top_cpv": [{"desc": c.get("desc"), "count": c.get("count"),
+                         "importo": c.get("importo")}
+                        for c in (anac.get("top_cpv") or [])[:10]],
+            "fonte": "ANAC · Banca Dati Nazionale dei Contratti Pubblici",
+        }
     return out
 
 
-def kpi_fingerprint(kpi, pa):
-    """Hash stabile per capire se i dati sono cambiati (per lo storico)."""
+def fingerprint(kpi, pa):
     blob = json.dumps({"k": kpi, "p": pa}, ensure_ascii=False, sort_keys=True)
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
 
-
-# ------------------------------------------------------------------ storico
 
 def read_json(path):
     try:
@@ -230,42 +251,33 @@ def read_json(path):
 
 
 def write_json(path, obj):
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+    d = os.path.dirname(path)
+    if d:
+        os.makedirs(d, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(obj, f, ensure_ascii=False, separators=(",", ":"))
 
 
 def update_storico(out_dir, istat, record):
-    """Scrive uno snapshot nello storico solo se cambiato dall'ultimo.
-
-    Struttura: comuni/storico/<istat>/<YYYY-MM-DD>.json
-    Ritorna: 'nuovo' | 'aggiornato' | 'invariato'
-    """
     sdir = os.path.join(out_dir, "storico", istat)
     os.makedirs(sdir, exist_ok=True)
-    snaps = sorted(f for f in os.listdir(sdir) if f.endswith(".json"))
-    fp = record["_fingerprint"]
+    snaps = sorted(f for f in os.listdir(sdir)
+                   if f.endswith(".json") and not f.startswith("_"))
     if snaps:
         last = read_json(os.path.join(sdir, snaps[-1]))
-        if last and last.get("_fingerprint") == fp:
+        if last and last.get("_fingerprint") == record["_fingerprint"]:
             return "invariato"
     day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     write_json(os.path.join(sdir, day + ".json"), record)
-    # aggiorna un piccolo manifest dello storico
-    manifest = {
+    write_json(os.path.join(sdir, "_index.json"), {
         "istat": istat,
-        "snapshots": sorted(
-            [s[:-5] for s in os.listdir(sdir) if s.endswith(".json")]
-        ),
-    }
-    write_json(os.path.join(sdir, "_index.json"), manifest)
+        "snapshots": sorted(s[:-5] for s in os.listdir(sdir)
+                            if s.endswith(".json") and not s.startswith("_")),
+    })
     return "nuovo" if not snaps else "aggiornato"
 
 
-# ------------------------------------------------------------------ pipeline
-
-CAPOLUOGHI_DEFAULT = [
-    # 107 capoluoghi (codice ISTAT). L'ETL li risolve e verifica sull'indice.
+CAPOLUOGHI = [
     "001272", "002004", "005002", "096024", "004078", "003106", "103077",
     "002158", "007003", "015146", "016024", "017029", "013075", "019036",
     "097042", "098031", "020030", "108033", "018110", "014061", "012133",
@@ -281,142 +293,148 @@ CAPOLUOGHI_DEFAULT = [
     "075035", "073027", "076063", "077014", "080063", "078045", "079023",
     "101010", "102047", "082053", "083048", "087015", "084001", "085004",
     "086009", "088009", "089017", "081021", "092009", "090064", "091051",
-    "095038", "111",
+    "095038",
 ]
 
 
-def load_index():
-    idx, err = fetch_json("lookup/comuni-index.json")
-    if err:
-        return None, err
-    # normalizza in dict istat -> record
-    d = {}
-    for c in idx:
-        d[c["i"]] = {"istat": c["i"], "nome": c.get("n"),
-                     "prov": c.get("p"), "reg": c.get("r")}
-    return d, None
+def carica_indice(throttle):
+    idx, err = fetch_json("lookup/comuni-index.json", throttle, "__indice__")
+    if err or not idx:
+        return None, err or "indice vuoto"
+    return {c["i"]: {"nome": c.get("n"), "prov": c.get("p"), "reg": c.get("r")}
+            for c in idx}, None
 
 
-def run(istat_list, out_dir, sleep_s, index):
+def run(istat_list, out_dir, throttle, index):
     os.makedirs(out_dir, exist_ok=True)
     now = datetime.now(timezone.utc).isoformat()
     esiti = {"ok": 0, "nuovo": 0, "aggiornato": 0, "invariato": 0, "errore": 0}
-    index_out = []
-    dettaglio = []
+    fermato = None
 
     for i, istat in enumerate(istat_list, 1):
-        meta = (index or {}).get(istat, {}) if index else {}
+        meta = (index or {}).get(istat, {})
         nome = meta.get("nome") or istat
-        print("[%3d/%3d] %s (%s) ... " % (i, len(istat_list), nome, istat),
+        print("[%3d/%3d] %-24s (%s) ... " % (i, len(istat_list), nome, istat),
               end="", flush=True)
-
-        dash, err = fetch_json("dashboard/%s.json" % istat)
+        try:
+            dash, err = fetch_json("dashboard/%s.json" % istat, throttle, istat)
+        except LimiteFonte as e:
+            print("STOP")
+            fermato = str(e)
+            break
         if err or not dash:
-            print("SALTATO:", err)
+            print("saltato:", err)
             esiti["errore"] += 1
-            dettaglio.append({"istat": istat, "nome": nome, "esito": "errore",
-                              "motivo": err})
-            time.sleep(sleep_s)
             continue
 
         kpi = build_kpi(dash)
         pa = build_iniziative_pa(dash)
-        fp = kpi_fingerprint(kpi, pa)
-
+        ana = kpi.get("anagrafica") or {}
         record = {
             "istat": istat,
-            "nome": (kpi.get("anagrafica") or {}).get("nome") or nome,
-            "regione": (kpi.get("anagrafica") or {}).get("regione")
-                       or meta.get("reg"),
-            "provincia": (kpi.get("anagrafica") or {}).get("provincia")
-                         or meta.get("prov"),
+            "nome": ana.get("nome") or nome,
+            "regione": ana.get("regione") or meta.get("reg"),
+            "provincia": ana.get("provincia") or meta.get("prov"),
             "kpi": kpi,
-            "iniziative_pa": pa,
+            "iniziative_pa": pa or None,
             "_source_generated_at": dash.get("_generated_at"),
             "_etl_version": dash.get("_etl_version"),
             "_fetched_at": now,
-            "_fingerprint": fp,
+            "_fingerprint": fingerprint(kpi, pa),
             "_fonte": "Cruscotto Italia · AgID (dati.gov.it)",
         }
-
-        # file corrente
         write_json(os.path.join(out_dir, "%s.json" % istat), record)
-        # storico
-        esito_st = update_storico(out_dir, istat, record)
-        esiti[esito_st] += 1
+        esito = update_storico(out_dir, istat, record)
+        esiti[esito] += 1
         esiti["ok"] += 1
+        print(esito)
 
+    # indice ricostruito da TUTTI i file presenti, non solo da questo lotto
+    index_out = []
+    for f in sorted(os.listdir(out_dir)):
+        if not f.endswith(".json") or f.startswith("_") or f == "index.json":
+            continue
+        rec = read_json(os.path.join(out_dir, f))
+        if not rec or not rec.get("kpi"):
+            continue
         index_out.append({
-            "i": istat, "n": record["nome"],
-            "r": record["regione"], "p": record["provincia"],
-            "pop": (kpi.get("demografia") or {}).get("popolazione"),
+            "i": rec.get("istat"), "n": rec.get("nome"),
+            "r": rec.get("regione"), "p": rec.get("provincia"),
+            "pop": (rec["kpi"].get("demografia") or {}).get("popolazione"),
         })
-        dettaglio.append({"istat": istat, "nome": record["nome"],
-                          "esito": esito_st})
-        print(esito_st)
-        time.sleep(sleep_s)
-
-    # indice comuni per la ricerca in-app (solo quelli scaricati)
     index_out.sort(key=lambda x: (x.get("n") or ""))
     write_json(os.path.join(out_dir, "index.json"), index_out)
-
-    meta = {
+    write_json(os.path.join(out_dir, "_meta.json"), {
         "generato": now,
-        "n_comuni": esiti["ok"],
-        "esiti": esiti,
-        "dettaglio": dettaglio,
+        "comuni_in_archivio": len(index_out),
+        "esiti_ultimo_lotto": esiti,
+        "fermato_dal_limite": fermato,
         "fonte": "Cruscotto Italia · AgID",
-        "base": BASE if not BASE.startswith("/") else "(filesystem locale)",
-    }
-    write_json(os.path.join(out_dir, "_meta.json"), meta)
+        "limiti_rispettati": {
+            "intervallo_minimo_s": MIN_INTERVAL,
+            "comuni_per_finestra": MAX_COMUNI,
+            "finestra_s": WINDOW,
+        },
+    })
 
-    print("\n=== ETL completato ===")
-    print("  comuni ok:      ", esiti["ok"])
-    print("  nuovi:          ", esiti["nuovo"])
-    print("  aggiornati:     ", esiti["aggiornato"])
-    print("  invariati:      ", esiti["invariato"])
-    print("  errori/saltati: ", esiti["errore"])
-    print("  output:         ", os.path.abspath(out_dir))
-    return esiti
+    print("\n=== lotto completato ===")
+    for k in ("ok", "nuovo", "aggiornato", "invariato", "errore"):
+        print("  %-12s %d" % (k + ":", esiti[k]))
+    print("  in archivio: %d comuni" % len(index_out))
+    if fermato:
+        print("\n!! FERMATO DAL LIMITE DELLA FONTE\n   %s" % fermato)
+        return 2
+    return 0
 
 
 def main():
-    ap = argparse.ArgumentParser(description="ETL Polis — comuni Cruscotto Italia")
+    ap = argparse.ArgumentParser(
+        description="ETL Polis — comuni Cruscotto Italia (rispetta i limiti della fonte)")
     ap.add_argument("--istat", nargs="*", help="codici ISTAT specifici")
-    ap.add_argument("--lista", help="file con un codice ISTAT per riga")
-    ap.add_argument("--out", default="../app/data/comuni",
-                    help="cartella di output (default ../app/data/comuni)")
-    ap.add_argument("--sleep", type=float, default=1.2,
-                    help="secondi fra le richieste (default 1.2)")
-    ap.add_argument("--no-index", action="store_true",
-                    help="non scaricare l'indice comuni (usa solo --istat)")
+    ap.add_argument("--out", default="../app/data/comuni")
+    ap.add_argument("--lotto", type=int, default=MAX_COMUNI,
+                    help="comuni per esecuzione (default %d = una finestra)" % MAX_COMUNI)
+    ap.add_argument("--tutti", action="store_true",
+                    help="tutti i capoluoghi in una sola esecuzione: si mette "
+                         "in pausa da solo, circa 50 s per comune")
     args = ap.parse_args()
 
-    # lista comuni
+    throttle = Throttle()
+
     if args.istat:
-        istat_list = args.istat
-    elif args.lista:
-        istat_list = []
-        with open(args.lista, encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith("#"):
-                    continue
-                istat_list.append(line.split(";")[0].strip())
+        lista = args.istat
+        if not args.tutti and len(lista) > args.lotto:
+            print("Richiesti %d comuni: ne faccio %d per rispettare la finestra. "
+                  "Usa --tutti per l'intera lista (più lento)."
+                  % (len(lista), args.lotto))
+            lista = lista[:args.lotto]
     else:
-        istat_list = CAPOLUOGHI_DEFAULT
+        cur_path = os.path.join(args.out, "_cursore.json")
+        cur = read_json(cur_path) or {"pos": 0}
+        pos = int(cur.get("pos", 0)) % len(CAPOLUOGHI)
+        n = len(CAPOLUOGHI) if args.tutti else max(1, args.lotto)
+        lista = [CAPOLUOGHI[(pos + k) % len(CAPOLUOGHI)] for k in range(n)]
+        os.makedirs(args.out, exist_ok=True)
+        write_json(cur_path, {"pos": (pos + n) % len(CAPOLUOGHI),
+                              "aggiornato": datetime.now(timezone.utc).isoformat()})
+        print("Cursore: parto dalla posizione %d di %d capoluoghi."
+              % (pos, len(CAPOLUOGHI)))
 
-    # indice (per nomi e verifica)
-    index = None
-    if not args.no_index:
-        index, err = load_index()
-        if err:
-            print("Attenzione: indice comuni non disponibile (%s). "
-                  "Procedo senza nomi risolti." % err, file=sys.stderr)
+    print("Limiti rispettati: %.1fs fra richieste, max %d comuni ogni %ds.\n"
+          % (MIN_INTERVAL, MAX_COMUNI, WINDOW))
 
-    run(istat_list, args.out, args.sleep, index)
+    try:
+        index, err = carica_indice(throttle)
+    except LimiteFonte as e:
+        print("!! %s" % e)
+        return 2
+    if err:
+        print("Attenzione: indice non disponibile (%s). Procedo senza nomi."
+              % err, file=sys.stderr)
+        index = None
+
+    return run(lista, args.out, throttle, index)
 
 
 if __name__ == "__main__":
-    main()
-
+    sys.exit(main())
