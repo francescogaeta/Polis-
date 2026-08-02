@@ -3432,6 +3432,40 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
 .c2-bloc{font-size:11px;color:#8a968e;margin-top:9px}
 .c2-help{font-size:11.5px;color:#6b7a72;margin-top:9px;line-height:1.4}
 
+
+/* ===== Classifica regioni ===== */
+#claOverlay{z-index:70}
+.cla-load,.cla-note{padding:18px;background:var(--surface);border:1px solid var(--line);border-radius:14px;font-size:13px;color:var(--ink-soft);line-height:1.6}
+.cla-tabs{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px}
+.cla-tab{flex:0 0 auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:8px 14px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;white-space:nowrap}
+.cla-tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.cla-head h3{margin:0 0 4px;font-size:19px;font-weight:800;letter-spacing:-.02em}
+.cla-head p{margin:0 0 10px;font-size:13px;color:var(--ink-soft);line-height:1.5}
+.cla-imp{background:rgba(31,111,235,.08);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:10px 12px;font-size:12.5px;line-height:1.5;margin-bottom:14px}
+.cla-modo{display:flex;gap:8px;margin-bottom:10px}
+.cla-modo button{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:9px;font-size:12.5px;font-weight:700;color:var(--ink);cursor:pointer}
+.cla-modo button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cla-modo button[disabled]{opacity:.4}
+.cla-warn{background:rgba(232,130,61,.12);border-radius:10px;padding:9px 12px;font-size:11.5px;line-height:1.5;margin-bottom:12px}
+.cla-lista{display:flex;flex-direction:column;gap:7px}
+.cla-riga{display:flex;align-items:center;gap:9px;position:relative}
+.cla-pos{width:22px;font-size:11.5px;font-weight:700;color:var(--ink-soft);flex:0 0 auto;text-align:right}
+.cla-barra{position:absolute;left:31px;right:0;height:30px;background:var(--surface);border-radius:8px;overflow:hidden;z-index:0}
+.cla-barra i{display:block;height:100%;background:linear-gradient(90deg,rgba(31,111,235,.30),rgba(31,111,235,.16));border-radius:8px}
+.cla-nome{position:relative;z-index:1;font-size:13px;font-weight:600;padding:7px 0 7px 10px;flex:1}
+.cla-val{position:relative;z-index:1;font-size:12.5px;font-weight:800;padding-right:10px;flex:0 0 auto}
+.cla-unita{font-size:11px;color:var(--ink-soft);margin-top:9px;font-style:italic}
+.cla-parziale{margin-top:10px;font-size:11.5px;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+.cla-limiti{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px}
+.cla-limiti b{font-size:12.5px}
+.cla-limiti ul{margin:7px 0 0;padding-left:17px}
+.cla-limiti li{font-size:11.5px;color:var(--ink-soft);line-height:1.55;margin-bottom:5px}
+.cla-fonte{margin-top:12px;font-size:10.5px;color:var(--ink-soft);line-height:1.5;font-style:italic}
+
+
+.cla-cta{width:100%;background:linear-gradient(135deg,#0d3d8c,#1f6feb);color:#fff;border:none;border-radius:14px;padding:14px 16px;text-align:left;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;gap:3px;margin-bottom:14px}
+.cla-cta span{font-size:11px;font-weight:500;opacity:.9}
+.cla-cta:active{transform:scale(.98)}
 </style>
 </head>
 <body>
@@ -16956,6 +16990,10 @@ function contiPubbliciHTML(){
     <div class="h-block"><div class="eyebrow">Conti pubblici</div>
       <h2>Dove vanno le risorse</h2>
       <p>Il bilancio dello Stato in chiaro: quanto entra, quanto si spende, quanto si deve. <b>Dati ${ANNI.conti}</b></p></div>
+    <button class="cla-cta" onclick="claApri()">
+      🏆 Le regioni a confronto
+      <span>Opere pubbliche e spesa, per abitante · dati BDAP-MOP, CPT e ISTAT</span>
+    </button>
     <div class="stat-row" style="margin-bottom:14px">
       <div class="stat"><div class="num b">${fmt(c.pil)}<span style="font-size:14px"> mld</span></div><div class="lbl">PIL annuo</div></div>
       <div class="stat"><div class="num" style="color:var(--danger)">${fmt(c.debito)}<span style="font-size:14px"> mld</span></div><div class="lbl">Debito pubblico</div></div>
@@ -26937,6 +26975,139 @@ function casaLoop(t){
   casaState.anim=requestAnimationFrame(casaLoop);
 }
 
+
+/* ===== POLIS · CLASSIFICA REGIONI (inizio) ===== */
+/* ============================================================
+   POLIS · Classifica fra regioni — opere pubbliche e spesa
+   ------------------------------------------------------------
+   Legge data/territorio/classifica.json prodotto dagli ETL.
+   Non contatta nessuna fonte esterna: tutto arriva dal nostro
+   archivio, già verificato e con le fonti citate.
+
+   Scelta di prodotto: la vista predefinita è PRO CAPITE.
+   In valore assoluto la Lombardia vince quasi ogni classifica
+   perché ha dieci milioni di abitanti, e questo non dice nulla
+   sul merito. Il valore assoluto resta disponibile accanto.
+   ============================================================ */
+(function(){
+  'use strict';
+
+  const CLA = { URL:'data/territorio/classifica.json', dati:null, ind:0, modo:'procapite' };
+
+  async function claCarica(){
+    if(CLA.dati) return CLA.dati;
+    try{
+      const r = await fetch(CLA.URL, {cache:'no-cache'});
+      if(r.ok){ CLA.dati = await r.json(); }
+    }catch(e){}
+    return CLA.dati;
+  }
+
+  function claFmt(v, unita){
+    if(v==null) return '—';
+    if(unita==='%') return Number(v).toLocaleString('it-IT')+'%';
+    if(unita==='euro'){
+      const n=Math.round(v);
+      if(Math.abs(n)>=1e9) return (n/1e9).toFixed(1).replace('.',',')+' mld €';
+      if(Math.abs(n)>=1e6) return (n/1e6).toFixed(1).replace('.',',')+' mln €';
+      if(Math.abs(n)>=1e3) return Math.round(n/1e3).toLocaleString('it-IT')+' mila €';
+      return n.toLocaleString('it-IT')+' €';
+    }
+    return Number(v).toLocaleString('it-IT', {maximumFractionDigits:2});
+  }
+  function claE(s){ return (typeof esc==='function')?esc(String(s==null?'':s)):String(s==null?'':s); }
+
+  async function claApri(){
+    let ov=document.getElementById('claOverlay');
+    if(!ov){ ov=document.createElement('div'); ov.id='claOverlay'; ov.className='detail'; document.body.appendChild(ov); }
+    ov.innerHTML=`
+      <div class="detail-top">
+        <button class="bk" onclick="claChiudi()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div style="flex:1"><h2 style="font-size:16px">Le regioni a confronto</h2>
+        <div style="font-size:11.5px;color:var(--ink-soft)">Opere pubbliche e spesa · dati ufficiali</div></div>
+      </div>
+      <div class="detail-body" id="claBody"><div class="cla-load">Carico i dati…</div></div>`;
+    ov.classList.add('open');
+    await claCarica();
+    claRender();
+  }
+  function claChiudi(){ const o=document.getElementById('claOverlay'); if(o) o.classList.remove('open'); }
+
+  function claRender(){
+    const b=document.getElementById('claBody'); if(!b) return;
+    const d=CLA.dati;
+    if(!d || !d.indicatori || !d.indicatori.length){
+      b.innerHTML=`<div class="cla-note">
+        <b>Archivio in costruzione.</b><br><br>
+        I dati su opere pubbliche e spesa vengono raccolti dal nostro aggiornamento
+        automatico dalle banche dati ufficiali (BDAP-MOP della Ragioneria dello Stato,
+        Conti Pubblici Territoriali, ISTAT). La classifica comparirà appena il primo
+        aggiornamento sarà completato.</div>`;
+      return;
+    }
+    const ind=d.indicatori[CLA.ind] || d.indicatori[0];
+    const lista = (CLA.modo==='procapite' && ind.procapite && ind.procapite.length)
+      ? ind.procapite : ind.assoluto;
+    const unita = (CLA.modo==='procapite' && ind.procapite && ind.procapite.length)
+      ? ind.unita_procapite : ind.unita;
+    const max = lista.length ? Math.abs(lista[0].valore)||1 : 1;
+    const haPro = !!(ind.procapite && ind.procapite.length);
+
+    b.innerHTML=`
+      <div class="cla-tabs">
+        ${d.indicatori.map((x,i)=>`<button class="cla-tab${i===CLA.ind?' on':''}" data-i="${i}">${claE(x.titolo)}</button>`).join('')}
+      </div>
+
+      <div class="cla-head">
+        <h3>${claE(ind.titolo)}</h3>
+        <p>${claE(ind.spiegazione)}</p>
+        ${ind.impatto_cittadino?`<div class="cla-imp">👤 <b>Per te:</b> ${claE(ind.impatto_cittadino)}</div>`:''}
+      </div>
+
+      <div class="cla-modo">
+        <button class="${CLA.modo==='procapite'?'on':''}" data-m="procapite" ${haPro?'':'disabled'}>Per abitante</button>
+        <button class="${CLA.modo==='assoluto'?'on':''}" data-m="assoluto">Valore totale</button>
+      </div>
+      ${(CLA.modo==='assoluto')?`<div class="cla-warn">⚠️ In valore totale le regioni grandi risultano sempre prime: stai confrontando anche la loro dimensione.</div>`:''}
+
+      <div class="cla-lista">
+        ${lista.map((x,i)=>{
+          const w=Math.max(2, Math.round(Math.abs(x.valore)/max*100));
+          return `<div class="cla-riga">
+            <span class="cla-pos">${i+1}</span>
+            <div class="cla-barra"><i style="width:${w}%"></i></div>
+            <span class="cla-nome">${claE(x.nome)}</span>
+            <span class="cla-val">${claFmt(x.valore, ind.unita)}</span>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="cla-unita">Valori in ${claE(unita)}${ind.anno?' · anno '+claE(ind.anno):''}</div>
+
+      ${!ind.completo?`<div class="cla-parziale">Dati disponibili per ${ind.n_regioni} regioni su 20: la classifica è parziale.</div>`:''}
+
+      <div class="cla-limiti">
+        <b>Come leggere questo confronto</b>
+        <ul>${(ind.limiti||[]).map(l=>`<li>${claE(l)}</li>`).join('')}
+        ${d._avvertenza?`<li>${claE(d._avvertenza)}</li>`:''}</ul>
+      </div>
+      <div class="cla-fonte">Fonte: ${claE(ind.fonte)}${d._popolazione_anno?` · popolazione ISTAT ${claE(d._popolazione_anno)}`:''}.
+      Polis non modifica i valori pubblicati.</div>`;
+
+    b.querySelectorAll('.cla-tab').forEach(el=>el.addEventListener('click',()=>{
+      CLA.ind=parseInt(el.getAttribute('data-i'),10)||0; claRender();
+      const bb=document.getElementById('claBody'); if(bb) bb.scrollTop=0;
+    }));
+    b.querySelectorAll('.cla-modo button').forEach(el=>el.addEventListener('click',()=>{
+      if(el.hasAttribute('disabled')) return;
+      CLA.modo=el.getAttribute('data-m'); claRender();
+    }));
+  }
+
+  window.claApri=claApri;
+  window.claChiudi=claChiudi;
+})();
+
+/* ===== POLIS · CLASSIFICA REGIONI (fine) ===== */
 
 // allow Enter to login
 document.addEventListener('keydown',e=>{ if(e.key==='Enter' && $('#login').classList.contains('active')) doLogin(); });
