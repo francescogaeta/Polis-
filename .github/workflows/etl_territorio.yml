@@ -1,0 +1,86 @@
+# .github/workflows/etl_territorio.yml
+# ETL Polis — opere pubbliche e spesa pubblica per comune e regione.
+#
+# LIMITI DELLE FONTI (dichiarati negli script, non aggirabili da qui):
+#   ISTAT  → 5 query/minuto per IP, oltre il quale blocco di 1-2 giorni.
+#            Gli script tengono 13 s fra le richieste.
+#   BDAP   → nessun limite numerico pubblicato: 2 s di cortesia e
+#            User-Agent esplicito.
+#   CPT    → file statici, aggiornamento annuale: 2 s di cortesia.
+# Se una fonte risponde 403/429 lo script si ferma e lo dichiara.
+# NON aumentare la frequenza del cron per "avere i dati prima".
+#
+# Nota: Cruscotto Italia (AgID) ha un ETL separato, con il suo limite di
+# 12 comuni ogni 10 minuti. I due workflow non vanno uniti.
+
+name: ETL Territorio (opere e spesa pubblica)
+
+on:
+  schedule:
+    - cron: "0 4 * * 1"      # lunedì: BDAP è mensile, CPT annuale
+  workflow_dispatch:
+    inputs:
+      solo:
+        description: "Esegui solo una fonte: istat | cpt | bdap | classifica (vuoto = tutte)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: etl-territorio
+  cancel-in-progress: false
+
+jobs:
+  etl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install certifi
+        run: pip install --quiet certifi
+
+      # la cache evita di riscaricare file immutati (rispetto della fonte
+      # e minor tempo di esecuzione)
+      - name: Cache stato HTTP
+        uses: actions/cache@v4
+        with:
+          path: etl/.cache_etl
+          key: etl-territorio-${{ github.run_id }}
+          restore-keys: etl-territorio-
+
+      - name: ISTAT — raccordo territoriale e popolazione
+        if: ${{ github.event.inputs.solo == '' || github.event.inputs.solo == 'istat' }}
+        run: cd etl && python3 etl_istat.py --out ../data/territorio
+
+      - name: CPT — spesa pubblica consolidata
+        if: ${{ github.event.inputs.solo == '' || github.event.inputs.solo == 'cpt' }}
+        run: cd etl && python3 etl_cpt.py --out ../data/territorio
+
+      - name: BDAP-MOP — opere pubbliche
+        if: ${{ github.event.inputs.solo == '' || github.event.inputs.solo == 'bdap' }}
+        run: cd etl && python3 etl_bdap.py --out ../data/territorio
+
+      - name: Classifica regionale
+        if: ${{ always() }}
+        run: cd etl && python3 etl_classifica.py --dati ../data/territorio
+
+      - name: Commit
+        if: ${{ always() }}
+        run: |
+          git config user.name  "polis-etl-bot"
+          git config user.email "etl@polis.local"
+          git add -A data/territorio
+          if git diff --cached --quiet; then
+            echo "Nessuna variazione."
+          else
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git commit -m "ETL territorio: aggiornamento $(date -u +%Y-%m-%d)"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
