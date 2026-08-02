@@ -3463,9 +3463,6 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
 .cla-fonte{margin-top:12px;font-size:10.5px;color:var(--ink-soft);line-height:1.5;font-style:italic}
 
 
-.cla-cta{width:100%;background:linear-gradient(135deg,#0d3d8c,#1f6feb);color:#fff;border:none;border-radius:14px;padding:14px 16px;text-align:left;font-size:14.5px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;gap:3px;margin-bottom:14px}
-.cla-cta span{font-size:11px;font-weight:500;opacity:.9}
-.cla-cta:active{transform:scale(.98)}
 </style>
 </head>
 <body>
@@ -13758,6 +13755,9 @@ const SUBNAV = {
     { id:'bilancio', label:'Bilancio', icon:'M12 3v18 M5 7h14 M12 7l-4 7h8z M5 7l-3 7h6z' },
     { id:'debito', label:'Debito', icon:'M3 17l6-6 4 4 8-8 M21 7v6h-6' },
     { id:'societa', label:'Società', icon:'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M22 21v-2a4 4 0 0 0-3-3.87' },
+    /* Confronto fra regioni: non è un gruppo di voci come gli altri,
+       apre direttamente la schermata della classifica (vedi switchSub). */
+    { id:'confronto', label:'Regioni', icon:'M3 21h18 M6 21V9 M12 21V4 M18 21v-7 M4 9h4 M10 4h4 M16 14h4' },
   ],
   ragioneria: [
     { id:'hub', label:'Ragioneria', icon:'M3 21h18 M5 21V7l7-4 7 4v14 M9 21v-6h6v6' },
@@ -13794,6 +13794,12 @@ function buildSubNav(sezione){
 
 /* Cambia sotto-sezione e ridisegna la vista */
 function switchSub(sezione, subId){
+  // Voce speciale "Regioni": apre il confronto e NON diventa la sotto-sezione
+  // attiva (altrimenti resterebbe evidenziata come se fosse una schermata).
+  if(sezione==='conti' && subId==='confronto'){
+    if(typeof claApri==='function') claApri();
+    return;
+  }
   currentSub[sezione] = subId;
   // "I conti dello Stato": la barra in basso mostra i gruppi (Bilancio/Debito/Società);
   // scegliendo un gruppo si apre la sua prima voce.
@@ -16990,10 +16996,6 @@ function contiPubbliciHTML(){
     <div class="h-block"><div class="eyebrow">Conti pubblici</div>
       <h2>Dove vanno le risorse</h2>
       <p>Il bilancio dello Stato in chiaro: quanto entra, quanto si spende, quanto si deve. <b>Dati ${ANNI.conti}</b></p></div>
-    <button class="cla-cta" onclick="claApri()">
-      🏆 Le regioni a confronto
-      <span>Opere pubbliche e spesa, per abitante · dati BDAP-MOP, CPT e ISTAT</span>
-    </button>
     <div class="stat-row" style="margin-bottom:14px">
       <div class="stat"><div class="num b">${fmt(c.pil)}<span style="font-size:14px"> mld</span></div><div class="lbl">PIL annuo</div></div>
       <div class="stat"><div class="num" style="color:var(--danger)">${fmt(c.debito)}<span style="font-size:14px"> mld</span></div><div class="lbl">Debito pubblico</div></div>
