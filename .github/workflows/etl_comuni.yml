@@ -1,24 +1,23 @@
 # .github/workflows/etl_comuni.yml
-# ETL Polis — aggiornamento dati comunali (Cruscotto Italia / AgID)
+# ETL Polis — dati comunali da Cruscotto Italia (AgID)
 #
-# Cosa fa:
-#  - gira ogni notte (e su richiesta manuale)
-#  - scarica KPI + iniziative PA per i capoluoghi
-#  - versiona lo storico (comuni/storico/<istat>/<data>.json)
-#  - committa solo se qualcosa è cambiato
-#
-# NB: il server AgID applica un limite di richieste. Lo --sleep tiene
-# le richieste distanziate. Non abbassarlo per "andare più veloce".
+# LIMITI DELLA FONTE, da non aggirare:
+#   la fonte consente al massimo 12 comuni distinti ogni 10 minuti
+#   e blocca l'IP per un'ora se il limite viene superato.
+#   Per questo ogni esecuzione notturna scarica UN SOLO LOTTO da 12 comuni,
+#   avanzando con un cursore: i 107 capoluoghi si completano in ~9 notti
+#   e da lì in poi l'archivio si aggiorna a rotazione.
+#   Non aumentare la frequenza del cron né la dimensione del lotto.
 
 name: ETL Comuni (Cruscotto Italia)
 
 on:
   schedule:
-    - cron: "30 3 * * *"   # 03:30 UTC ogni notte
-  workflow_dispatch:        # avvio manuale dalla tab Actions
+    - cron: "30 3 * * *"     # una volta al giorno
+  workflow_dispatch:
     inputs:
       istat:
-        description: "Codici ISTAT specifici (spazio-separati). Vuoto = tutti i capoluoghi."
+        description: "Codici ISTAT specifici (max 12, spazio-separati). Vuoto = lotto dal cursore."
         required: false
         default: ""
 
@@ -26,42 +25,41 @@ permissions:
   contents: write
 
 concurrency:
-  group: etl-comuni
+  group: etl-comuni          # mai due esecuzioni in parallelo sulla stessa fonte
   cancel-in-progress: false
 
 jobs:
   etl:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Install certifi (TLS)
         run: pip install --quiet certifi
 
-      - name: Run ETL
+      - name: Run ETL (un lotto conforme)
         run: |
           cd etl
           if [ -n "${{ github.event.inputs.istat }}" ]; then
-            python3 etl_comuni.py --out ../app/data/comuni --sleep 1.5 --istat ${{ github.event.inputs.istat }}
+            python3 etl_comuni.py --out ../data/comuni --istat ${{ github.event.inputs.istat }}
           else
-            python3 etl_comuni.py --out ../app/data/comuni --sleep 1.5
+            python3 etl_comuni.py --out ../data/comuni
           fi
 
       - name: Commit dati e storico
         run: |
           git config user.name  "polis-etl-bot"
           git config user.email "etl@polis.local"
-          git add -A app/data/comuni
+          git add -A data/comuni
           if git diff --cached --quiet; then
-            echo "Nessuna variazione: niente da committare."
+            echo "Nessuna variazione."
           else
             git pull --rebase --autostash origin ${{ github.ref_name }} || true
-            git commit -m "ETL comuni: aggiornamento dati $(date -u +%Y-%m-%d)"
+            git commit -m "ETL comuni: lotto $(date -u +%Y-%m-%d)"
             git push origin HEAD:${{ github.ref_name }}
           fi
