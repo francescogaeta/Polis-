@@ -1,0 +1,32 @@
+# .github/workflows/etl_testi.yml
+# Scarica il testo integrale degli atti per il traduttore burocratico.
+# Normattiva è un servizio pubblico gratuito: un lotto per volta, 2 s fra
+# le richieste, e stop immediato se il server segnala un blocco.
+name: ETL Testi Normattiva
+on:
+  schedule:
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: etl-testi
+jobs:
+  etl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install --quiet certifi
+      - run: cd etl && python3 etl_normattiva_testi.py --archivio ../dati/normattiva.json --out ../dati/testi
+      - run: |
+          git config user.name "polis-etl-bot"
+          git config user.email "etl@polis.local"
+          git add -A dati/testi
+          if git diff --cached --quiet; then echo "Nessuna variazione."; else
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git commit -m "ETL testi Normattiva $(date -u +%Y-%m-%d)"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
