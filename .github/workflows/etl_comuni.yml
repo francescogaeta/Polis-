@@ -1,4 +1,4 @@
-# # .github/workflows/etl_comuni.yml
+# .github/workflows/etl_comuni.yml
 # Dati comunali da Cruscotto Italia (AgID).
 #
 # LIMITE DELLA FONTE: max 12 comuni distinti ogni 10 minuti; superarlo
@@ -52,12 +52,18 @@ jobs:
         if: ${{ always() }}
         run: cd etl && python3 genera_index.py --dir ../data/comuni
 
+      # La classifica dei comuni si ricostruisce a ogni lotto, così cresce
+      # insieme all'archivio. Non usa la rete.
+      - name: Aggiorna la classifica dei comuni
+        if: ${{ always() }}
+        run: cd etl && python3 etl_classifica_comuni.py --dir ../data/comuni --out ../data/classifica_comuni.json
+
       - name: Commit
         if: ${{ always() }}
         run: |
           git config user.name  "polis-etl-bot"
           git config user.email "etl@polis.local"
-          git add -A data/comuni
+          git add -A data/comuni data/classifica_comuni.json
           if git diff --cached --quiet; then
             echo "Nessuna variazione."
           else
