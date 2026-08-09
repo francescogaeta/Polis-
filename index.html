@@ -3619,6 +3619,10 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
 .asse-tag{font-size:10px;font-weight:700;background:rgba(255,255,255,.14);color:rgba(255,255,255,.85);padding:2px 8px;border-radius:6px}
 .asse-vuoto{background:rgba(255,255,255,.07);border-radius:12px;padding:14px;font-size:12.5px;color:rgba(255,255,255,.8);line-height:1.6}
 .asse-fonte{font-size:10.5px;color:rgba(255,255,255,.55);line-height:1.5;font-style:italic;margin-bottom:8px}
+
+/* pulsante Casa Polis: sparisce quando c'è qualcosa di aperto sopra */
+body.con-overlay .casa-fab{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease}
+.casa-fab{transition:opacity .18s ease}
 </style>
 </head>
 <body>
@@ -6355,7 +6359,38 @@ function filterTerrComuni(q){
 }
 // mappa nome->codice istat: popolata da importa_dati.py (ISTAT). Vuota = nessun dato comunale ancora.
 const ISTATCODE = (typeof ISTAT_CODES!=='undefined')?ISTAT_CODES:{};
-function comuneIstat(nome){ return ISTATCODE[nome]||null; }
+
+/* La mappa nome→codice ISTAT non era mai stata definita: comuneIstat()
+   restituiva sempre null e QUALSIASI comune risultava "non in archivio",
+   anche dopo che l'ETL aveva scaricato i dati. Ora la mappa si costruisce
+   da sola leggendo l'indice prodotto dall'ETL, così cresce insieme
+   all'archivio senza dover elencare 7.900 comuni a mano. */
+let ISTAT_DA_INDICE = null;
+function crCaricaIndiceIstat(){
+  if(ISTAT_DA_INDICE) return Promise.resolve(ISTAT_DA_INDICE);
+  return fetch('data/comuni/index.json',{cache:'no-cache'})
+    .then(r=>r.ok?r.json():[])
+    .then(list=>{
+      const m={};
+      (list||[]).forEach(c=>{
+        if(c && c.i && c.n){
+          m[c.n]=c.i;
+          m[String(c.n).toLowerCase()]=c.i;
+        }
+      });
+      ISTAT_DA_INDICE=m;
+      return m;
+    })
+    .catch(()=>{ ISTAT_DA_INDICE={}; return ISTAT_DA_INDICE; });
+}
+crCaricaIndiceIstat();
+
+function comuneIstat(nome){
+  if(!nome) return null;
+  if(ISTATCODE[nome]) return ISTATCODE[nome];
+  const m=ISTAT_DA_INDICE||{};
+  return m[nome] || m[String(nome).toLowerCase()] || null;
+}
 
 /* ============ SCHEDA COMUNE ============ */
 function openComuneData(nome, regName){
@@ -25689,6 +25724,13 @@ function renderOggi(){
        browser blocca comunque la richiesta ("Load failed").
      L'unico che parla con AgID è l'ETL, lato server e con le pause dovute. */
   async function crLoad(istat, nome){
+    /* Se il codice non è arrivato, lo cerco nell'indice per nome invece di
+       arrendermi: prima bastava un codice mancante per dichiarare assente
+       un comune che in archivio c'era. */
+    if(!istat && nome && typeof crCaricaIndiceIstat==='function'){
+      try{ await crCaricaIndiceIstat(); istat=comuneIstat(nome); }catch(e){}
+    }
+    if(!istat) return {__assente:true, istat, nome};
     try{
       const r = await fetch(CR.LOCAL+'/'+istat+'.json', {cache:'no-cache'});
       if(r.ok){ const d = await r.json(); if(d && d.kpi) return d; }
@@ -28540,6 +28582,44 @@ function asseFiltro(v){
   if(c) c.innerHTML=asseHTML();
 }
 /* ===== POLIS · ASSEMBLEE QUOTIDIANE (fine) ===== */
+
+
+/* Il pulsante flottante "Casa Polis" restava sopra i pannelli e gli overlay,
+   coprendo i contenuti (si vedeva sopra l'elenco dei comuni di una regione).
+   Qui viene nascosto ogni volta che qualcosa si apre sopra la mappa, e
+   ricompare da solo alla chiusura. Osserviamo le classi invece di elencare
+   ogni singolo punto di apertura: così vale anche per le schermate future. */
+(function(){
+  const APERTI = '.detail.open, .quiz-over.open, .sheet.open, #sheet.open,'
+               + ' #casaOverlay.open, #acOverlay.open, #ptOverlay.open,'
+               + ' #claOverlay.open, #cruscotto.open, #tbOverlay.open,'
+               + ' .modal.open, .overlay.open';
+  function aggiorna(){
+    let aperto=false;
+    try{ aperto = !!document.querySelector(APERTI); }catch(e){}
+    // il pannello dei comuni non usa .open: controllo anche se è visibile
+    if(!aperto){
+      const s=document.getElementById('sheet');
+      if(s){
+        const st=window.getComputedStyle(s);
+        if(st && st.display!=='none' && st.visibility!=='hidden'
+           && parseFloat(st.opacity||'1')>0.05
+           && !/translateY\(1\d\d%/.test(st.transform||'')) aperto=true;
+      }
+    }
+    document.body.classList.toggle('con-overlay', aperto);
+  }
+  function avvia(){
+    aggiorna();
+    try{
+      new MutationObserver(aggiorna).observe(document.documentElement,
+        {attributes:true, subtree:true, attributeFilter:['class','style']});
+    }catch(e){}
+    setInterval(aggiorna, 400);   // rete di sicurezza
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',avvia);
+  else avvia();
+})();
 
 // allow Enter to login
 document.addEventListener('keydown',e=>{ if(e.key==='Enter' && $('#login').classList.contains('active')) doLogin(); });
