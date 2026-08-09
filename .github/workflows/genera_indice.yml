@@ -1,0 +1,76 @@
+# .github/workflows/genera_indice.yml
+#
+# Ricostruisce DUE file partendo dai dati dei comuni già presenti:
+#   data/comuni/index.json        → serve all'app per trovare i comuni
+#   data/classifica_comuni.json   → la classifica fra comuni
+#
+# NON scarica nulla da internet: legge solo i file già nel repository.
+# Si può lanciare quante volte si vuole, senza rischiare limiti di alcuna fonte.
+# Si avvia a mano dalla scheda "Actions".
+
+name: Genera indice e classifica comuni
+
+on:
+  workflow_dispatch:
+    inputs:
+      cartella:
+        description: "Cartella dei file dei comuni (lascia com'è se non sai)"
+        required: false
+        default: "data/comuni"
+
+permissions:
+  contents: write
+
+jobs:
+  indice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cosa c'è nella cartella
+        run: |
+          CART="${{ github.event.inputs.cartella }}"
+          CART="${CART:-data/comuni}"
+          echo "Cartella: $CART"
+          if [ -d "$CART" ]; then
+            echo "File dei comuni trovati: $(ls -1 "$CART"/*.json 2>/dev/null | wc -l)"
+            ls -1 "$CART" | head -20
+          else
+            echo "ATTENZIONE: la cartella $CART non esiste."
+            echo "Cartelle 'comuni' presenti nel repository:"
+            find . -maxdepth 3 -type d -name comuni
+            exit 1
+          fi
+
+      - name: Genera l'indice
+        run: |
+          CART="${{ github.event.inputs.cartella }}"
+          CART="${CART:-data/comuni}"
+          cd etl && python3 genera_index.py --dir "../$CART"
+
+      - name: Genera la classifica dei comuni
+        run: |
+          CART="${{ github.event.inputs.cartella }}"
+          CART="${CART:-data/comuni}"
+          cd etl && python3 etl_classifica_comuni.py --dir "../$CART" --out ../data/classifica_comuni.json
+
+      - name: Salva nel repository
+        run: |
+          CART="${{ github.event.inputs.cartella }}"
+          CART="${CART:-data/comuni}"
+          git config user.name  "polis-etl-bot"
+          git config user.email "etl@polis.local"
+          git add -A "$CART" data/classifica_comuni.json
+          if git diff --cached --quiet; then
+            echo "Tutto già aggiornato."
+          else
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git commit -m "Indice e classifica dei comuni ricostruiti"
+            git push origin HEAD:${{ github.ref_name }}
+            echo "Salvato."
+          fi
