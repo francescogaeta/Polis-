@@ -1,6 +1,73 @@
 # .github/workflows/etl_comuni.yml
 # ETL Polis — dati comunali da Cruscotto Italia (AgID)
+## .github/workflows/etl_comuni.yml
+# Dati comunali da Cruscotto Italia (AgID).
 #
+# LIMITE DELLA FONTE: max 12 comuni distinti ogni 10 minuti; superarlo
+# fa bloccare l'IP per un'ora. Quindi UN SOLO LOTTO per esecuzione.
+# I 107 capoluoghi si completano in circa nove notti, poi si aggiornano
+# a rotazione. Non aumentare il cron né la dimensione del lotto.
+
+name: ETL Comuni (Cruscotto Italia)
+
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+    inputs:
+      istat:
+        description: "Codici ISTAT specifici (max 12). Vuoto = lotto dal cursore."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: etl-comuni
+  cancel-in-progress: false
+
+jobs:
+  etl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install --quiet certifi
+
+      - name: Scarica il lotto di comuni
+        continue-on-error: true
+        run: |
+          cd etl
+          if [ -n "${{ github.event.inputs.istat }}" ]; then
+            python3 etl_comuni.py --out ../data/comuni --istat ${{ github.event.inputs.istat }}
+          else
+            python3 etl_comuni.py --out ../data/comuni
+          fi
+
+      # Passo indispensabile: senza index.json l'app non sa collegare
+      # il nome del comune al suo file, e non mostra nulla.
+      # Non usa la rete: lavora sui file già scaricati.
+      - name: Ricostruisci l'indice dei comuni
+        if: ${{ always() }}
+        run: cd etl && python3 genera_index.py --dir ../data/comuni
+
+      - name: Commit
+        if: ${{ always() }}
+        run: |
+          git config user.name  "polis-etl-bot"
+          git config user.email "etl@polis.local"
+          git add -A data/comuni
+          if git diff --cached --quiet; then
+            echo "Nessuna variazione."
+          else
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git commit -m "ETL comuni: lotto $(date -u +%Y-%m-%d)"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
+
 # LIMITI DELLA FONTE, da non aggirare:
 #   la fonte consente al massimo 12 comuni distinti ogni 10 minuti
 #   e blocca l'IP per un'ora se il limite viene superato.
