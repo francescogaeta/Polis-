@@ -3463,6 +3463,162 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
 .cla-fonte{margin-top:12px;font-size:10.5px;color:var(--ink-soft);line-height:1.5;font-style:italic}
 
 
+
+/* ===== Sezione Partiti ===== */
+#ptOverlay{z-index:72}
+.pt-load,.pt-vuoto{padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:13px;font-size:13px;color:var(--ink-soft);line-height:1.65}
+.pt-tabs{display:flex;gap:7px;margin-bottom:14px;overflow-x:auto;padding-bottom:3px}
+.pt-tab{flex:0 0 auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:8px 15px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer}
+.pt-tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.pt-intro p{margin:0 0 10px;font-size:13.5px;line-height:1.6;color:var(--ink)}
+.pt-nota{background:rgba(31,111,235,.08);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:10px 12px;font-size:12px;line-height:1.55;margin-bottom:16px;color:var(--ink-soft)}
+.pt-sez{font-size:13px;font-weight:800;margin:18px 0 9px;padding-bottom:5px;border-bottom:2px solid var(--line)}
+.pt-elez{font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:9px}
+/* liste/programmi */
+.pt-lista{display:flex;flex-direction:column;gap:9px}
+.pt-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.pt-nome{font-size:13.5px;font-weight:700;line-height:1.35}
+.pt-capo{font-size:11.5px;color:var(--ink-soft);margin-top:3px}
+.pt-link{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.pt-link a{background:var(--blue);color:#fff;border-radius:9px;padding:7px 12px;font-size:12px;font-weight:600;text-decoration:none}
+.pt-manca{font-size:11.5px;color:var(--ink-soft);font-style:italic}
+/* gruppi e votazioni */
+.pt-gruppi{display:flex;flex-direction:column;gap:6px}
+.pt-g{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+.pt-g-n{font-size:12.5px;font-weight:600;flex:1}
+.pt-g-c{font-size:11.5px;color:var(--ink-soft);font-weight:700}
+.pt-vot{display:flex;flex-direction:column;gap:8px}
+.pt-v{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px 12px}
+.pt-v-t{font-size:12.5px;font-weight:600;line-height:1.4}
+.pt-v-m{font-size:11px;color:var(--ink-soft);margin-top:5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.pt-esito{font-weight:700;padding:1px 8px;border-radius:20px;font-size:10.5px}
+.pt-esito.ok{background:rgba(31,157,107,.16);color:#1f9d6b}
+.pt-esito.no{background:rgba(201,42,42,.14);color:#c92a2a}
+.pt-v-g{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.pt-chip{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--line);color:var(--ink-soft)}
+.pt-chip.favorevole{background:rgba(31,157,107,.16);color:#1f9d6b}
+.pt-chip.contrario{background:rgba(201,42,42,.14);color:#c92a2a}
+.pt-chip.astenuto{background:rgba(232,130,61,.16);color:#e8823d}
+/* documenti e link ufficiali */
+.pt-doc{display:flex;flex-direction:column;gap:8px}
+.pt-doc a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;text-decoration:none;color:var(--ink)}
+.pt-doc a b{display:block;font-size:13px}
+.pt-doc a span{display:block;font-size:11.5px;color:var(--ink-soft);margin-top:3px;line-height:1.45}
+.pt-uff{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px}
+.pt-uff b{display:block;font-size:12.5px;margin-bottom:7px}
+.pt-uff a{display:block;font-size:12px;color:var(--blue);text-decoration:none;padding:4px 0}
+.pt-fonte{margin-top:13px;font-size:10.5px;color:var(--ink-soft);line-height:1.55;font-style:italic}
+
+
+/* ===== Traduttore burocratico ===== */
+.tb-over{z-index:230}
+.tb-scroll{padding:16px;overflow-y:auto;max-height:calc(100vh - 120px)}
+.tb-intro{font-size:13px;line-height:1.6;color:var(--ink-soft);margin:0 0 12px}
+.tb-input{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13.5px;line-height:1.5;background:var(--surface);color:var(--ink);font-family:inherit;resize:vertical}
+.tb-input:focus{outline:none;border-color:var(--blue)}
+.tb-azioni{display:flex;gap:8px;margin:10px 0 14px}
+.tb-go{flex:1;background:var(--blue);color:#fff;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:700;cursor:pointer}
+.tb-clear{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:11px;padding:12px 16px;font-size:13px;cursor:pointer}
+.tb-vuoto{font-size:13px;color:var(--ink-soft);padding:12px;background:var(--surface);border-radius:11px}
+.tb-box{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:14px;margin-bottom:11px}
+.tb-tipo{border-left:4px solid var(--blue)}
+.tb-tipo-h{font-size:15px;margin-bottom:9px}
+.tb-h{font-size:13.5px;font-weight:800;margin-bottom:7px}
+.tb-h2{font-size:11.5px;font-weight:700;color:var(--ink-soft);margin:10px 0 5px}
+.tb-p{font-size:12.5px;line-height:1.6;color:var(--ink-soft);margin:0 0 8px}
+.tb-riga{display:flex;gap:10px;margin-bottom:7px}
+.tb-riga span{flex:0 0 84px;font-size:11px;font-weight:700;color:var(--ink-soft);padding-top:1px}
+.tb-riga p{margin:0;font-size:12.5px;line-height:1.55;flex:1}
+.tb-chips{display:flex;gap:6px;flex-wrap:wrap}
+.tb-chip{background:var(--line);border-radius:20px;padding:4px 11px;font-size:11px;font-weight:600}
+.tb-rinvii{border-left:4px solid #e8823d}
+.tb-lista{margin:6px 0 0;padding-left:17px}
+.tb-lista li{font-size:12.5px;line-height:1.65;margin-bottom:5px}
+.tb-lista a{color:var(--blue);font-size:11px;text-decoration:none;font-weight:600;white-space:nowrap}
+.tb-form{display:flex;flex-direction:column;gap:8px}
+.tb-f{border-left:2px solid var(--line);padding-left:10px}
+.tb-f b{display:block;font-size:12.5px}
+.tb-f span{display:block;font-size:12px;color:var(--ink-soft);line-height:1.5;margin-top:2px}
+.tb-lv{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:800;margin-bottom:8px}
+.tb-lv-leggibile{background:rgba(31,157,107,.16);color:#1f9d6b}
+.tb-lv-impegnativo{background:rgba(232,130,61,.18);color:#c9702f}
+.tb-lv-moltodifficile{background:rgba(201,42,42,.16);color:#c92a2a}
+.tb-lunga{font-size:11.5px;line-height:1.6;background:rgba(128,128,128,.08);border-radius:9px;padding:10px;font-style:italic}
+.tb-disc{font-size:11.5px;line-height:1.6;color:var(--ink-soft);background:rgba(232,130,61,.10);border-radius:11px;padding:12px;margin-top:6px}
+
+
+.norm-tb{display:block;width:100%;margin:10px 0 6px;background:rgba(31,111,235,.10);border:1px solid rgba(31,111,235,.28);color:var(--blue);border-radius:11px;padding:11px;font-size:13px;font-weight:700;cursor:pointer}
+.norm-tb:active{transform:scale(.98)}
+
+.tb-file{width:100%;background:var(--surface);border:1.5px dashed var(--line);border-radius:12px;padding:13px;font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;gap:3px;text-align:left}
+.tb-file span{font-size:11px;font-weight:500;color:var(--ink-soft);line-height:1.4}
+.tb-file:active{transform:scale(.99)}
+.tb-stato{font-size:12px;color:var(--ink-soft);margin-top:9px;display:flex;align-items:center;gap:7px;min-height:0}
+.tb-sp{width:13px;height:13px;border:2px solid var(--line);border-top-color:var(--blue);border-radius:50%;display:inline-block;animation:tbspin .7s linear infinite;flex:0 0 auto}
+@keyframes tbspin{to{transform:rotate(360deg)}}
+.tb-priv{font-size:11px;color:var(--ink-soft);line-height:1.5;margin:9px 0 14px;background:rgba(31,157,107,.09);border-radius:9px;padding:9px 11px}
+
+/* ===== Assistente civico ===== */
+#acOverlay{z-index:74}
+.ac-prog{height:4px;background:var(--line);border-radius:20px;overflow:hidden;margin-bottom:14px}
+.ac-prog i{display:block;height:100%;background:var(--blue);transition:width .3s ease}
+.ac-passo{font-size:11px;color:var(--ink-soft);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.ac-dom{font-size:21px;font-weight:800;margin:6px 0 16px;letter-spacing:-.02em;line-height:1.25}
+.ac-opz{display:flex;flex-direction:column;gap:8px}
+.ac-o{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;font-size:14.5px;font-weight:600;color:var(--ink);text-align:left;cursor:pointer}
+.ac-o:active{transform:scale(.98);border-color:var(--blue)}
+.ac-back{background:none;border:none;color:var(--ink-soft);font-size:13px;margin-top:14px;cursor:pointer;padding:6px 0}
+.ac-priv{font-size:11px;color:var(--ink-soft);background:rgba(31,157,107,.09);border-radius:9px;padding:9px 11px;margin-top:18px;line-height:1.5}
+/* risultati */
+.ac-testa{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:13px;margin-bottom:12px}
+.ac-t-h{font-size:12px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px}
+.ac-chips{display:flex;gap:6px;flex-wrap:wrap}
+.ac-chip{background:var(--line);border-radius:20px;padding:4px 11px;font-size:11.5px;font-weight:600}
+.ac-rifai{background:none;border:none;color:var(--blue);font-size:12.5px;font-weight:700;margin-top:10px;cursor:pointer;padding:0}
+.ac-avviso{background:rgba(232,130,61,.10);border-radius:12px;padding:13px;font-size:12.5px;line-height:1.6;margin-bottom:16px}
+.ac-sez{font-size:13.5px;font-weight:800;margin:20px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+.ac-vuoto{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;font-size:12.5px;color:var(--ink-soft);line-height:1.65}
+.ac-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:11px}
+.ac-nome{font-size:15.5px;font-weight:800;line-height:1.3;letter-spacing:-.01em}
+.ac-perche{font-size:11px;color:var(--blue);font-weight:700;margin-top:5px}
+.ac-cosa{font-size:13px;line-height:1.6;margin:9px 0 0}
+.ac-lab{font-size:11px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin-top:11px}
+.ac-p{font-size:12.5px;line-height:1.55;margin:4px 0 0;color:var(--ink-soft)}
+.ac-req{margin:5px 0 0;padding-left:18px}
+.ac-req li{font-size:12.5px;line-height:1.55;color:var(--ink-soft);margin-bottom:3px}
+.ac-imp{background:rgba(31,111,235,.09);border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.55;margin-top:11px}
+.ac-noimp{font-size:11.5px;color:var(--ink-soft);font-style:italic;margin-top:10px;line-height:1.5}
+.ac-vai{display:inline-block;background:var(--blue);color:#fff;border-radius:10px;padding:9px 15px;font-size:12.5px;font-weight:700;text-decoration:none;margin-top:12px}
+.ac-fonte{font-size:10.5px;color:var(--ink-soft);font-style:italic;margin-top:9px;line-height:1.5}
+.ac-cat{display:flex;flex-direction:column;gap:7px}
+.ac-b{display:block;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px;text-decoration:none;color:var(--ink)}
+.ac-b b{display:block;font-size:12.5px;line-height:1.4}
+.ac-b span{display:block;font-size:11px;color:var(--ink-soft);margin-top:3px}
+.ac-dove{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:14px;margin-top:20px}
+.ac-dove p{font-size:12.5px;line-height:1.6;margin:0 0 8px;color:var(--ink-soft)}
+.ac-dove ul{margin:0;padding-left:18px}
+.ac-dove li{font-size:12.5px;line-height:1.6;margin-bottom:6px;color:var(--ink-soft)}
+.ac-disc{font-size:11.5px;line-height:1.6;color:var(--ink-soft);background:rgba(232,130,61,.10);border-radius:11px;padding:12px;margin-top:14px}
+
+
+.asse-filtro{display:flex;gap:8px;margin:0 0 10px}
+.asse-filtro button{flex:1;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);color:#fff;border-radius:11px;padding:9px;font-size:12.5px;font-weight:700;cursor:pointer}
+.asse-filtro button.on{background:#fff;color:#12281f;border-color:#fff}
+.asse-nota{font-size:11.5px;color:rgba(255,255,255,.78);line-height:1.55;background:rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;margin-bottom:10px}
+.asse-conta{font-size:11px;color:rgba(255,255,255,.6);margin-bottom:9px;font-weight:600}
+.asse-lista{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.asse-item{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:11px 12px}
+.asse-top{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.asse-data{font-size:11px;color:rgba(255,255,255,.65);font-weight:700}
+.asse-ramo{font-size:10.5px;color:rgba(255,255,255,.55)}
+.asse-esito{font-size:10px;font-weight:800;padding:1px 8px;border-radius:20px;margin-left:auto}
+.asse-esito.ok{background:rgba(63,196,143,.22);color:#7ee5bb}
+.asse-esito.no{background:rgba(230,90,90,.22);color:#f0a0a0}
+.asse-tit{font-size:12.5px;line-height:1.45;color:#fff}
+.asse-temi{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.asse-tag{font-size:10px;font-weight:700;background:rgba(255,255,255,.14);color:rgba(255,255,255,.85);padding:2px 8px;border-radius:6px}
+.asse-vuoto{background:rgba(255,255,255,.07);border-radius:12px;padding:14px;font-size:12.5px;color:rgba(255,255,255,.8);line-height:1.6}
+.asse-fonte{font-size:10.5px;color:rgba(255,255,255,.55);line-height:1.5;font-style:italic;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -13750,6 +13906,9 @@ const SUBNAV = {
     { id:'leggi', label:'Leggi', icon:'M4 5h16 M4 5l1 14h14l1-14 M9 9v6 M15 9v6 M12 3v2' },
     { id:'assemblea', label:'Assemblea', icon:'M3 21h18 M5 21V11 M9 21V11 M15 21V11 M19 21V11 M2 11h20L12 4z' },
     { id:'impatto', label:'Impatto', icon:'M3 17l6-6 4 4 8-8 M14 7h7v7' },
+    /* Apre la schermata dei partiti (programmi, voti, bilanci):
+       come 'Regioni' nei conti, non è un gruppo di voci. */
+    { id:'partiti', label:'Partiti', icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75' },
   ],
   conti: [
     { id:'bilancio', label:'Bilancio', icon:'M12 3v18 M5 7h14 M12 7l-4 7h8z M5 7l-3 7h6z' },
@@ -13798,6 +13957,10 @@ function switchSub(sezione, subId){
   // attiva (altrimenti resterebbe evidenziata come se fosse una schermata).
   if(sezione==='conti' && subId==='confronto'){
     if(typeof claApri==='function') claApri();
+    return;
+  }
+  if(sezione==='politica' && subId==='partiti'){
+    if(typeof ptApri==='function') ptApri();
     return;
   }
   currentSub[sezione] = subId;
@@ -14373,6 +14536,8 @@ function resoSeduta(id){ return RESO_SEDUTE.find(s=>s.id===id) || RESO_SEDUTE[0]
    Primo strumento: Resoconti "gratta e capisci".
    ============================================================ */
 const POLIS_TOOLS = [
+  { id:'assistente', ico:'🧭', nome:'Cosa potrebbe spettarti', desc:'Rispondi a 6 domande: ti mostro le misure pubbliche che ti riguardano', fn:'acApri' },
+  { id:'tradburo', ico:'🔍', nome:'Capire un testo burocratico', desc:'Incolla una legge, un decreto o un comma: te lo scompongo e spiego', fn:'tbApri' },
   { id:'assemblea', ico:'🏛️', nome:'Assemblea', desc:'Cosa fanno i deputati ogni giorno, in parole semplici', fn:'openAssemblea' },
   { id:'resoconti', ico:'📄', nome:'Resoconti spiegati', desc:'Le sedute con le parole difficili spiegate al tocco', fn:'openResocontiTool' },
   { id:'glossario', ico:'📖', nome:'Glossario', desc:'Le parole difficili di politica ed economia, spiegate', fn:'openGlossario' },
@@ -14811,6 +14976,7 @@ function openAssemblea(){
       <div class="h-block" style="margin-top:8px"><div class="eyebrow">Camera dei deputati</div>
         <h2>Cosa fanno i deputati</h2>
         <p>Giorno per giorno, cosa succede in Aula: le sedute riassunte in parole semplici. Tocca una giornata per i dettagli.</p></div>
+      <div id="asseBox">${(typeof asseHTML==='function')?asseHTML():''}</div>
       <div class="ass-list">
         ${(typeof RESO_SEDUTE!=='undefined'?RESO_SEDUTE:[]).map(s=>`
           <button class="ass-day" onclick="closeAssemblea();setTimeout(()=>{openResocontiTool();setTimeout(()=>openResocontoSeduta('${s.id}'),120)},160)">
@@ -20909,6 +21075,36 @@ async function normAggiorna(){
 
 let NORM_OPEN=-1;
 function normToggle(i){ NORM_OPEN=(NORM_OPEN===i)?-1:i; normRender(); }
+/* Collega un atto arrivato dall'aggiornamento al traduttore burocratico.
+   Passo titolo, tipo e numero: sono i dati che l'app possiede davvero.
+   Il testo integrale resta su Normattiva (link nella scheda). */
+async function normSpiegaAtto(i){
+  const a=(NORM && NORM.atti)?NORM.atti[i]:null;
+  if(!a || typeof tbApriTesto!=='function') return;
+  const intestazione=(a.tipo||'')+(a.numero?' n. '+a.numero:'')+
+                     (a.gu?' — Gazzetta Ufficiale del '+a.gu:'');
+  const titolo=normPulisciTitolo(a.titolo||'');
+  /* Se l'ETL ha già scaricato il testo integrale, uso quello: lo strumento
+     può scomporre articoli e commi. Altrimenti lavoro su intestazione e
+     titolo, che bastano per tipo di atto, rinvii e formule. */
+  const cod=a.cod||'';
+  if(cod){
+    try{
+      const r=await fetch('dati/testi/'+encodeURIComponent(cod)+'.json',{cache:'no-cache'});
+      if(r.ok){
+        const j=await r.json();
+        if(j && j.testo && j.testo.length>200){
+          tbApriTesto(intestazione+'\n\n'+titolo+'\n\n'+j.testo,
+                      'Testo integrale dell\u2019atto');
+          return;
+        }
+      }
+    }catch(e){ /* testo non ancora scaricato: si continua col titolo */ }
+  }
+  tbApriTesto([intestazione,titolo].filter(Boolean).join('\n\n'),
+              'Atto dall\u2019ultimo aggiornamento \u00b7 solo titolo');
+}
+
 function normCardHTML(a,i){
   const finto={titolo:a.titolo}; // riuso della pipeline chiarezza
   const cat=leggeCategoria(finto);
@@ -20935,6 +21131,7 @@ function normCardHTML(a,i){
       <div class="norm-f"><span class="norm-fl">${cat.ico} Ambito</span><p>${esc(cat.nome)}</p></div>
       <div class="norm-f"><span class="norm-fl">👥 Chi riguarda</span><p>${esc(sp.chi)}</p></div>
       <div class="norm-f"><span class="norm-fl">🔧 Come si attua</span><p>${esc(sp.come)}</p></div>
+      <button class="norm-tb" onclick="event.stopPropagation();normSpiegaAtto(${i})">🔍 Spiegami com'è scritto</button>
       ${link?`<a class="norm-link" href="${link}" target="_blank" rel="noopener">Leggi il testo ufficiale su Normattiva ›</a>`:''}
     </div>`:''}
   </div>`;
@@ -21178,7 +21375,7 @@ const LIFE_EVENTS=[
   {t:'Fatti prescrivere la ricetta col codice di priorit\u00e0',d:'U=72 ore, B=10 giorni, D=30 gg visite/60 esami, P=120-180 gg. Il codice \u00e8 il tuo diritto: guardalo.',dove:'Medico di base',tempo:'15 min'},
   {t:'Prenota al CUP',d:'Telefono, sportello, farmacia, app regionale o Fascicolo Sanitario Elettronico.',dove:'CUP regionale',tempo:'15-40 min'},
   {t:'Se sforano i tempi massimi, fatti dare un\u2019attestazione scritta',d:'Chiedi al CUP il protocollo dell\u2019impossibilit\u00e0 di prenotare nei termini del codice.',dove:'CUP',tempo:'10 min'},
-  {t:'Attiva il "Percorso di tutela"',d:'Istanza (meglio via PEC) al Direttore Generale della ASL: hai diritto alla prestazione in intramoenia o dal privato accreditato pagando SOLO il ticket (D.Lgs. 124/1998). Moduli pronti su Cittadinanzattiva.',dove:'ASL \u2014 Direzione generale',tempo:'30 min',attesa:'~2 settimane'},
+  {t:'Attiva il "Percorso di tutela"',d:'Istanza (meglio via PEC) al Direttore Generale della ASL: puoi avere diritto alla prestazione in intramoenia o dal privato accreditato pagando SOLO il ticket (D.Lgs. 124/1998). Moduli pronti su Cittadinanzattiva.',dove:'ASL \u2014 Direzione generale',tempo:'30 min',attesa:'~2 settimane'},
   {t:'Verifica le esenzioni ticket',d:'Per reddito: E01 (under 6/over 65, reddito familiare \u2264 36.151,98\u20ac), E02 (disoccupati, < 8.263,31\u20ac +maggiorazioni), E03 (assegno sociale), E04 (pensione minima over 60). Conta il reddito fiscale del nucleo, NON l\u2019ISEE.',dove:'ASL / medico',tempo:'20 min'}],
  benefici:[{v:'solo ticket',l:'intramoenia a carico ASL se sforano i tempi'},{v:'E01-E04',l:'esenzioni per reddito (variano per Regione)'}],
  errori:['Accettare in silenzio un appuntamento oltre i tempi massimi','Non chiedere l\u2019attestazione scritta','Pretendere una struttura specifica: se un\u2019altra della ASL rispetta i tempi, il diritto decade'],
@@ -24119,7 +24316,7 @@ function ottHTML(){
    La classe si può cambiare quando la vita cambia (level up).
    Dati da fonti ufficiali 2026 (INPS, Ag. Entrate, MEF, MIM, INDIRE...),
    ogni misura con importo, fonte e stato normativo. 'Nessun dato inventato'. */
-const CL_CLASSI=[{"k": "studente", "ico": "🎓", "nome": "Studente", "fascia": "18-25", "situazione": "Sei all'università o stai per iscriverti. Il tuo parametro-chiave è l'ISEE universitario: da lì dipendono borse di studio, esenzioni e alloggio.", "arrivo": "Completare gli studi senza che i costi siano un ostacolo, e arrivare pronto al primo lavoro con competenze spendibili.", "percorso": ["Richiedi l'ISEE (DSU precompilata sul portale INPS): è la chiave per tutto il resto", "Presenta domanda di borsa di studio all'ente regionale per il diritto allo studio, rispettando le scadenze del bando", "Se studi fuori sede, conserva il contratto d'affitto registrato: dà diritto a una detrazione", "Verifica l'esenzione dalle tasse universitarie per la tua fascia ISEE"], "misure": [{"n": "Borsa di studio DSU", "v": "importi minimi fissati dal MUR ogni anno", "f": "MUR, D.D. n.175 del 10/02/2026", "stato": "confermata"}, {"n": "Detrazione affitto fuorisede", "v": "19% su max 2.633 €/anno (fino a 500,17 €)", "f": "art.15 c.1 lett. i-sexies TUIR", "stato": "confermata"}, {"n": "Carta Giovani Nazionale", "v": "sconti cultura, sport, viaggi fino a 35 anni", "f": "Dip. Politiche Giovanili", "stato": "confermata"}], "ostacoli": "Scadenze dei bandi regionali diverse tra loro, requisiti di merito (CFU), il calcolo dei 100 km per l'affitto, la differenza tra 'idoneo' e 'vincitore' di borsa.", "eventi": ["studente_lavoro", "studente_piva"]}, {"k": "transizione", "ico": "🧭", "nome": "In transizione", "fascia": "18-29", "situazione": "Hai finito la scuola e non sei ancora all'università né al lavoro. È una fase di orientamento, non un vuoto: ci sono percorsi pensati apposta.", "arrivo": "Trovare la direzione: un percorso formativo, un'esperienza di servizio civile, o il primo ingresso nel lavoro.", "percorso": ["Valuta il Servizio Civile Universale: un anno di esperienza con un assegno mensile", "Guarda gli ITS Academy e gli IFTS: formazione tecnica con alti tassi di occupazione", "Iscriviti al Centro per l'Impiego per accedere ai percorsi del programma GOL", "Considera Erasmus+ e i tirocini per costruire esperienza"], "misure": [{"n": "Servizio Civile Universale", "v": "519,47 €/mese netti, 8-12 mesi", "f": "Dip. Politiche Giovanili, bando 2026", "stato": "confermata"}, {"n": "ITS Academy", "v": "84% occupati a 12 mesi dal diploma", "f": "INDIRE, monitoraggio 2025", "stato": "confermata"}], "ostacoli": "Orientarsi tra troppi percorsi diversi, le tempistiche dei bandi, la difficoltà di scegliere senza esperienza.", "eventi": ["transizione_lavoro", "transizione_studente"]}, {"k": "primo_impiego", "ico": "💼", "nome": "Primo impiego", "fascia": "22-35", "situazione": "Hai il tuo primo lavoro dipendente, o lo stai cercando. Devi imparare a leggere la busta paga e sapere cosa ti spetta se le cose cambiano.", "arrivo": "Stabilità lavorativa, una busta paga che capisci, e la possibilità di pensare a progetti più grandi come la casa.", "percorso": ["Impara a leggere la busta paga: lordo, netto, contributi, detrazioni", "Verifica se rientri negli incentivi per l'assunzione under 35 (li usa il datore, ma saperlo aiuta)", "Se cerchi casa, controlla il Fondo Garanzia mutui prima casa under 36", "Tieni presente la NASpI: se perdi il lavoro, hai 68 giorni per fare domanda"], "misure": [{"n": "Bonus assunzione under 35", "v": "esonero fino a 500 €/mese (650 € nel Sud), 24-36 mesi", "f": "a carico del datore", "stato": "scade 30 aprile 2026"}, {"n": "Cuneo fiscale in busta paga", "v": "integrazione esente IRPEF fino a 20.000 € di reddito", "f": "L.207/2024, confermata L.199/2025", "stato": "confermata"}, {"n": "NASpI", "v": "max 1.584,70 €/mese lordi; serve requisito 18 settimane", "f": "Circolare INPS n.4/2026", "stato": "modificata (da 13 a 18 settimane)"}, {"n": "Fondo mutui prima casa under 36", "v": "garanzia statale fino all'80%, ISEE ≤ 40.000 €", "f": "CONSAP, prorogato al 31/12/2027", "stato": "confermata (solo garanzia, non lo sconto fiscale)"}], "ostacoli": "Capire la busta paga, il requisito NASpI più severo dal 2026, il fatto che le agevolazioni fiscali under 36 non sono state rinnovate.", "eventi": ["primo_disoccupato", "primo_famiglia", "primo_piva", "primo_casa"]}, {"k": "freelance", "ico": "🧾", "nome": "Freelance / Partita IVA", "fascia": "tutte", "situazione": "Lavori in proprio con partita IVA. Hai più libertà ma anche adempimenti da gestire: fisco, contributi, scadenze.", "arrivo": "Un'attività che cresce in modo sostenibile, con i conti in ordine e senza sorprese fiscali.", "percorso": ["Se apri ora, verifica il regime forfettario: imposta al 5% per i primi 5 anni se hai i requisiti", "Calcola i contributi INPS Gestione Separata: si versano in percentuale sul reddito effettivo", "Attiva la fatturazione elettronica", "Segna le scadenze degli acconti: 30 giugno e 30 novembre"], "misure": [{"n": "Regime forfettario", "v": "ricavi fino a 85.000 €, imposta 15% (5% primi 5 anni)", "f": "confermato L.199/2025", "stato": "confermata"}, {"n": "INPS Gestione Separata", "v": "aliquota 26,07% sul reddito (24% se già assicurato)", "f": "Circolare INPS n.8/2026", "stato": "confermata"}], "ostacoli": "Nel forfettario non si usano le detrazioni (mutuo, figli); gestire gli acconti; il principio di cassa.", "eventi": ["freelance_dipendente"]}, {"k": "famiglia", "ico": "👨‍👩‍👧", "nome": "Famiglia con figli", "fascia": "tutte", "situazione": "Hai figli a carico. Ci sono diversi sostegni, quasi tutti legati all'ISEE, e alcuni con scadenze da rispettare per non perdere gli arretrati.", "arrivo": "Sostenere la crescita dei figli con tutti gli aiuti a cui hai diritto, senza perdere scadenze.", "percorso": ["Aggiorna l'ISEE entro il 28 febbraio: è la condizione per l'Assegno Unico pieno con arretrati", "Verifica l'Assegno Unico Universale: spetta per ogni figlio, l'importo dipende dall'ISEE", "Se hai bambini piccoli, richiedi il Bonus asilo nido", "Controlla se rientri nella Carta Dedicata a te (ISEE ≤ 15.000 €)"], "misure": [{"n": "Assegno Unico Universale", "v": "da 58,30 € a 203,80 €/mese per figlio", "f": "Circolare INPS n.7/2026 (ISTAT +1,4%)", "stato": "confermata (nuovo ISEE dal 2026)"}, {"n": "Bonus asilo nido", "v": "fino a 3.600 €/anno con ISEE ≤ 40.000 €", "f": "Circolare INPS n.29/2026", "stato": "confermata"}, {"n": "Carta Dedicata a te", "v": "500 € una tantum, nuclei 3+ con ISEE ≤ 15.000 €", "f": "L. Bilancio 2026", "stato": "in attesa di decreto attuativo"}], "ostacoli": "Serve ISEE aggiornato per l'importo pieno, caricare ogni mese le ricevute del nido, verificare l'autorizzazione della struttura.", "eventi": ["famiglia_pensione"]}, {"k": "casa", "ico": "🏠", "nome": "Casa", "fascia": "tutte", "situazione": "Stai comprando, ristrutturando o affittando casa. Le regole 2026 sono cambiate: alcune agevolazioni sono scese e altre scadono a fine anno.", "arrivo": "Una casa adeguata alle tue esigenze, sfruttando le agevolazioni giuste prima che cambino.", "percorso": ["Se ristrutturi, sfrutta il bonus prima casa al 50% entro il 2026: dal 2027 scende", "Per l'acquisto, verifica le agevolazioni prima casa (imposta di registro ridotta)", "Se sei in affitto e hai 20-31 anni, controlla il bonus affitto giovani", "In caso di difficoltà, informati sui fondi per la morosità incolpevole"], "misure": [{"n": "Bonus ristrutturazione", "v": "50% prima casa / 36% seconde (max 96.000 €)", "f": "L.199/2025", "stato": "modificata (scende dal 2027)"}, {"n": "Bonus mobili", "v": "50% su max 5.000 €", "f": "L.199/2025", "stato": "confermata"}, {"n": "Bonus affitto giovani 20-31 anni", "v": "20% del canone, da 991,60 € a 2.000 €", "f": "art.16 c.1-quinquies TUIR", "stato": "confermata"}], "ostacoli": "Le aliquote cambiano tra prima e seconda casa e scendono dal 2027; il bonus affitto non è cumulabile col fondo affitti.", "eventi": []}, {"k": "disoccupato", "ico": "🔎", "nome": "Disoccupato / fragilità", "fascia": "tutte", "situazione": "Sei senza lavoro o in difficoltà economica. Esistono sostegni al reddito legati all'ISEE, ma richiedono passaggi precisi per essere attivati.", "arrivo": "Ritrovare stabilità economica e rientrare nel mondo del lavoro con un percorso accompagnato.", "percorso": ["Richiedi l'ISEE: definisce l'accesso all'Assegno di Inclusione e al Supporto Formazione", "Iscriviti alla piattaforma SIISL e firma il Patto di Attivazione Digitale: è ciò che sblocca il pagamento", "Valuta il Supporto Formazione e Lavoro se sei 'occupabile': 500 €/mese per un anno", "Rivolgiti al Centro per l'Impiego per le politiche attive (GOL)"], "misure": [{"n": "Assegno di Inclusione (ADI)", "v": "fino a ~500 €/mese + quota affitto, con requisiti", "f": "D.L. 48/2023", "stato": "confermata (nuovo ISEE allarga la platea)"}, {"n": "Supporto Formazione e Lavoro", "v": "500 €/mese per max 12 mesi", "f": "D.L. 48/2023", "stato": "confermata"}, {"n": "Reddito di libertà", "v": "per donne vittime di violenza (con certificazione)", "f": "INPS", "stato": "confermata"}], "ostacoli": "L'obbligo di SIISL e Patto di Attivazione, comunicare le variazioni entro 30 giorni per non decadere.", "eventi": ["disoccupato_lavoro"]}, {"k": "over50", "ico": "🛠️", "nome": "Over 50 in ricollocazione", "fascia": "50+", "situazione": "Hai più di 50 anni e cerchi di rientrare nel lavoro. La ricollocazione a questa età è più difficile, ma ci sono incentivi pensati per te.", "arrivo": "Un nuovo impiego stabile, valorizzando l'esperienza, o un ponte verso la pensione.", "percorso": ["Fai valere gli incentivi all'assunzione: chi ti assume ha uno sconto contributivo del 50%", "Se hai i requisiti, verifica l'APE sociale come ponte verso la pensione", "Rivolgiti al Centro per l'Impiego per i percorsi dedicati agli over 50"], "misure": [{"n": "Incentivo assunzione over 50", "v": "-50% contributi datoriali per 18 mesi", "f": "Ministero del Lavoro", "stato": "confermata"}, {"n": "APE sociale", "v": "ponte pensionistico per categorie tutelate", "f": "INPS", "stato": "confermata 2026"}], "ostacoli": "La difficoltà oggettiva di ricollocazione, misure frammentate e spesso temporanee.", "eventi": ["over50_pensione"]}, {"k": "pensione", "ico": "🌇", "nome": "Pensionando / pensionato", "fascia": "60+", "situazione": "Sei vicino alla pensione o già in pensione. Il quadro 2026 è cambiato: alcune vie d'uscita anticipate non ci sono più.", "arrivo": "Una transizione serena alla pensione, con la certezza degli importi e dei diritti collegati.", "percorso": ["Verifica i requisiti: vecchiaia a 67 anni con 20 di contributi, oppure anticipata con 42 anni e 10 mesi", "Sappi che Quota 103 e Opzione Donna non sono più accessibili se non avevi già i requisiti", "Controlla la rivalutazione della tua pensione (+1,4% dal 2026)", "Se hai redditi bassi, verifica l'assegno sociale e le esenzioni ticket"], "misure": [{"n": "Pensione di vecchiaia", "v": "67 anni + 20 di contributi", "f": "L.199/2025", "stato": "confermata"}, {"n": "Trattamento minimo", "v": "611,85 €/mese (con maggiorazione ~619,80 €)", "f": "Circolare INPS n.153/2025", "stato": "rivalutato +1,4%"}, {"n": "Assegno sociale", "v": "546,24 €/mese per 13 mensilità", "f": "INPS 2026", "stato": "confermata"}, {"n": "Quota 103 / Opzione Donna", "v": "solo per chi aveva già i requisiti", "f": "L.199/2025", "stato": "non prorogate"}], "ostacoli": "La fine delle 'quote', l'adeguamento alla speranza di vita dal 2027, capire quale via d'uscita resta praticabile.", "eventi": ["pensione_caregiver"]}, {"k": "caregiver", "ico": "🤝", "nome": "Caregiver / disabilità", "fascia": "tutte", "situazione": "Assisti un familiare non autosufficiente, o convivi con una disabilità. Ci sono tutele importanti, ma il sistema sta cambiando con la riforma.", "arrivo": "Ottenere tutti i sostegni e le tutele previsti, con un progetto di vita costruito sulle reali esigenze.", "percorso": ["Verifica i permessi e i congedi della Legge 104 se assisti un familiare grave", "Controlla l'indennità di accompagnamento: spetta senza limiti di reddito", "Informati sulla riforma disabilità: dal 2026 si estende a nuove province col 'Progetto di vita'", "Valuta l'amministratore di sostegno e le tutele 'Dopo di noi'"], "misure": [{"n": "Indennità di accompagnamento", "v": "551,53 €/mese (2026)", "f": "Messaggio INPS n.628/2026", "stato": "rivalutata (non più 542,02 €)"}, {"n": "Legge 104", "v": "3 giorni/mese di permesso, congedo fino a 2 anni", "f": "L.104/1992; art.42 D.Lgs.151/2001", "stato": "confermata"}, {"n": "Riforma disabilità", "v": "'Progetto di vita' individuale, +40 province da marzo 2026", "f": "D.Lgs. 62/2024", "stato": "sperimentale (doppio binario)"}], "ostacoli": "Il doppio binario tra province sperimentali e non, le procedure UVM, il cambio di terminologia.", "eventi": []}, {"k": "straniero", "ico": "🌍", "nome": "Straniero / nuovo cittadino", "fascia": "tutte", "situazione": "Sei di origine straniera e vivi in Italia. Hai bisogno di orientarti tra permessi, accesso ai servizi ed eventualmente il percorso di cittadinanza.", "arrivo": "Piena integrazione: documenti in regola, accesso ai servizi, ed eventualmente la cittadinanza italiana.", "percorso": ["Verifica il tuo permesso di soggiorno e le condizioni di rinnovo", "Iscriviti al Servizio Sanitario Nazionale e all'anagrafe del Comune", "Se hai i requisiti di residenza, valuta la domanda di cittadinanza sul Portale ALI", "Fai riconoscere i tuoi titoli di studio esteri"], "misure": [{"n": "Cittadinanza per residenza", "v": "10 anni (extra-UE), 4 anni (UE); test lingua B1", "f": "L.91/1992 rif. da L.74/2025", "stato": "riformata 2025"}, {"n": "Cittadinanza per matrimonio", "v": "2 anni di residenza dopo le nozze (dimezzati con figli)", "f": "L.74/2025", "stato": "riformata 2025"}, {"n": "Accesso al SSN", "v": "iscrizione con permesso di soggiorno valido", "f": "Ministero Salute", "stato": "confermata"}], "ostacoli": "Tempi lunghi (fino a 24-36 mesi per la cittadinanza), complessità documentale, riforma in evoluzione.", "eventi": []}];
+const CL_CLASSI=[{"k": "studente", "ico": "🎓", "nome": "Studente", "fascia": "18-25", "situazione": "Sei all'università o stai per iscriverti. Il tuo parametro-chiave è l'ISEE universitario: da lì dipendono borse di studio, esenzioni e alloggio.", "arrivo": "Completare gli studi senza che i costi siano un ostacolo, e arrivare pronto al primo lavoro con competenze spendibili.", "percorso": ["Richiedi l'ISEE (DSU precompilata sul portale INPS): è la chiave per tutto il resto", "Presenta domanda di borsa di studio all'ente regionale per il diritto allo studio, rispettando le scadenze del bando", "Se studi fuori sede, conserva il contratto d'affitto registrato: dà diritto a una detrazione", "Verifica l'esenzione dalle tasse universitarie per la tua fascia ISEE"], "misure": [{"n": "Borsa di studio DSU", "v": "importi minimi fissati dal MUR ogni anno", "f": "MUR, D.D. n.175 del 10/02/2026", "stato": "confermata"}, {"n": "Detrazione affitto fuorisede", "v": "19% su max 2.633 €/anno (fino a 500,17 €)", "f": "art.15 c.1 lett. i-sexies TUIR", "stato": "confermata"}, {"n": "Carta Giovani Nazionale", "v": "sconti cultura, sport, viaggi fino a 35 anni", "f": "Dip. Politiche Giovanili", "stato": "confermata"}], "ostacoli": "Scadenze dei bandi regionali diverse tra loro, requisiti di merito (CFU), il calcolo dei 100 km per l'affitto, la differenza tra 'idoneo' e 'vincitore' di borsa.", "eventi": ["studente_lavoro", "studente_piva"]}, {"k": "transizione", "ico": "🧭", "nome": "In transizione", "fascia": "18-29", "situazione": "Hai finito la scuola e non sei ancora all'università né al lavoro. È una fase di orientamento, non un vuoto: ci sono percorsi pensati apposta.", "arrivo": "Trovare la direzione: un percorso formativo, un'esperienza di servizio civile, o il primo ingresso nel lavoro.", "percorso": ["Valuta il Servizio Civile Universale: un anno di esperienza con un assegno mensile", "Guarda gli ITS Academy e gli IFTS: formazione tecnica con alti tassi di occupazione", "Iscriviti al Centro per l'Impiego per accedere ai percorsi del programma GOL", "Considera Erasmus+ e i tirocini per costruire esperienza"], "misure": [{"n": "Servizio Civile Universale", "v": "519,47 €/mese netti, 8-12 mesi", "f": "Dip. Politiche Giovanili, bando 2026", "stato": "confermata"}, {"n": "ITS Academy", "v": "84% occupati a 12 mesi dal diploma", "f": "INDIRE, monitoraggio 2025", "stato": "confermata"}], "ostacoli": "Orientarsi tra troppi percorsi diversi, le tempistiche dei bandi, la difficoltà di scegliere senza esperienza.", "eventi": ["transizione_lavoro", "transizione_studente"]}, {"k": "primo_impiego", "ico": "💼", "nome": "Primo impiego", "fascia": "22-35", "situazione": "Hai il tuo primo lavoro dipendente, o lo stai cercando. Devi imparare a leggere la busta paga e sapere cosa ti spetta se le cose cambiano.", "arrivo": "Stabilità lavorativa, una busta paga che capisci, e la possibilità di pensare a progetti più grandi come la casa.", "percorso": ["Impara a leggere la busta paga: lordo, netto, contributi, detrazioni", "Verifica se rientri negli incentivi per l'assunzione under 35 (li usa il datore, ma saperlo aiuta)", "Se cerchi casa, controlla il Fondo Garanzia mutui prima casa under 36", "Tieni presente la NASpI: se perdi il lavoro, hai 68 giorni per fare domanda"], "misure": [{"n": "Bonus assunzione under 35", "v": "esonero fino a 500 €/mese (650 € nel Sud), 24-36 mesi", "f": "a carico del datore", "stato": "scade 30 aprile 2026"}, {"n": "Cuneo fiscale in busta paga", "v": "integrazione esente IRPEF fino a 20.000 € di reddito", "f": "L.207/2024, confermata L.199/2025", "stato": "confermata"}, {"n": "NASpI", "v": "max 1.584,70 €/mese lordi; serve requisito 18 settimane", "f": "Circolare INPS n.4/2026", "stato": "modificata (da 13 a 18 settimane)"}, {"n": "Fondo mutui prima casa under 36", "v": "garanzia statale fino all'80%, ISEE ≤ 40.000 €", "f": "CONSAP, prorogato al 31/12/2027", "stato": "confermata (solo garanzia, non lo sconto fiscale)"}], "ostacoli": "Capire la busta paga, il requisito NASpI più severo dal 2026, il fatto che le agevolazioni fiscali under 36 non sono state rinnovate.", "eventi": ["primo_disoccupato", "primo_famiglia", "primo_piva", "primo_casa"]}, {"k": "freelance", "ico": "🧾", "nome": "Freelance / Partita IVA", "fascia": "tutte", "situazione": "Lavori in proprio con partita IVA. Hai più libertà ma anche adempimenti da gestire: fisco, contributi, scadenze.", "arrivo": "Un'attività che cresce in modo sostenibile, con i conti in ordine e senza sorprese fiscali.", "percorso": ["Se apri ora, verifica il regime forfettario: imposta al 5% per i primi 5 anni se hai i requisiti", "Calcola i contributi INPS Gestione Separata: si versano in percentuale sul reddito effettivo", "Attiva la fatturazione elettronica", "Segna le scadenze degli acconti: 30 giugno e 30 novembre"], "misure": [{"n": "Regime forfettario", "v": "ricavi fino a 85.000 €, imposta 15% (5% primi 5 anni)", "f": "confermato L.199/2025", "stato": "confermata"}, {"n": "INPS Gestione Separata", "v": "aliquota 26,07% sul reddito (24% se già assicurato)", "f": "Circolare INPS n.8/2026", "stato": "confermata"}], "ostacoli": "Nel forfettario non si usano le detrazioni (mutuo, figli); gestire gli acconti; il principio di cassa.", "eventi": ["freelance_dipendente"]}, {"k": "famiglia", "ico": "👨‍👩‍👧", "nome": "Famiglia con figli", "fascia": "tutte", "situazione": "Hai figli a carico. Ci sono diversi sostegni, quasi tutti legati all'ISEE, e alcuni con scadenze da rispettare per non perdere gli arretrati.", "arrivo": "Sostenere la crescita dei figli con gli aiuti a cui potresti avere diritto, senza perdere scadenze.", "percorso": ["Aggiorna l'ISEE entro il 28 febbraio: è la condizione per l'Assegno Unico pieno con arretrati", "Verifica l'Assegno Unico Universale: spetta per ogni figlio, l'importo dipende dall'ISEE", "Se hai bambini piccoli, richiedi il Bonus asilo nido", "Controlla se rientri nella Carta Dedicata a te (ISEE ≤ 15.000 €)"], "misure": [{"n": "Assegno Unico Universale", "v": "da 58,30 € a 203,80 €/mese per figlio", "f": "Circolare INPS n.7/2026 (ISTAT +1,4%)", "stato": "confermata (nuovo ISEE dal 2026)"}, {"n": "Bonus asilo nido", "v": "fino a 3.600 €/anno con ISEE ≤ 40.000 €", "f": "Circolare INPS n.29/2026", "stato": "confermata"}, {"n": "Carta Dedicata a te", "v": "500 € una tantum, nuclei 3+ con ISEE ≤ 15.000 €", "f": "L. Bilancio 2026", "stato": "in attesa di decreto attuativo"}], "ostacoli": "Serve ISEE aggiornato per l'importo pieno, caricare ogni mese le ricevute del nido, verificare l'autorizzazione della struttura.", "eventi": ["famiglia_pensione"]}, {"k": "casa", "ico": "🏠", "nome": "Casa", "fascia": "tutte", "situazione": "Stai comprando, ristrutturando o affittando casa. Le regole 2026 sono cambiate: alcune agevolazioni sono scese e altre scadono a fine anno.", "arrivo": "Una casa adeguata alle tue esigenze, sfruttando le agevolazioni giuste prima che cambino.", "percorso": ["Se ristrutturi, sfrutta il bonus prima casa al 50% entro il 2026: dal 2027 scende", "Per l'acquisto, verifica le agevolazioni prima casa (imposta di registro ridotta)", "Se sei in affitto e hai 20-31 anni, controlla il bonus affitto giovani", "In caso di difficoltà, informati sui fondi per la morosità incolpevole"], "misure": [{"n": "Bonus ristrutturazione", "v": "50% prima casa / 36% seconde (max 96.000 €)", "f": "L.199/2025", "stato": "modificata (scende dal 2027)"}, {"n": "Bonus mobili", "v": "50% su max 5.000 €", "f": "L.199/2025", "stato": "confermata"}, {"n": "Bonus affitto giovani 20-31 anni", "v": "20% del canone, da 991,60 € a 2.000 €", "f": "art.16 c.1-quinquies TUIR", "stato": "confermata"}], "ostacoli": "Le aliquote cambiano tra prima e seconda casa e scendono dal 2027; il bonus affitto non è cumulabile col fondo affitti.", "eventi": []}, {"k": "disoccupato", "ico": "🔎", "nome": "Disoccupato / fragilità", "fascia": "tutte", "situazione": "Sei senza lavoro o in difficoltà economica. Esistono sostegni al reddito legati all'ISEE, ma richiedono passaggi precisi per essere attivati.", "arrivo": "Ritrovare stabilità economica e rientrare nel mondo del lavoro con un percorso accompagnato.", "percorso": ["Richiedi l'ISEE: definisce l'accesso all'Assegno di Inclusione e al Supporto Formazione", "Iscriviti alla piattaforma SIISL e firma il Patto di Attivazione Digitale: è ciò che sblocca il pagamento", "Valuta il Supporto Formazione e Lavoro se sei 'occupabile': 500 €/mese per un anno", "Rivolgiti al Centro per l'Impiego per le politiche attive (GOL)"], "misure": [{"n": "Assegno di Inclusione (ADI)", "v": "fino a ~500 €/mese + quota affitto, con requisiti", "f": "D.L. 48/2023", "stato": "confermata (nuovo ISEE allarga la platea)"}, {"n": "Supporto Formazione e Lavoro", "v": "500 €/mese per max 12 mesi", "f": "D.L. 48/2023", "stato": "confermata"}, {"n": "Reddito di libertà", "v": "per donne vittime di violenza (con certificazione)", "f": "INPS", "stato": "confermata"}], "ostacoli": "L'obbligo di SIISL e Patto di Attivazione, comunicare le variazioni entro 30 giorni per non decadere.", "eventi": ["disoccupato_lavoro"]}, {"k": "over50", "ico": "🛠️", "nome": "Over 50 in ricollocazione", "fascia": "50+", "situazione": "Hai più di 50 anni e cerchi di rientrare nel lavoro. La ricollocazione a questa età è più difficile, ma ci sono incentivi pensati per te.", "arrivo": "Un nuovo impiego stabile, valorizzando l'esperienza, o un ponte verso la pensione.", "percorso": ["Fai valere gli incentivi all'assunzione: chi ti assume ha uno sconto contributivo del 50%", "Se hai i requisiti, verifica l'APE sociale come ponte verso la pensione", "Rivolgiti al Centro per l'Impiego per i percorsi dedicati agli over 50"], "misure": [{"n": "Incentivo assunzione over 50", "v": "-50% contributi datoriali per 18 mesi", "f": "Ministero del Lavoro", "stato": "confermata"}, {"n": "APE sociale", "v": "ponte pensionistico per categorie tutelate", "f": "INPS", "stato": "confermata 2026"}], "ostacoli": "La difficoltà oggettiva di ricollocazione, misure frammentate e spesso temporanee.", "eventi": ["over50_pensione"]}, {"k": "pensione", "ico": "🌇", "nome": "Pensionando / pensionato", "fascia": "60+", "situazione": "Sei vicino alla pensione o già in pensione. Il quadro 2026 è cambiato: alcune vie d'uscita anticipate non ci sono più.", "arrivo": "Una transizione serena alla pensione, con la certezza degli importi e dei diritti collegati.", "percorso": ["Verifica i requisiti: vecchiaia a 67 anni con 20 di contributi, oppure anticipata con 42 anni e 10 mesi", "Sappi che Quota 103 e Opzione Donna non sono più accessibili se non avevi già i requisiti", "Controlla la rivalutazione della tua pensione (+1,4% dal 2026)", "Se hai redditi bassi, verifica l'assegno sociale e le esenzioni ticket"], "misure": [{"n": "Pensione di vecchiaia", "v": "67 anni + 20 di contributi", "f": "L.199/2025", "stato": "confermata"}, {"n": "Trattamento minimo", "v": "611,85 €/mese (con maggiorazione ~619,80 €)", "f": "Circolare INPS n.153/2025", "stato": "rivalutato +1,4%"}, {"n": "Assegno sociale", "v": "546,24 €/mese per 13 mensilità", "f": "INPS 2026", "stato": "confermata"}, {"n": "Quota 103 / Opzione Donna", "v": "solo per chi aveva già i requisiti", "f": "L.199/2025", "stato": "non prorogate"}], "ostacoli": "La fine delle 'quote', l'adeguamento alla speranza di vita dal 2027, capire quale via d'uscita resta praticabile.", "eventi": ["pensione_caregiver"]}, {"k": "caregiver", "ico": "🤝", "nome": "Caregiver / disabilità", "fascia": "tutte", "situazione": "Assisti un familiare non autosufficiente, o convivi con una disabilità. Ci sono tutele importanti, ma il sistema sta cambiando con la riforma.", "arrivo": "Ottenere tutti i sostegni e le tutele previsti, con un progetto di vita costruito sulle reali esigenze.", "percorso": ["Verifica i permessi e i congedi della Legge 104 se assisti un familiare grave", "Controlla l'indennità di accompagnamento: spetta senza limiti di reddito", "Informati sulla riforma disabilità: dal 2026 si estende a nuove province col 'Progetto di vita'", "Valuta l'amministratore di sostegno e le tutele 'Dopo di noi'"], "misure": [{"n": "Indennità di accompagnamento", "v": "551,53 €/mese (2026)", "f": "Messaggio INPS n.628/2026", "stato": "rivalutata (non più 542,02 €)"}, {"n": "Legge 104", "v": "3 giorni/mese di permesso, congedo fino a 2 anni", "f": "L.104/1992; art.42 D.Lgs.151/2001", "stato": "confermata"}, {"n": "Riforma disabilità", "v": "'Progetto di vita' individuale, +40 province da marzo 2026", "f": "D.Lgs. 62/2024", "stato": "sperimentale (doppio binario)"}], "ostacoli": "Il doppio binario tra province sperimentali e non, le procedure UVM, il cambio di terminologia.", "eventi": []}, {"k": "straniero", "ico": "🌍", "nome": "Straniero / nuovo cittadino", "fascia": "tutte", "situazione": "Sei di origine straniera e vivi in Italia. Hai bisogno di orientarti tra permessi, accesso ai servizi ed eventualmente il percorso di cittadinanza.", "arrivo": "Piena integrazione: documenti in regola, accesso ai servizi, ed eventualmente la cittadinanza italiana.", "percorso": ["Verifica il tuo permesso di soggiorno e le condizioni di rinnovo", "Iscriviti al Servizio Sanitario Nazionale e all'anagrafe del Comune", "Se hai i requisiti di residenza, valuta la domanda di cittadinanza sul Portale ALI", "Fai riconoscere i tuoi titoli di studio esteri"], "misure": [{"n": "Cittadinanza per residenza", "v": "10 anni (extra-UE), 4 anni (UE); test lingua B1", "f": "L.91/1992 rif. da L.74/2025", "stato": "riformata 2025"}, {"n": "Cittadinanza per matrimonio", "v": "2 anni di residenza dopo le nozze (dimezzati con figli)", "f": "L.74/2025", "stato": "riformata 2025"}, {"n": "Accesso al SSN", "v": "iscrizione con permesso di soggiorno valido", "f": "Ministero Salute", "stato": "confermata"}], "ostacoli": "Tempi lunghi (fino a 24-36 mesi per la cittadinanza), complessità documentale, riforma in evoluzione.", "eventi": []}];
 const CL_ASSI={"eta": [["18-25", "18-25 anni"], ["26-35", "26-35 anni"], ["36-49", "36-49 anni"], ["50-66", "50-66 anni"], ["67+", "67 anni o più"]], "lavoro": [["studente", "Studio"], ["dipendente", "Lavoro dipendente"], ["autonomo", "Partita IVA / autonomo"], ["disoccupato", "Cerco lavoro"], ["pensionato", "In pensione"]], "figli": [["no", "Nessun figlio a carico"], ["si", "Ho figli a carico"]], "isee": [["basso", "Basso (fino a ~15.000 €)"], ["medio", "Medio (15-40.000 €)"], ["alto", "Alto (oltre 40.000 €)"], ["nd", "Non lo so / non ce l'ho"]], "casa": [["no", "Non ora"], ["si", "Sto comprando/ristrutturando/cerco affitto"]], "disab": [["no", "No"], ["si", "Sì, nel mio nucleo"]], "cittad": [["it", "Italiana"], ["stra", "Straniera / in corso"]], "area": [["nord","Nord Italia"],["centro","Centro Italia"],["sud","Sud e Isole"]]};
 
 
@@ -27110,6 +27307,1239 @@ function casaLoop(t){
 })();
 
 /* ===== POLIS · CLASSIFICA REGIONI (fine) ===== */
+
+/* ===== POLIS · SEZIONE PARTITI (inizio) ===== */
+/* ============================================================
+   POLIS · Sezione PARTITI
+   ------------------------------------------------------------
+   Tre blocchi, tutti costruiti su documenti ufficiali:
+     1. Programmi elettorali depositati (Ministero dell'Interno)
+     2. Come hanno votato in Parlamento (dati aperti Camera/Senato)
+     3. Bilanci, statuti e trasparenza (Commissione di garanzia)
+
+   DUE VINCOLI RISPETTATI ALLA LETTERA
+   -----------------------------------
+   a) DIRITTO D'AUTORE. I programmi e gli statuti sono opere dei
+      partiti: lo Stato li pubblica ma non ne detiene i diritti.
+      Polis quindi LINKA il PDF ufficiale e non ne riproduce il
+      testo. Vale anche per gli articoli di stampa: mai copiati.
+   b) NEUTRALITÀ. Si mostrano tutte le forze politiche che hanno
+      depositato i documenti, con la stessa struttura e lo stesso
+      spazio, senza selezione editoriale e senza commenti.
+
+   Le posizioni dei partiti sono mostrate tramite i VOTI in aula,
+   che sono fatti verificabili, non tramite dichiarazioni scelte
+   da noi: la selezione delle interviste sarebbe una scelta
+   editoriale, e romperebbe la neutralità.
+   ============================================================ */
+(function(){
+  'use strict';
+
+  const PT = {
+    URL_PROG: 'data/politica/programmi.json',
+    URL_VOTI: 'data/politica/votazioni.json',
+    prog:null, voti:null, tab:'programmi'
+  };
+
+  /* Pagine ufficiali verificate: sono gli indici di legge dove
+     compaiono TUTTE le liste, non una selezione. */
+  const UFFICIALI = {
+    politiche2022: 'https://dait.interno.gov.it/elezioni/trasparenza/elezioni-politiche-2022',
+    europee2024:   'https://dait.interno.gov.it/elezioni/trasparenza/elezioni-europee-2024',
+    trasparenza:   'https://dait.interno.gov.it/elezioni/trasparenza',
+    registro:      'https://www.parlamento.it/1063',
+    benefici:      'https://www.parlamento.it/1067',
+    rendiconti:    'https://www.parlamento.it/7359',
+    comunicazioni: 'https://www.parlamento.it/1174',
+    relazioni:     'https://www.senato.it/leggi-e-documenti/controllo-dei-rendiconti-dei-partiti-politici',
+    duepermille:   'https://www1.finanze.gov.it/finanze/2xmille/public/index.php',
+    gruppiCamera:  'https://www.camera.it/leg19/1084',
+    gruppiSenato:  'https://www.senato.it/composizione/gruppi-parlamentari/riepilogo-della-composizione'
+  };
+
+  function E(s){ return (typeof esc==='function')?esc(String(s==null?'':s)):String(s==null?'':s); }
+  function num(n){ return (n==null)?'—':Number(n).toLocaleString('it-IT'); }
+
+  async function ptCarica(){
+    if(PT.prog===null){
+      try{ const r=await fetch(PT.URL_PROG,{cache:'no-cache'}); PT.prog = r.ok? await r.json() : {}; }
+      catch(e){ PT.prog={}; }
+    }
+    if(PT.voti===null){
+      try{ const r=await fetch(PT.URL_VOTI,{cache:'no-cache'}); PT.voti = r.ok? await r.json() : {}; }
+      catch(e){ PT.voti={}; }
+    }
+  }
+
+  async function ptApri(){
+    let ov=document.getElementById('ptOverlay');
+    if(!ov){ ov=document.createElement('div'); ov.id='ptOverlay'; ov.className='detail'; document.body.appendChild(ov); }
+    ov.innerHTML=`
+      <div class="detail-top">
+        <button class="bk" onclick="ptChiudi()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div style="flex:1"><h2 style="font-size:16px">I partiti</h2>
+        <div style="font-size:11.5px;color:var(--ink-soft)">Programmi, voti e bilanci · documenti ufficiali</div></div>
+      </div>
+      <div class="detail-body" id="ptBody"><div class="pt-load">Carico…</div></div>`;
+    ov.classList.add('open');
+    await ptCarica();
+    ptRender();
+  }
+  function ptChiudi(){ const o=document.getElementById('ptOverlay'); if(o) o.classList.remove('open'); }
+  window.ptTab=ptTab; function ptTab(t){ PT.tab=t; ptRender(); const b=document.getElementById('ptBody'); if(b) b.scrollTop=0; }
+
+  function ptRender(){
+    const b=document.getElementById('ptBody'); if(!b) return;
+    const tabs=[['programmi','Programmi'],['voti','Come votano'],['bilanci','Bilanci']];
+    b.innerHTML=`
+      <div class="pt-tabs">${tabs.map(t=>`<button class="pt-tab${PT.tab===t[0]?' on':''}" data-t="${t[0]}">${t[1]}</button>`).join('')}</div>
+      ${PT.tab==='programmi'?vistaProgrammi():PT.tab==='voti'?vistaVoti():vistaBilanci()}`;
+    b.querySelectorAll('.pt-tab').forEach(el=>el.addEventListener('click',()=>ptTab(el.getAttribute('data-t'))));
+  }
+
+  /* ---------------- 1. PROGRAMMI ---------------- */
+  function vistaProgrammi(){
+    const d=PT.prog||{};
+    const liste=(d.liste||[]);
+    return `
+      <div class="pt-intro">
+        <p>Ogni forza politica che si presenta alle elezioni deve depositare il proprio
+        <b>programma</b> presso il Ministero dell'Interno, che lo pubblica per legge
+        (art. 4 della legge 165/2017). Qui trovi il collegamento ai documenti originali.</p>
+        <div class="pt-nota">📄 Polis rimanda al PDF ufficiale e non ne riproduce il testo:
+        il programma è un'opera del partito, che ne detiene i diritti. Così leggi la fonte
+        diretta, senza filtri né riassunti nostri.</div>
+      </div>
+
+      ${liste.length? `
+        <div class="pt-elez">${E(d.elezione||'Ultime elezioni')}${d.data?` · ${E(d.data)}`:''}</div>
+        <div class="pt-lista">
+          ${liste.map(l=>`
+            <div class="pt-card">
+              <div class="pt-nome">${E(l.nome)}</div>
+              ${l.capo?`<div class="pt-capo">Capo della forza politica: ${E(l.capo)}</div>`:''}
+              <div class="pt-link">
+                ${l.programma?`<a href="${E(l.programma)}" target="_blank" rel="noopener">📄 Programma</a>`:'<span class="pt-manca">programma non depositato</span>'}
+                ${l.statuto?`<a href="${E(l.statuto)}" target="_blank" rel="noopener">📜 Statuto</a>`:''}
+              </div>
+            </div>`).join('')}
+        </div>`
+      : `<div class="pt-vuoto">
+          <b>Elenco in preparazione.</b><br><br>
+          I collegamenti ai programmi di ciascuna lista vengono raccolti dal portale
+          del Ministero dell'Interno tramite il nostro aggiornamento automatico.
+          Nel frattempo puoi consultare direttamente le pagine ufficiali, dove
+          compaiono <b>tutte</b> le liste che hanno depositato i documenti.
+        </div>`}
+
+      <div class="pt-uff">
+        <b>Pagine ufficiali</b>
+        <a href="${UFFICIALI.politiche2022}" target="_blank" rel="noopener">Elezioni politiche 2022 · Elezioni trasparenti ↗</a>
+        <a href="${UFFICIALI.europee2024}" target="_blank" rel="noopener">Elezioni europee 2024 · Elezioni trasparenti ↗</a>
+        <a href="${UFFICIALI.trasparenza}" target="_blank" rel="noopener">Tutte le consultazioni ↗</a>
+      </div>
+      <div class="pt-fonte">Fonte: Ministero dell'Interno · sezione "Elezioni trasparenti".
+      I programmi restano opera dei rispettivi partiti.</div>`;
+  }
+
+  /* ---------------- 2. VOTI ---------------- */
+  function vistaVoti(){
+    const d=PT.voti||{};
+    const gruppi=(d.gruppi||[]);
+    const vot=(d.votazioni||[]);
+    return `
+      <div class="pt-intro">
+        <p>Il modo più solido per capire cosa sostiene davvero un partito è guardare
+        <b>come vota in aula</b>: sono fatti registrati e verificabili, non dichiarazioni.</p>
+        <div class="pt-nota">🗳️ Polis non seleziona interviste né dichiarazioni: sceglierle
+        sarebbe una scelta editoriale, e toglierebbe imparzialità. Qui trovi i voti,
+        tutti, così come sono stati espressi.</div>
+      </div>
+
+      ${gruppi.length?`
+        <div class="pt-sez">Gruppi parlamentari · XIX legislatura</div>
+        <div class="pt-gruppi">
+          ${gruppi.map(g=>`<div class="pt-g">
+            <span class="pt-g-n">${E(g.nome)}</span>
+            <span class="pt-g-c">${num(g.componenti)} eletti</span>
+          </div>`).join('')}
+        </div>`:''}
+
+      ${vot.length?`
+        <div class="pt-sez">Ultime votazioni</div>
+        <div class="pt-vot">
+          ${vot.slice(0,40).map(v=>`
+            <div class="pt-v">
+              <div class="pt-v-t">${E(v.oggetto||'Votazione')}</div>
+              <div class="pt-v-m">${E(v.data||'')} · ${E(v.ramo||'')}
+                ${v.esito?`<span class="pt-esito ${/appro/i.test(v.esito)?'ok':'no'}">${E(v.esito)}</span>`:''}</div>
+              ${v.per_gruppo?`<div class="pt-v-g">${Object.keys(v.per_gruppo).slice(0,8).map(k=>
+                `<span class="pt-chip ${v.per_gruppo[k]}">${E(k)}</span>`).join('')}</div>`:''}
+            </div>`).join('')}
+        </div>`
+      : `<div class="pt-vuoto">
+          <b>Archivio votazioni in costruzione.</b><br><br>
+          I voti della legislatura in corso vengono scaricati dai dati aperti di
+          Camera e Senato dal nostro aggiornamento automatico. Compariranno qui
+          appena completato il primo caricamento.
+        </div>`}
+
+      <div class="pt-uff">
+        <b>Fonti ufficiali</b>
+        <a href="${UFFICIALI.gruppiCamera}" target="_blank" rel="noopener">Gruppi alla Camera ↗</a>
+        <a href="${UFFICIALI.gruppiSenato}" target="_blank" rel="noopener">Gruppi al Senato ↗</a>
+      </div>
+      <div class="pt-fonte">Fonti: Camera dei deputati (dati.camera.it) e Senato della
+      Repubblica (dati.senato.it), dati aperti con licenza Creative Commons Attribuzione.</div>`;
+  }
+
+  /* ---------------- 3. BILANCI ---------------- */
+  function vistaBilanci(){
+    return `
+      <div class="pt-intro">
+        <p>I partiti iscritti al registro nazionale devono pubblicare <b>statuto</b> e
+        <b>rendiconto annuale</b>. Il controllo spetta alla Commissione di garanzia
+        istituita presso la Camera (legge 13/2014).</p>
+        <div class="pt-nota">💶 Sapere da dove arrivano i soldi di un partito, e come li
+        spende, è la forma più concreta di trasparenza politica.</div>
+      </div>
+
+      <div class="pt-sez">Dove trovare i documenti</div>
+      <div class="pt-doc">
+        <a href="${UFFICIALI.rendiconti}" target="_blank" rel="noopener">
+          <b>Rendiconti annuali dei partiti</b>
+          <span>Bilanci per partito e per esercizio, con le relazioni di controllo</span></a>
+        <a href="${UFFICIALI.registro}" target="_blank" rel="noopener">
+          <b>Registro nazionale dei partiti</b>
+          <span>Partiti iscritti e relativi statuti</span></a>
+        <a href="${UFFICIALI.benefici}" target="_blank" rel="noopener">
+          <b>Partiti ammessi ai benefici</b>
+          <span>Detrazioni fiscali e destinazione del 2 per mille</span></a>
+        <a href="${UFFICIALI.comunicazioni}" target="_blank" rel="noopener">
+          <b>Obblighi di trasparenza</b>
+          <span>Cosa i partiti devono pubblicare sui propri siti</span></a>
+        <a href="${UFFICIALI.relazioni}" target="_blank" rel="noopener">
+          <b>Relazioni della Commissione di garanzia</b>
+          <span>Giudizio di regolarità sui rendiconti</span></a>
+        <a href="${UFFICIALI.duepermille}" target="_blank" rel="noopener">
+          <b>2 per mille · quanto riceve ogni partito</b>
+          <span>Dati del Dipartimento delle Finanze (MEF)</span></a>
+      </div>
+
+      <div class="pt-fonte">Fonti: Commissione di garanzia degli statuti e per la trasparenza
+      e il controllo dei rendiconti dei partiti politici (Parlamento italiano);
+      Dipartimento delle Finanze (MEF). Polis rimanda ai documenti originali.</div>`;
+  }
+
+  window.ptApri=ptApri;
+  window.ptChiudi=ptChiudi;
+})();
+
+/* ===== POLIS · SEZIONE PARTITI (fine) ===== */
+
+/* ===== POLIS · TRADUTTORE BUROCRATICO (inizio) ===== */
+/* ============================================================
+   POLIS · TRADUTTORE BUROCRATICO
+   ------------------------------------------------------------
+   Aiuta a capire leggi, decreti, disegni di legge, emendamenti,
+   articoli e commi. Funziona offline.
+
+   SCELTA DI FONDO, importante.
+   Questo strumento NON riscrive la norma e non la riassume con
+   parole sue. Su un testo di legge una parafrasi sbagliata è
+   peggio del testo originale: cambia i diritti di chi la legge.
+   Perciò lo strumento fa quattro cose, tutte verificabili:
+
+     1. RICONOSCE il tipo di atto e spiega cosa comporta
+        (chi lo scrive, come entra in vigore, quanto dura).
+     2. SCOMPONE la struttura: articoli, commi, lettere, numeri —
+        così si capisce dove si è dentro il testo.
+     3. TRADUCE le formule burocratiche ricorrenti, che sono
+        sempre le stesse e hanno un significato fisso.
+     4. SCOVA I RINVII ad altre norme ("ai sensi dell'art. X della
+        legge Y"): è la vera ragione per cui le leggi italiane
+        risultano illeggibili, perché il senso sta altrove.
+
+   Il testo originale resta sempre visibile: si aggiunge una
+   spiegazione accanto, non la si sostituisce.
+
+   Non è consulenza legale, ed è dichiarato nell'interfaccia.
+   ============================================================ */
+(function(){
+  'use strict';
+
+  /* ---------- tipi di atto: cosa sono e cosa comportano ---------- */
+  const ATTI = {
+    'legge': {
+      n:'Legge ordinaria', ico:'⚖️',
+      chi:'Approvata da Camera e Senato nello stesso testo, poi promulgata dal Presidente della Repubblica.',
+      quando:'Entra in vigore di norma 15 giorni dopo la pubblicazione in Gazzetta Ufficiale (la "vacatio legis"), salvo diversa indicazione.',
+      nota:'È la fonte ordinaria: può essere modificata solo da un\u2019altra legge o da un atto di pari forza.'
+    },
+    'decreto-legge': {
+      n:'Decreto-legge', ico:'⏱️',
+      chi:'Adottato dal Governo in casi straordinari di necessità e urgenza (art. 77 Costituzione).',
+      quando:'Entra in vigore SUBITO, il giorno stesso o il giorno dopo la pubblicazione. Ma decade se il Parlamento non lo converte in legge entro 60 giorni.',
+      nota:'Se decade, gli effetti prodotti nel frattempo si considerano come mai avvenuti, salvo che una legge li faccia salvi. Per questo va sempre verificato se è stato convertito.'
+    },
+    'decreto legislativo': {
+      n:'Decreto legislativo', ico:'📘',
+      chi:'Scritto dal Governo su delega del Parlamento: la legge delega fissa principi, oggetto e tempi.',
+      quando:'Entra in vigore secondo quanto stabilito nel testo, di norma 15 giorni dopo la pubblicazione.',
+      nota:'Ha la stessa forza di una legge. Se esce dai limiti della delega può essere annullato dalla Corte costituzionale.'
+    },
+    'disegno di legge': {
+      n:'Disegno di legge (DDL)', ico:'📝',
+      chi:'È una PROPOSTA, non una norma in vigore. Presentata da Governo, parlamentari, Regioni o cittadini.',
+      quando:'Non produce alcun effetto finché non è approvato da entrambe le Camere e promulgato.',
+      nota:'Attenzione: quello che leggi in un DDL può cambiare completamente durante l\u2019esame, o non diventare mai legge.'
+    },
+    'proposta di legge': {
+      n:'Proposta di legge', ico:'📝',
+      chi:'Come il disegno di legge: alla Camera si chiama proposta, al Senato disegno.',
+      quando:'Nessun effetto finché non è approvata.',
+      nota:'La maggior parte delle proposte non arriva mai all\u2019approvazione.'
+    },
+    'emendamento': {
+      n:'Emendamento', ico:'✏️',
+      chi:'Proposta di modifica a un testo in discussione, presentata da un parlamentare o dal Governo.',
+      quando:'Ha effetto solo se approvato, e solo se il testo che modifica viene a sua volta approvato.',
+      nota:'Si legge sempre insieme al testo che modifica: da solo dice poco. Le formule tipiche sono "sostituire", "sopprimere", "dopo il comma X inserire".'
+    },
+    'dpcm': {
+      n:'DPCM · Decreto del Presidente del Consiglio', ico:'🏛️',
+      chi:'Atto amministrativo del Presidente del Consiglio, non una legge.',
+      quando:'Secondo quanto previsto nel testo.',
+      nota:'Essendo un atto amministrativo, può essere impugnato davanti al giudice amministrativo (TAR).'
+    },
+    'regolamento': {
+      n:'Regolamento', ico:'📋',
+      chi:'Atto del Governo o di un ente che disciplina i dettagli attuativi di una legge.',
+      quando:'Secondo quanto previsto nel testo.',
+      nota:'Sta sotto la legge: non può contraddirla.'
+    },
+    'circolare': {
+      n:'Circolare', ico:'✉️',
+      chi:'Istruzione interna di un ministero o ente (es. Agenzia delle Entrate, INPS) ai propri uffici.',
+      quando:'Vale come indirizzo interno.',
+      nota:'NON è una fonte del diritto: non può creare obblighi nuovi per i cittadini. Se contrasta con la legge, prevale la legge.'
+    }
+  };
+
+  /* ---------- formule burocratiche: significato fisso ---------- */
+  const FORMULE = [
+    ['ai sensi (?:dell|di)','secondo quanto stabilito da (rimanda a un\u2019altra norma)'],
+    ['fatto salvo|fatti salvi|fatta salva|fatte salve','resta valido quanto previsto da (l\u2019eccezione che segue continua a valere)'],
+    ['ferm[oaie] restand[oi]','senza modificare (quello che segue resta com\u2019è)'],
+    ['in deroga a','in eccezione a (questa norma si applica AL POSTO di quella indicata)'],
+    ['salvo che|salvo quanto','tranne nel caso in cui'],
+    ['entro e non oltre','termine ultimo: dopo questa data non si può più'],
+    ['a decorrere da','a partire da'],
+    ['ha facoltà di','può (non è obbligato)'],
+    ['è tenuto a|sono tenuti a','deve (è un obbligo)'],
+    ['previa|previo','solo dopo aver ottenuto'],
+    ['nonché','e anche'],
+    ['di cui al|di cui alla|di cui agli','indicato in (rimanda a un punto preciso del testo)'],
+    ['il presente decreto|la presente legge','questo stesso documento'],
+    ['si applic[ao]','vale per'],
+    ['è abrogat[oa]|sono abrogat[ei]','viene cancellato: non vale più'],
+    ['è sostituit[oa]','viene rimpiazzato dal nuovo testo indicato'],
+    ['sentito il parere|acquisito il parere','dopo aver chiesto il parere (spesso non vincolante)'],
+    ['di concerto con','d\u2019accordo con (serve il consenso anche di)'],
+    ['con successivo (?:decreto|provvedimento)','le regole pratiche arriveranno dopo, con un altro atto'],
+    ['nei limiti delle risorse|senza nuovi o maggiori oneri','non ci sono soldi in più: si fa con quelli già stanziati'],
+    ['salvo diversa (?:disposizione|previsione)','a meno che un\u2019altra norma non dica il contrario'],
+    ['il termine .{0,20}è prorogato','la scadenza viene spostata più avanti'],
+    ['si intende(?:no)? (?:per|sostituit)','definizione: come va letta questa parola nel testo'],
+    ['resta ferm[oa]','continua a valere senza cambiamenti'],
+    ['in ogni caso','senza eccezioni'],
+    ['ove|qualora','se, nel caso in cui'],
+    ['il medesimo|la medesima','lo stesso, la stessa (si riferisce a quanto appena detto)'],
+    ['a pena di (?:decadenza|nullità|esclusione)','se non lo fai, perdi il diritto o l\u2019atto non vale']
+  ];
+
+  /* ---------- glossario esteso, si somma a quello dell'app ---------- */
+  const TERMINI = {
+    'comma':'Ogni paragrafo numerato dentro un articolo. Si cita così: art. 3, comma 2.',
+    'articolo':'L\u2019unità base di una legge. Al suo interno ci sono i commi.',
+    'lettera':'Suddivisione di un comma, indicata con a), b), c)…',
+    'rubrica':'Il titolo di un articolo: aiuta a capire di cosa tratta.',
+    'vacatio legis':'Il periodo tra la pubblicazione di una legge e la sua entrata in vigore, di norma 15 giorni.',
+    'gazzetta ufficiale':'Il giornale dello Stato dove le norme vengono pubblicate: prima di lì, non esistono per i cittadini.',
+    'abrogazione':'Cancellazione di una norma precedente: da quel momento non si applica più.',
+    'deroga':'Eccezione: per un caso specifico si applica una regola diversa da quella generale.',
+    'delega':'Il Parlamento incarica il Governo di scrivere le norme di dettaglio, entro limiti e tempi fissati.',
+    'conversione':'Il passaggio con cui il Parlamento trasforma un decreto-legge in legge entro 60 giorni.',
+    'iter':'Il percorso che un testo compie per diventare legge.',
+    'promulgazione':'La firma del Presidente della Repubblica che chiude l\u2019approvazione di una legge.',
+    'entrata in vigore':'Il giorno da cui la norma si applica davvero.',
+    'copertura finanziaria':'L\u2019indicazione di dove si prendono i soldi per attuare la norma: senza, la norma non può essere approvata.',
+    'onere':'Il costo che una norma comporta per lo Stato.',
+    'decadenza':'La perdita di un diritto per non aver agito entro il termine.',
+    'proroga':'Lo spostamento in avanti di una scadenza.',
+    'ratifica':'L\u2019approvazione con cui l\u2019Italia rende efficace un trattato internazionale.',
+    'quorum':'Il numero minimo di presenti o di voti perché una decisione sia valida.',
+    'fiducia':'Voto con cui il Parlamento conferma il sostegno al Governo: se il Governo la pone su un testo, quel testo si vota in blocco e senza modifiche.',
+    'maxiemendamento':'Un emendamento che sostituisce interi articoli in una volta sola, spesso abbinato al voto di fiducia.',
+    'seduta':'La riunione dell\u2019aula.',
+    'commissione':'Gruppo ristretto di parlamentari che esamina i testi prima dell\u2019aula.',
+    'relatore':'Il parlamentare incaricato di illustrare un testo e proporre come modificarlo.',
+    'questione di legittimità':'Il dubbio che una norma violi la Costituzione, sollevato davanti alla Corte costituzionale.'
+  };
+
+  const TB = { testo:'', risultato:null };
+
+  function E(s){ return (typeof esc==='function')?esc(String(s==null?'':s)):String(s==null?'':s); }
+
+  /* ============ ANALISI ============ */
+  function analizza(t){
+    const testo = (t||'').trim();
+    if(!testo) return null;
+    const basso = testo.toLowerCase();
+
+    /* 1. tipo di atto */
+    let tipo=null;
+    const ordine=['decreto-legge','decreto legislativo','disegno di legge','proposta di legge',
+                  'emendamento','dpcm','regolamento','circolare','legge'];
+    // L'intestazione (prima riga) dice che cos'È questo atto. Il corpo può
+    // nominare altri atti: una LEGGE di conversione parla di un decreto-legge
+    // senza essere un decreto-legge. Quindi l'intestazione ha la precedenza.
+    const intestazione = basso.split('\n')[0] || '';
+    const cerca = (dove)=>{
+      for(const k of ordine){
+        const kk=k.replace('-','[- ]');
+        if(new RegExp('\\b'+kk+'\\b','i').test(dove)) return ATTI[k];
+      }
+      return null;
+    };
+    tipo = cerca(intestazione) || cerca(basso);
+    // indizi strutturali quando il tipo non è scritto
+    if(!tipo && /\b(sostituire|sopprimere|dopo il comma|aggiungere il seguente)\b/i.test(basso)) tipo=ATTI['emendamento'];
+
+    /* 2. struttura */
+    const art = (testo.match(/\bart(?:icolo)?\.?\s*\d+/gi)||[]);
+    const commi = (testo.match(/\bcomm[ai]\s*\d+/gi)||[]);
+    const lettere = (testo.match(/\n\s*[a-z]\)/g)||[]);
+    const struttura = {
+      articoli:[...new Set(art.map(x=>x.replace(/\s+/g,' ').toLowerCase()))],
+      commi:[...new Set(commi.map(x=>x.replace(/\s+/g,' ').toLowerCase()))],
+      lettere:lettere.length
+    };
+
+    /* 3. formule burocratiche */
+    const formule=[];
+    FORMULE.forEach(([re_,spieg])=>{
+      const m=testo.match(new RegExp(re_,'i'));
+      if(m) formule.push({trovato:m[0], spiegazione:spieg});
+    });
+
+    /* 4. rinvii ad altre norme: la vera causa dell'illeggibilità */
+    // Le norme si citano quasi sempre come "<tipo> <data>, n. <numero>".
+    // Cerco quel formato, non la frase che lo introduce: così li prendo tutti,
+    // anche quando non c'è un "ai sensi di" davanti.
+    const rinvii=[];
+    const reRinvio=new RegExp(
+      '((?:decreto[\\s-]legge|decreto\\s+legislativo|regio\\s+decreto|legge\\s+costituzionale|legge|d\\.?\\s?lgs\\.?|d\\.?\\s?l\\.?|d\\.?p\\.?r\\.?)'
+      + '(?:\\s+\\d{1,2}\\s+[a-zà-ù]+\\s+\\d{4})?'      // data estesa, se c\'è
+      + '\\s*,?\\s*n\\.?\\s*\\d{1,4}'                    // n. 165
+      + '(?:\\s*\\/\\s*\\d{2,4})?)', 'gi');
+    let m;
+    while((m=reRinvio.exec(testo))!==null && rinvii.length<25){
+      const frase=m[1].replace(/\s+/g,' ').replace(/\s*,\s*/g,', ').trim();
+      const chiave=frase.toLowerCase();
+      // Non è un rinvio la citazione dell'atto stesso, che compare
+      // nell'intestazione: elencarla confonderebbe il lettore.
+      const inIntestazione = intestazione.indexOf(chiave)>=0;
+      // un vero rinvio porta con sé la data o l'anno della norma richiamata
+      const completo = /\d{4}/.test(frase) || /\d{1,2}\s+[a-zà-ù]+/i.test(frase);
+      if(!inIntestazione && completo &&
+         !rinvii.some(r=>r.norma.toLowerCase()===chiave)) rinvii.push({norma:frase});
+    }
+
+    /* 5. termini tecnici */
+    const term=[];
+    const tutti=Object.assign({}, TERMINI,
+      (typeof GLOSSARIO!=='undefined' && GLOSSARIO)?GLOSSARIO:{});
+    Object.keys(tutti).forEach(k=>{
+      if(new RegExp('\\b'+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','i').test(basso))
+        term.push({t:k, d:tutti[k]});
+    });
+
+    /* 6. leggibilità: frasi lunghe e subordinate sono il problema vero */
+    // "n. 165", "art. 3", "D.Lgs." contengono punti che NON chiudono la frase:
+    // se non li proteggo, il testo sembra fatto di frasi corte e il calcolo
+    // della difficoltà risulta falsato verso il basso.
+    const protetto = testo
+      .replace(/\b(n|art|artt|co|cc|lett|cfr|pag|es|sg|ss|vol|cap|d|lgs|dpr|dl|dpcm|p|s|c)\.\s*/gi,
+               (x)=>x.replace('.','\u0001'));
+    const frasi=protetto.split(/[.;]\s+/)
+      .map(x=>x.replace(/\u0001/g,'.'))
+      .filter(x=>x.trim().length>3);
+    const parole=testo.split(/\s+/).filter(Boolean);
+    const mediaFrase = frasi.length? Math.round(parole.length/frasi.length) : parole.length;
+    const lunghe = frasi.filter(f=>f.split(/\s+/).length>40)
+                        .sort((a,b)=>b.length-a.length).slice(0,3);
+    let livello, consiglio;
+    if(mediaFrase<=20){ livello='leggibile'; consiglio='Le frasi sono di lunghezza normale.'; }
+    else if(mediaFrase<=35){ livello='impegnativo'; consiglio='Frasi lunghe: conviene leggere un comma per volta.'; }
+    else { livello='molto difficile'; consiglio='Frasi molto lunghe e piene di incisi: leggi una riga alla volta e segna i rinvii ad altre norme.'; }
+
+    return {tipo, struttura, formule, rinvii, termini:term,
+            leggibilita:{mediaFrase, livello, consiglio, lunghe,
+                         parole:parole.length, frasi:frasi.length}};
+  }
+
+  /* ============ INTERFACCIA ============ */
+  function tbApri(){
+    let el=document.getElementById('tbOverlay');
+    if(!el){ el=document.createElement('div'); el.id='tbOverlay'; el.className='quiz-over tb-over'; document.body.appendChild(el); }
+    el.innerHTML=`
+      <div class="quiz-head">
+        <button class="qh-x" onclick="tbChiudi()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <div style="font-weight:700;font-size:15px">🔍 Capire un testo burocratico</div>
+      </div>
+      <div class="tb-scroll" id="tbScroll">
+        <p class="tb-intro">Incolla qui una legge, un decreto, un articolo, un comma o un
+        emendamento. Polis non lo riscrive: lo <b>scompone</b> e ti spiega com'è fatto,
+        cosa significano le formule usate e a quali altre norme rimanda.</p>
+        <textarea id="tbInput" class="tb-input" rows="7" placeholder="Incolla qui il testo…"></textarea>
+        <div class="tb-azioni">
+          <button class="tb-go" onclick="tbAnalizza()">Analizza</button>
+          <button class="tb-clear" onclick="tbPulisci()">Pulisci</button>
+        </div>
+        <button class="tb-file" onclick="tbScegliFile()">
+          📎 Carica un documento
+          <span>PDF, Word, testo, foto o scansioni · contratti, bollette, bilanci, atti</span>
+        </button>
+        <input type="file" id="tbFile" style="display:none"
+               accept=".pdf,.docx,.txt,.md,.csv,.json,.xml,.rtf,image/*"
+               onchange="tbFileScelto(event)">
+        <div id="tbStato" class="tb-stato"></div>
+        <div class="tb-priv">🔒 Il documento resta sul tuo dispositivo: viene letto qui,
+        non viene inviato a Polis né a nessun altro server.</div>
+        <div id="tbOut"></div>
+      </div>`;
+    el.classList.add('open');
+    const inp=document.getElementById('tbInput');
+    if(inp && TB.testo) inp.value=TB.testo;
+  }
+  function tbChiudi(){ const el=document.getElementById('tbOverlay'); if(el) el.classList.remove('open'); }
+  function tbPulisci(){
+    TB.testo=''; const i=document.getElementById('tbInput'); if(i) i.value='';
+    const o=document.getElementById('tbOut'); if(o) o.innerHTML='';
+  }
+
+  function tbAnalizza(){
+    const inp=document.getElementById('tbInput');
+    const out=document.getElementById('tbOut');
+    if(!inp||!out) return;
+    TB.testo=inp.value||'';
+    if(TB.testo.trim().length<15){
+      out.innerHTML='<div class="tb-vuoto">Incolla almeno una frase completa del testo.</div>';
+      return;
+    }
+    const r=analizza(TB.testo);
+    TB.risultato=r;
+    out.innerHTML=render(r);
+    const sc=document.getElementById('tbScroll');
+    if(sc) sc.scrollTop=Math.max(0, sc.scrollHeight*0.25);
+  }
+
+  function render(r){
+    if(!r) return '';
+    let h='';
+
+    if(r.tipo){
+      h+=`<div class="tb-box tb-tipo">
+        <div class="tb-tipo-h">${r.tipo.ico} <b>${E(r.tipo.n)}</b></div>
+        <div class="tb-riga"><span>Chi lo fa</span><p>${E(r.tipo.chi)}</p></div>
+        <div class="tb-riga"><span>Da quando vale</span><p>${E(r.tipo.quando)}</p></div>
+        <div class="tb-riga"><span>Da sapere</span><p>${E(r.tipo.nota)}</p></div>
+      </div>`;
+    } else {
+      h+=`<div class="tb-box"><b>Tipo di atto non riconosciuto.</b>
+        <p class="tb-p">Non ho trovato nel testo l'indicazione del tipo di atto. L'analisi
+        che segue vale comunque.</p></div>`;
+    }
+
+    const s=r.struttura;
+    if(s.articoli.length||s.commi.length||s.lettere){
+      h+=`<div class="tb-box">
+        <div class="tb-h">🧩 Com'è fatto</div>
+        <p class="tb-p">Un testo normativo è a scatole: l'<b>articolo</b> contiene i
+        <b>commi</b> (paragrafi numerati), che possono contenere <b>lettere</b> a), b), c).
+        Quando una norma viene citata si scrive: art. 3, comma 2, lettera b).</p>
+        <div class="tb-chips">
+          ${s.articoli.length?`<span class="tb-chip">${s.articoli.length} articoli citati</span>`:''}
+          ${s.commi.length?`<span class="tb-chip">${s.commi.length} commi citati</span>`:''}
+          ${s.lettere?`<span class="tb-chip">${s.lettere} lettere</span>`:''}
+        </div>
+      </div>`;
+    }
+
+    if(r.rinvii.length){
+      h+=`<div class="tb-box tb-rinvii">
+        <div class="tb-h">🔗 Rimanda ad altre norme</div>
+        <p class="tb-p">Questa è la ragione principale per cui un testo risulta
+        incomprensibile: il senso non è qui, ma nelle norme richiamate. Per capirlo
+        davvero servono anche queste.</p>
+        <ul class="tb-lista">${r.rinvii.map(x=>
+          `<li>${E(x.norma)} <a href="https://www.normattiva.it/ricerca/semplice?titolo=${encodeURIComponent(x.norma)}" target="_blank" rel="noopener">cerca ↗</a></li>`).join('')}</ul>
+      </div>`;
+    }
+
+    if(r.formule.length){
+      h+=`<div class="tb-box">
+        <div class="tb-h">💬 Le formule usate, in italiano semplice</div>
+        <div class="tb-form">${r.formule.map(f=>
+          `<div class="tb-f"><b>"${E(f.trovato)}"</b><span>${E(f.spiegazione)}</span></div>`).join('')}</div>
+      </div>`;
+    }
+
+    if(r.termini.length){
+      h+=`<div class="tb-box">
+        <div class="tb-h">📖 Parole tecniche trovate</div>
+        <div class="tb-form">${r.termini.slice(0,14).map(t=>
+          `<div class="tb-f"><b>${E(t.t)}</b><span>${E(t.d)}</span></div>`).join('')}</div>
+      </div>`;
+    }
+
+    const L=r.leggibilita;
+    h+=`<div class="tb-box">
+      <div class="tb-h">📏 Quanto è difficile</div>
+      <div class="tb-lv tb-lv-${L.livello.replace(/\s/g,'')}">${E(L.livello)}</div>
+      <p class="tb-p">${L.parole} parole, ${L.frasi} frasi, in media
+      <b>${L.mediaFrase} parole per frase</b>. ${E(L.consiglio)}</p>
+      ${L.lunghe.length?`<div class="tb-h2">La frase più lunga</div>
+        <div class="tb-lunga">${E(L.lunghe[0].slice(0,300))}${L.lunghe[0].length>300?'…':''}</div>`:''}
+    </div>`;
+
+    h+=`<div class="tb-disc">⚠️ Polis spiega com'è costruito il testo e cosa significano le
+    formule ricorrenti. <b>Non è consulenza legale</b> e non sostituisce il parere di un
+    avvocato o di un professionista: per una situazione personale rivolgiti a chi può
+    valutarla. Il testo originale resta l'unico che fa fede.</div>`;
+    return h;
+  }
+
+
+  /* ============ CARICAMENTO FILE ============
+     Tutto avviene NEL TELEFONO: il file non viene caricato da nessuna parte,
+     non passa da server nostri né di terzi. È essenziale, perché qui la gente
+     porterà contratti, buste paga, cartelle esattoriali: documenti che non
+     devono uscire dal dispositivo.
+     Le librerie per PDF e Word si scaricano solo la prima volta che servono. */
+  const LIMITE_MB = 12;
+  const MAX_PAGINE = 40;
+  const MAX_CARATTERI = 200000;
+
+  function caricaLib(url){
+    return new Promise((ok, ko)=>{
+      if(document.querySelector('script[data-lib="'+url+'"]')) return ok();
+      const s=document.createElement('script');
+      s.src=url; s.setAttribute('data-lib',url);
+      s.onload=()=>ok();
+      s.onerror=()=>ko(new Error('libreria non raggiungibile'));
+      document.head.appendChild(s);
+    });
+  }
+
+  function stato(msg){
+    const e=document.getElementById('tbStato');
+    if(e) e.innerHTML = msg ? '<span class="tb-sp"></span>'+E(msg) : '';
+  }
+
+  function tbScegliFile(){
+    const i=document.getElementById('tbFile');
+    if(i) i.click();
+  }
+
+  async function tbFileScelto(ev){
+    const f=(ev.target.files||[])[0];
+    if(!f) return;
+    const out=document.getElementById('tbOut');
+    if(out) out.innerHTML='';
+    if(f.size > LIMITE_MB*1024*1024){
+      stato('');
+      if(out) out.innerHTML='<div class="tb-vuoto">Il file supera i '+LIMITE_MB+
+        ' MB. Prova con un documento più piccolo, oppure incolla la parte che ti interessa.</div>';
+      return;
+    }
+    const nome=(f.name||'documento').toLowerCase();
+    stato('Leggo «'+(f.name||'')+'»…');
+    let testo='';
+    try{
+      if(/\.(txt|md|csv|json|xml|rtf|log)$/.test(nome) || /^text\//.test(f.type)){
+        testo = await leggiTesto(f);
+        if(nome.endsWith('.rtf')) testo = ripuliscRTF(testo);
+      } else if(/\.pdf$/.test(nome) || f.type==='application/pdf'){
+        testo = await leggiPDF(f);
+      } else if(/\.(docx)$/.test(nome)){
+        testo = await leggiDOCX(f);
+      } else if(/^image\//.test(f.type) || /\.(png|jpe?g|webp|bmp|gif|heic)$/.test(nome)){
+        testo = await leggiImmagine(f);
+      } else if(/\.doc$/.test(nome)){
+        throw new Error('I file .doc (vecchio formato Word) non si leggono nel browser. '+
+          'Aprilo e salvalo come .docx o PDF, oppure copia il testo.');
+      } else {
+        testo = await leggiTesto(f);   // ultimo tentativo
+        if(!/[a-zàèéìòù]{4}/i.test(testo))
+          throw new Error('Formato non riconosciuto. Funzionano PDF, Word (.docx), '+
+            'testo semplice e foto o scansioni.');
+      }
+    }catch(e){
+      stato('');
+      if(out) out.innerHTML='<div class="tb-vuoto"><b>Non sono riuscito a leggere il file.</b><br>'+
+        E(e.message||e)+'</div>';
+      ev.target.value='';
+      return;
+    }
+    stato('');
+    ev.target.value='';
+    testo=(testo||'').replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+    if(testo.length > MAX_CARATTERI){
+      testo = testo.slice(0, MAX_CARATTERI);
+      testo += '\n\n[…documento troncato: analizzo la prima parte]';
+    }
+    if(testo.length < 20){
+      if(out) out.innerHTML='<div class="tb-vuoto"><b>Il file non contiene testo leggibile.</b><br>'+
+        'Se è un PDF fatto di immagini scansionate, fotografa la pagina e caricala come immagine: '+
+        'in quel caso provo a riconoscere il testo.</div>';
+      return;
+    }
+    const inp=document.getElementById('tbInput');
+    if(inp) inp.value=testo;
+    TB.testo=testo;
+    TB.origine=f.name||'';
+    tbAnalizza();
+  }
+
+  function leggiTesto(f){
+    return new Promise((ok,ko)=>{
+      const r=new FileReader();
+      r.onload=()=>ok(String(r.result||''));
+      r.onerror=()=>ko(new Error('lettura non riuscita'));
+      r.readAsText(f);
+    });
+  }
+  function leggiBuffer(f){
+    return new Promise((ok,ko)=>{
+      const r=new FileReader();
+      r.onload=()=>ok(r.result);
+      r.onerror=()=>ko(new Error('lettura non riuscita'));
+      r.readAsArrayBuffer(f);
+    });
+  }
+  function leggiDataURL(f){
+    return new Promise((ok,ko)=>{
+      const r=new FileReader();
+      r.onload=()=>ok(String(r.result||''));
+      r.onerror=()=>ko(new Error('lettura non riuscita'));
+      r.readAsDataURL(f);
+    });
+  }
+  function ripuliscRTF(s){
+    return String(s||'').replace(/\\'[0-9a-f]{2}/gi,' ')
+      .replace(/\\[a-z]+-?\d* ?/gi,' ').replace(/[{}]/g,' ');
+  }
+
+  async function leggiPDF(f){
+    stato('Apro il PDF…');
+    const base='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/';
+    try{ await caricaLib(base+'pdf.min.js'); }
+    catch(e){ throw new Error('Per leggere i PDF serve una connessione la prima volta. '+
+      'Riprova online, oppure copia e incolla il testo.'); }
+    const pdfjs = window.pdfjsLib;
+    if(!pdfjs) throw new Error('lettore PDF non disponibile');
+    /* Il browser NON permette di avviare un Worker che sta su un altro
+       dominio: il worker di pdf.js è sul CDN, quindi il caricamento diretto
+       fallisce e la libreria ripiega su un "fake worker" (tutto sul thread
+       principale, con l'avviso in console e a volte l'errore).
+       Soluzione standard: scarico il worker e lo riavvolgo in un blob della
+       nostra stessa origine, che il browser accetta. */
+    if(!window.__pdfWorkerPronto){
+      try{
+        const w = base+'pdf.worker.min.js';
+        const blob = new Blob(["importScripts('"+w+"');"], {type:'application/javascript'});
+        pdfjs.GlobalWorkerOptions.workerSrc = URL.createObjectURL(blob);
+        window.__pdfWorkerPronto = true;
+      }catch(e){
+        // se non riesce, pdf.js lavora sul thread principale: più lento ma funziona
+        try{ pdfjs.GlobalWorkerOptions.workerSrc = base+'pdf.worker.min.js'; }catch(_){}
+      }
+    }
+    const buf = await leggiBuffer(f);
+    let doc;
+    try{
+      doc = await pdfjs.getDocument({data:buf, isEvalSupported:false}).promise;
+    }catch(e){
+      const m=String(e && e.message || e);
+      if(/password/i.test(m))
+        throw new Error('Il PDF è protetto da password: aprilo, salvane una copia senza protezione e riprova.');
+      if(/Invalid|corrupt/i.test(m))
+        throw new Error('Il PDF risulta danneggiato o non leggibile.');
+      throw new Error('Non sono riuscito ad aprire il PDF ('+m.slice(0,80)+').');
+    }
+    const n = Math.min(doc.numPages, MAX_PAGINE);
+    let fuori=[];
+    for(let p=1;p<=n;p++){
+      stato('Leggo il PDF · pagina '+p+' di '+n+'…');
+      const pag = await doc.getPage(p);
+      const c = await pag.getTextContent();
+      fuori.push(c.items.map(x=>x.str).join(' '));
+    }
+    let t=fuori.join('\n\n');
+    if(doc.numPages > MAX_PAGINE)
+      t += '\n\n[…documento di '+doc.numPages+' pagine: analizzo le prime '+MAX_PAGINE+']';
+    return t;
+  }
+
+  async function leggiDOCX(f){
+    stato('Apro il documento Word…');
+    try{ await caricaLib('https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js'); }
+    catch(e){ throw new Error('Per leggere i file Word serve una connessione la prima volta. '+
+      'Riprova online, oppure copia e incolla il testo.'); }
+    if(!window.mammoth) throw new Error('lettore Word non disponibile');
+    const buf=await leggiBuffer(f);
+    const res=await window.mammoth.extractRawText({arrayBuffer:buf});
+    return (res && res.value) || '';
+  }
+
+  async function leggiImmagine(f){
+    if(!window.Tesseract)
+      throw new Error('Il riconoscimento del testo dalle immagini non è disponibile ora. '+
+        'Serve una connessione la prima volta.');
+    stato('Riconosco il testo nell\u2019immagine… può richiedere qualche secondo');
+    const url=await leggiDataURL(f);
+    const r=await window.Tesseract.recognize(url,'ita',{
+      logger:m=>{ if(m && m.status==='recognizing text')
+        stato('Riconosco il testo… '+Math.round((m.progress||0)*100)+'%'); }
+    });
+    return (r && r.data && r.data.text) || '';
+  }
+
+  /* Apre lo strumento già compilato con un testo che l'app possiede
+     (es. un atto arrivato dall'aggiornamento Normattiva), così non serve
+     copiaincollare nulla. */
+  function tbApriTesto(testo, nota){
+    TB.testo = String(testo||'');
+    tbApri();
+    setTimeout(()=>{
+      const i=document.getElementById('tbInput');
+      if(i){ i.value=TB.testo; }
+      if(nota){
+        const s=document.getElementById('tbScroll');
+        const p=s?s.querySelector('.tb-intro'):null;
+        if(p) p.innerHTML='<b>'+E(nota)+'</b><br>Testo caricato dall\u2019archivio di Polis. '+
+          'Analizzo com\u2019\u00e8 costruito e a quali norme rimanda.';
+      }
+      tbAnalizza();
+    }, 90);
+  }
+
+  window.tbApri=tbApri; window.tbApriTesto=tbApriTesto; window.tbChiudi=tbChiudi;
+  window.tbScegliFile=tbScegliFile; window.tbFileScelto=tbFileScelto;
+  window.tbAnalizza=tbAnalizza; window.tbPulisci=tbPulisci;
+  window.tbAnalisi=analizza;   // riutilizzabile da altre parti dell'app
+})();
+
+/* ===== POLIS · TRADUTTORE BUROCRATICO (fine) ===== */
+
+/* Catalogo agevolazioni prodotto dall'ETL: se non c'è ancora,
+   l'assistente lo dichiara invece di mostrare una pagina vuota. */
+let AGEV=null;
+(function(){
+  fetch('dati/agevolazioni.json',{cache:'no-cache'})
+    .then(r=>r.ok?r.json():null)
+    .then(j=>{ if(j && Array.isArray(j.voci)) AGEV=j; })
+    .catch(()=>{});
+})();
+
+/* ===== POLIS · ASSISTENTE CIVICO (inizio) ===== */
+/* ============================================================
+   POLIS · ASSISTENTE CIVICO — "Cosa potrebbe spettarti"
+   ------------------------------------------------------------
+   Aiuta il cittadino a scoprire le misure pubbliche che lo
+   riguardano e a capire come muoversi.
+
+   TRE REGOLE NON NEGOZIABILI, che vengono dal quadro giuridico
+   -----------------------------------------------------------
+   1) INFORMARE, NON CONSIGLIARE. Compilare o inoltrare domande e
+      dare pareri personalizzati è attività riservata a CAF
+      (D.Lgs. 241/1997) e patronati (L. 152/2001). Polis si ferma
+      prima: dice che una misura esiste, quali sono i requisiti
+      generali, e manda alla fonte ufficiale.
+   2) LINGUAGGIO PRUDENZIALE. Mai "hai diritto a". Sempre
+      "potresti rientrare": il calcolo vero lo fa l'ente, sulla
+      base di dati che noi non abbiamo.
+   3) OGNI SCHEDA PORTA LA SUA FONTE E LA SUA DATA. Se un dato è
+      vecchio, l'app lo dice invece di far finta di nulla.
+
+   COME FUNZIONA
+   -------------
+   Il profilo resta sul dispositivo: nessun dato personale esce
+   da qui. Il motore è deterministico — regole scritte, non
+   stime — così ogni risposta è spiegabile: accanto a ogni
+   misura c'è il motivo per cui è comparsa.
+   ============================================================ */
+(function(){
+  'use strict';
+
+  const AC_KEY='polis_profilo_civico_v1';
+
+  /* ---------- domande del profilo ---------- */
+  const DOMANDE=[
+    {k:'eta', t:'Quanti anni hai?', tipo:'scelta',
+     opz:[['u18','Meno di 18'],['18_24','18-24'],['25_34','25-34'],
+          ['35_49','35-49'],['50_66','50-66'],['o67','67 o più']]},
+    {k:'situazione', t:'Qual è la tua situazione principale?', tipo:'scelta',
+     opz:[['studio','Studio'],['dipendente','Lavoro dipendente'],
+          ['autonomo','Lavoro autonomo o partita IVA'],
+          ['cerca','Sto cercando lavoro'],['pensione','In pensione'],
+          ['altro','Altro']]},
+    {k:'figli', t:'Hai figli a carico?', tipo:'scelta',
+     opz:[['no','No'],['si_minori','Sì, minorenni'],
+          ['si_21','Sì, fino a 21 anni'],['si_grandi','Sì, più grandi']]},
+    {k:'isee', t:'Conosci il tuo ISEE?', tipo:'scelta',
+     opz:[['b1','Fino a 10.000 €'],['b2','10.000-17.000 €'],
+          ['b3','17.000-25.000 €'],['b4','25.000-40.000 €'],
+          ['b5','Oltre 40.000 €'],['non_so','Non lo so']]},
+    {k:'casa', t:'Come vivi?', tipo:'scelta',
+     opz:[['affitto','In affitto'],['proprieta','In casa di proprietà'],
+          ['famiglia','Con la famiglia'],['cerco','Sto cercando casa']]},
+    {k:'regione', t:'In quale regione vivi?', tipo:'regione'}
+  ];
+
+  const REGIONI=['Abruzzo','Basilicata','Calabria','Campania','Emilia-Romagna',
+    'Friuli-Venezia Giulia','Lazio','Liguria','Lombardia','Marche','Molise',
+    'Piemonte','Puglia','Sardegna','Sicilia','Toscana','Trentino-Alto Adige',
+    'Umbria','Valle d\u2019Aosta','Veneto'];
+
+  /* ---------- base editoriale: misure per la persona ----------
+     Sono poche e verificate. I requisiti delle prestazioni sociali
+     NON esistono come dati aperti: stanno nelle circolari, quindi
+     ogni voce cita la propria fonte e la data. Dove non ho un
+     importo verificato NON lo scrivo: meglio un dato in meno che
+     un dato sbagliato. Il resto del catalogo arriva dall'ETL. */
+  const MISURE=[
+    {
+      id:'auu', nome:'Assegno Unico e Universale per i figli',
+      cosa:'Contributo mensile per ogni figlio a carico, erogato dall\u2019INPS. Spetta a prescindere dalla condizione lavorativa; l\u2019importo cambia in base all\u2019ISEE.',
+      chi:'Famiglie con figli a carico, dal settimo mese di gravidanza fino ai 21 anni (senza limiti di età se il figlio ha disabilità).',
+      requisiti:['Figli a carico','ISEE (determina l\u2019importo, ma spetta anche senza ISEE, nella misura minima)','Requisiti di residenza e cittadinanza'],
+      importo:'Nel 2026 la quota mensile per figlio va da 58,30 € (ISEE pari o superiore a 46.582,71 €) fino a 203,80 € (ISEE fino a 17.468,51 €).',
+      fonte:'INPS · Circolare n. 7 del 30 gennaio 2026',
+      data:'30 gennaio 2026',
+      url:'https://www.inps.it/it/it/dettaglio-scheda.schede-servizio-strumento.schede-servizi.assegno-unico-e-universale-per-i-figli-a-carico-53437.html',
+      regole:{figli:['si_minori','si_21','si_grandi']}
+    },
+    {
+      id:'adi', nome:'Assegno di Inclusione',
+      cosa:'Sostegno economico e percorso di inclusione per nuclei familiari in condizione di fragilità.',
+      chi:'Nuclei con almeno un componente minorenne, over 60, con disabilità o in condizione di svantaggio.',
+      requisiti:['ISEE sotto la soglia prevista','Composizione del nucleo familiare','Residenza in Italia da un periodo minimo','Adesione al percorso di inclusione'],
+      importo:null,
+      fonte:'INPS · pagina ufficiale della prestazione',
+      data:null,
+      url:'https://www.inps.it/it/it/dettaglio-scheda.it.schede-servizio-strumento.schede-servizi.assegno-di-inclusione-adi-.html',
+      regole:{isee:['b1','b2']}
+    },
+    {
+      id:'sfl', nome:'Supporto per la Formazione e il Lavoro',
+      cosa:'Misura di attivazione per chi è in condizione di povertà e partecipa a percorsi di formazione o politiche attive.',
+      chi:'Persone tra 18 e 59 anni in condizione di povertà, che non rientrano nell\u2019Assegno di Inclusione.',
+      requisiti:['Età fra 18 e 59 anni','ISEE sotto la soglia prevista','Iscrizione al percorso di politiche attive'],
+      importo:null,
+      fonte:'INPS · pagina ufficiale della prestazione',
+      data:null,
+      url:'https://www.inps.it/it/it/dettaglio-scheda.it.schede-servizio-strumento.schede-servizi.supporto-per-la-formazione-e-il-lavoro.html',
+      regole:{eta:['18_24','25_34','35_49','50_66'], isee:['b1','b2'], situazione:['cerca']}
+    },
+    {
+      id:'naspi', nome:'NASpI · indennità di disoccupazione',
+      cosa:'Indennità mensile per chi ha perso involontariamente il lavoro dipendente.',
+      chi:'Lavoratori dipendenti che hanno perso il lavoro non per propria volontà e hanno i requisiti contributivi.',
+      requisiti:['Perdita involontaria del lavoro dipendente','Requisiti contributivi nei mesi precedenti','Domanda entro i termini previsti'],
+      importo:null,
+      fonte:'INPS · pagina ufficiale della prestazione',
+      data:null,
+      url:'https://www.inps.it/it/it/dettaglio-scheda.it.schede-servizio-strumento.schede-servizi.naspi-indennita-mensile-di-disoccupazione-50162.html',
+      regole:{situazione:['cerca']}
+    },
+    {
+      id:'isee', nome:'ISEE · la chiave per quasi tutto',
+      cosa:'Non è un bonus: è l\u2019indicatore che apre l\u2019accesso a gran parte delle misure. Senza ISEE aggiornato molte agevolazioni non si possono chiedere, o si ottengono nella misura minima.',
+      chi:'Chiunque voglia accedere a prestazioni legate al reddito.',
+      requisiti:['Presentare la DSU (Dichiarazione Sostitutiva Unica)','Si può fare online sul sito INPS oppure tramite CAF, gratuitamente'],
+      importo:null,
+      fonte:'INPS · ISEE e DSU',
+      data:null,
+      url:'https://www.inps.it/it/it/dettaglio-scheda.schede-servizio-strumento.schede-servizi.isee-post-riforma-2015-50088.html',
+      regole:{isee:['non_so']},
+      priorita:true
+    },
+    {
+      id:'affitto', nome:'Detrazioni per l\u2019affitto',
+      cosa:'Chi vive in affitto con contratto registrato può avere una detrazione nella dichiarazione dei redditi. Esistono detrazioni specifiche per giovani e per studenti fuori sede.',
+      chi:'Inquilini con contratto di locazione registrato.',
+      requisiti:['Contratto di affitto registrato','Limiti di reddito','Condizioni specifiche per età o per studio fuori sede'],
+      importo:null,
+      fonte:'Agenzia delle Entrate · guida alle agevolazioni della dichiarazione',
+      data:null,
+      url:'https://www.agenziaentrate.gov.it/portale/aree-tematiche/casa',
+      regole:{casa:['affitto']}
+    }
+  ];
+
+  let AC={profilo:null, passo:0};
+
+  function E(s){ return (typeof esc==='function')?esc(String(s==null?'':s)):String(s==null?'':s); }
+
+  function caricaProfilo(){
+    if(AC.profilo) return AC.profilo;
+    try{ AC.profilo=JSON.parse(localStorage.getItem(AC_KEY))||null; }catch(e){ AC.profilo=null; }
+    return AC.profilo;
+  }
+  function salvaProfilo(){
+    try{ localStorage.setItem(AC_KEY, JSON.stringify(AC.profilo||{})); }catch(e){}
+  }
+
+  /* ---------- motore: regole, non stime ---------- */
+  function valuta(p){
+    const out=[];
+    MISURE.forEach(m=>{
+      const perche=[];
+      let escluso=false;
+      Object.keys(m.regole||{}).forEach(campo=>{
+        const ammessi=m.regole[campo];
+        const valore=p[campo];
+        if(valore===undefined || valore===null) return;   // non risposto: non esclude
+        if(ammessi.indexOf(valore)>=0){
+          perche.push(etichetta(campo, valore));
+        } else {
+          escluso=true;
+        }
+      });
+      if(!escluso && (perche.length || m.priorita)) out.push({m, perche});
+    });
+    // le misure con più corrispondenze prima
+    out.sort((a,b)=> (b.m.priorita?1:0)-(a.m.priorita?1:0) || b.perche.length-a.perche.length);
+    return out;
+  }
+  function etichetta(campo, valore){
+    const d=DOMANDE.find(x=>x.k===campo);
+    if(!d) return campo;
+    if(d.tipo==='regione') return 'vivi in '+valore;
+    const o=(d.opz||[]).find(x=>x[0]===valore);
+    return o? o[1].toLowerCase() : valore;
+  }
+
+  /* ---------- interfaccia ---------- */
+  function acApri(){
+    let el=document.getElementById('acOverlay');
+    if(!el){ el=document.createElement('div'); el.id='acOverlay'; el.className='detail'; document.body.appendChild(el); }
+    el.innerHTML=`
+      <div class="detail-top">
+        <button class="bk" onclick="acChiudi()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div style="flex:1"><h2 style="font-size:16px">Cosa potrebbe spettarti</h2>
+        <div style="font-size:11.5px;color:var(--ink-soft)">Misure pubbliche · fonti ufficiali</div></div>
+      </div>
+      <div class="detail-body" id="acBody"></div>`;
+    el.classList.add('open');
+    caricaProfilo();
+    if(AC.profilo && Object.keys(AC.profilo).length>=3) mostraRisultati();
+    else { AC.passo=0; AC.profilo=AC.profilo||{}; mostraDomanda(); }
+  }
+  function acChiudi(){ const e=document.getElementById('acOverlay'); if(e) e.classList.remove('open'); }
+
+  function mostraDomanda(){
+    const b=document.getElementById('acBody'); if(!b) return;
+    if(AC.passo>=DOMANDE.length){ salvaProfilo(); mostraRisultati(); return; }
+    const d=DOMANDE[AC.passo];
+    const opz = d.tipo==='regione'
+      ? REGIONI.map(r=>[r,r])
+      : d.opz;
+    b.innerHTML=`
+      <div class="ac-prog"><i style="width:${Math.round(AC.passo/DOMANDE.length*100)}%"></i></div>
+      <div class="ac-passo">Domanda ${AC.passo+1} di ${DOMANDE.length}</div>
+      <h3 class="ac-dom">${E(d.t)}</h3>
+      <div class="ac-opz">${opz.map(o=>
+        `<button class="ac-o" data-v="${E(o[0])}">${E(o[1])}</button>`).join('')}</div>
+      ${AC.passo>0?`<button class="ac-back" onclick="acIndietro()">‹ Indietro</button>`:''}
+      <div class="ac-priv">🔒 Le risposte restano sul tuo dispositivo. Non vengono inviate a nessuno.</div>`;
+    b.querySelectorAll('.ac-o').forEach(el=>el.addEventListener('click',()=>{
+      AC.profilo[d.k]=el.getAttribute('data-v');
+      AC.passo++; salvaProfilo(); mostraDomanda();
+      b.scrollTop=0;
+    }));
+  }
+  function acIndietro(){ if(AC.passo>0){ AC.passo--; mostraDomanda(); } }
+
+  function mostraRisultati(){
+    const b=document.getElementById('acBody'); if(!b) return;
+    const p=AC.profilo||{};
+    const ris=valuta(p);
+    const cat = (typeof AGEV!=='undefined' && AGEV && AGEV.voci)?AGEV:null;
+    const reg = p.regione||'';
+    const regionali = cat? (cat.voci||[]).filter(v=>
+        !v.regioni || !v.regioni.length || v.regioni.indexOf(reg)>=0).slice(0,25) : [];
+
+    b.innerHTML=`
+      <div class="ac-testa">
+        <div class="ac-t-h">Il tuo profilo</div>
+        <div class="ac-chips">${DOMANDE.filter(d=>p[d.k]).map(d=>
+          `<span class="ac-chip">${E(etichetta(d.k,p[d.k]))}</span>`).join('')}</div>
+        <button class="ac-rifai" onclick="acRifai()">Modifica le risposte</button>
+      </div>
+
+      <div class="ac-avviso">
+        <b>Come leggere questa pagina.</b> Qui trovi misure che <b>potrebbero</b>
+        riguardarti in base a quello che hai indicato. Non è una verifica del tuo
+        diritto: quella la fa solo l\u2019ente competente, che conosce la tua situazione
+        completa. Ogni scheda porta il collegamento alla fonte ufficiale.
+      </div>
+
+      <div class="ac-sez">Misure nazionali che potrebbero riguardarti</div>
+      ${ris.length? ris.map(r=>scheda(r.m, r.perche)).join('')
+        : `<div class="ac-vuoto">Con le risposte date non emergono misure fra quelle presenti nell\u2019archivio. Non significa che non ti spetti nulla: l\u2019archivio è parziale e cresce con gli aggiornamenti.</div>`}
+
+      <div class="ac-sez">Bandi e agevolazioni${reg?' · '+E(reg):''}</div>
+      ${cat? (regionali.length? `
+        <div class="ac-cat">${regionali.map(v=>`
+          <a class="ac-b" href="${E(v.url||'#')}" target="_blank" rel="noopener">
+            <b>${E(v.titolo||'')}</b>
+            <span>${E((v.soggetto||'')+(v.chiusura?' · scade il '+v.chiusura:''))}</span>
+          </a>`).join('')}</div>
+        <div class="ac-fonte">Fonte: ${E(cat.fonte||'Incentivi.gov.it')}${cat.aggiornato?' · aggiornato al '+E(cat.aggiornato):''}.</div>`
+        : `<div class="ac-vuoto">Nessun bando corrisponde ai filtri per questa regione nell\u2019archivio attuale.</div>`)
+      : `<div class="ac-vuoto"><b>Catalogo in costruzione.</b><br><br>
+          I bandi e le agevolazioni nazionali e regionali vengono raccolti dal
+          nostro aggiornamento automatico dal portale pubblico Incentivi.gov.it.
+          Compariranno qui appena completato il primo caricamento.</div>`}
+
+      <div class="ac-dove">
+        <div class="ac-t-h">Dove andare davvero</div>
+        <p>Polis ti dice cosa esiste. Per <b>presentare una domanda</b> o farti fare
+        un calcolo sulla tua situazione, rivolgiti a chi è abilitato a farlo:</p>
+        <ul>
+          <li><b>CAF</b> — per ISEE, dichiarazione dei redditi, prestazioni legate al reddito. Il rilascio dell\u2019ISEE è gratuito.</li>
+          <li><b>Patronato</b> — per pensioni, disoccupazione, prestazioni previdenziali. I servizi al cittadino sono gratuiti.</li>
+          <li><b>Ente erogatore</b> (INPS, Agenzia delle Entrate, Comune, Regione) — per la domanda diretta online.</li>
+          <li><b>URP del tuo Comune</b> — per orientarti sui servizi locali.</li>
+        </ul>
+      </div>
+
+      <div class="ac-disc">⚠️ Polis fornisce <b>informazione</b>, non consulenza. Non compila
+      né trasmette domande e non certifica il diritto a una prestazione: sono attività
+      riservate per legge a CAF e patronati. Verifica sempre sulla fonte ufficiale
+      indicata: requisiti e importi cambiano, e i fondi possono esaurirsi.</div>`;
+  }
+
+  function scheda(m, perche){
+    return `<div class="ac-card">
+      <div class="ac-nome">${E(m.nome)}</div>
+      ${perche.length?`<div class="ac-perche">Compare perché: ${perche.map(E).join(', ')}</div>`:''}
+      <p class="ac-cosa">${E(m.cosa)}</p>
+      <div class="ac-lab">A chi si rivolge</div>
+      <p class="ac-p">${E(m.chi)}</p>
+      <div class="ac-lab">Cosa serve</div>
+      <ul class="ac-req">${(m.requisiti||[]).map(r=>`<li>${E(r)}</li>`).join('')}</ul>
+      ${m.importo?`<div class="ac-imp">${E(m.importo)}</div>`:
+        `<div class="ac-noimp">Gli importi e le soglie cambiano ogni anno: li trovi aggiornati sulla pagina ufficiale.</div>`}
+      <a class="ac-vai" href="${E(m.url)}" target="_blank" rel="noopener">Pagina ufficiale ›</a>
+      <div class="ac-fonte">Fonte: ${E(m.fonte)}${m.data?' · '+E(m.data):''}</div>
+    </div>`;
+  }
+
+  function acRifai(){ AC.passo=0; mostraDomanda(); }
+
+  window.acApri=acApri; window.acChiudi=acChiudi;
+  window.acIndietro=acIndietro; window.acRifai=acRifai;
+  window.acValuta=valuta;   // esposto per i test
+})();
+
+/* ===== POLIS · ASSISTENTE CIVICO (fine) ===== */
+
+
+/* ===== POLIS · ASSEMBLEE QUOTIDIANE (inizio) =====
+   Legge dati/assemblee.json prodotto dall'ETL e mostra cosa è passato in
+   Aula. Il filtro "ti riguarda" usa il profilo dell'assistente civico, che
+   resta sul dispositivo: nessun dato personale esce da qui.
+   L'etichetta di tema dice DI COSA si parla, non cosa è stato deciso: il
+   titolo originale è sempre in chiaro. */
+let ASSE=null, ASSE_SOLO_MIEI=true;
+(function(){
+  fetch('dati/assemblee.json',{cache:'no-cache'})
+    .then(r=>r.ok?r.json():null)
+    .then(j=>{ if(j && Array.isArray(j.sedute)) ASSE=j; })
+    .catch(()=>{});
+})();
+
+const ASSE_NOMI={lavoro:'Lavoro',famiglia:'Famiglia',casa:'Casa',sanita:'Sanità',
+  scuola:'Scuola',fisco:'Fisco',pensioni:'Pensioni',imprese:'Imprese',
+  trasporti:'Trasporti',ambiente:'Ambiente',giustizia:'Giustizia',
+  sicurezza:'Sicurezza',bilancio:'Bilancio'};
+
+/* Quali temi riguardano chi sta usando l'app, in base al profilo. */
+function asseTemiMiei(){
+  let p=null;
+  try{ p=JSON.parse(localStorage.getItem('polis_profilo_civico_v1')||'null'); }catch(e){}
+  if(!p || !ASSE || !ASSE.rilevanza) return null;
+  const set={};
+  Object.keys(ASSE.rilevanza).forEach(campo=>{
+    const mappa=ASSE.rilevanza[campo]||{};
+    const val=p[campo];
+    (mappa[val]||[]).forEach(t=>{ set[t]=true; });
+  });
+  const temi=Object.keys(set);
+  return temi.length? temi : null;
+}
+
+function asseHTML(){
+  if(!ASSE) return `<div class="asse-vuoto"><b>Archivio in costruzione.</b><br><br>
+    Le sedute vengono raccolte dai dati aperti di Camera e Senato tramite il
+    nostro aggiornamento. Compariranno qui appena completato il caricamento.</div>`;
+  const miei=asseTemiMiei();
+  const tutte=ASSE.sedute||[];
+  const filtrate=(ASSE_SOLO_MIEI && miei)
+    ? tutte.filter(s=>(s.temi||[]).some(t=>miei.indexOf(t)>=0))
+    : tutte;
+  return `
+    ${miei?`<div class="asse-filtro">
+      <button class="${ASSE_SOLO_MIEI?'on':''}" onclick="asseFiltro(true)">Ciò che mi riguarda</button>
+      <button class="${!ASSE_SOLO_MIEI?'on':''}" onclick="asseFiltro(false)">Tutto</button>
+    </div>
+    ${ASSE_SOLO_MIEI?`<div class="asse-nota">Stai vedendo i punti sui temi
+      ${miei.map(t=>ASSE_NOMI[t]||t).join(', ').toLowerCase()}, scelti in base al tuo profilo.
+      Il profilo resta sul tuo dispositivo.</div>`:''}`
+    :`<div class="asse-nota">💡 Compila il profilo in <b>Cosa potrebbe spettarti</b>
+      per vedere solo i punti che riguardano la tua situazione.</div>`}
+
+    <div class="asse-conta">${filtrate.length} punti su ${tutte.length}${ASSE.aggiornato?` · aggiornato al ${esc(ASSE.aggiornato)}`:''}</div>
+
+    <div class="asse-lista">
+      ${filtrate.slice(0,60).map(s=>`
+        <div class="asse-item">
+          <div class="asse-top">
+            <span class="asse-data">${esc(s.data||'')}</span>
+            <span class="asse-ramo">${esc(s.ramo||'')}</span>
+            ${s.esito?`<span class="asse-esito ${/appro/i.test(s.esito)?'ok':'no'}">${esc(s.esito)}</span>`:''}
+          </div>
+          <div class="asse-tit">${esc(s.titolo||'')}</div>
+          ${(s.temi||[]).length?`<div class="asse-temi">${s.temi.map(t=>
+            `<span class="asse-tag">${esc(ASSE_NOMI[t]||t)}</span>`).join('')}</div>`:''}
+        </div>`).join('')}
+    </div>
+    ${!filtrate.length?`<div class="asse-vuoto">Nessun punto sui temi che ti riguardano
+      in questo periodo. Tocca “Tutto” per vedere l'intera attività.</div>`:''}
+    <div class="asse-fonte">Fonte: ${esc(ASSE.fonte||'Camera e Senato')}.
+    Le etichette indicano l'argomento, non l'esito politico: il titolo ufficiale è sempre riportato.</div>`;
+}
+function asseFiltro(v){
+  ASSE_SOLO_MIEI=v;
+  const c=document.getElementById('asseBox');
+  if(c) c.innerHTML=asseHTML();
+}
+/* ===== POLIS · ASSEMBLEE QUOTIDIANE (fine) ===== */
 
 // allow Enter to login
 document.addEventListener('keydown',e=>{ if(e.key==='Enter' && $('#login').classList.contains('active')) doLogin(); });
