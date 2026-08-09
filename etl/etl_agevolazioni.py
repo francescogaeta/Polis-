@@ -28,8 +28,22 @@ Lo schema del CSV non è documentato in modo stabile: qui le colonne vengono
 CERCATE, non presunte. Se non si riconosce nulla, lo script lo dichiara e si
 ferma invece di produrre un catalogo sbagliato.
 
+MODALITÀ MANUALE (quando il portale blocca il server)
+-----------------------------------------------------
+Incentivi.gov.it respinge gli accessi dai runner di GitHub: la richiesta va
+in timeout. Dal browser invece funziona. Quindi:
+
+  1. apri https://www.incentivi.gov.it/it/open-data
+  2. scarica il file di export (CSV o ZIP)
+  3. mettilo in una cartella e lancia:
+
+       python3 etl_agevolazioni.py --locale ~/Downloads/incentivi
+
+Il risultato è identico alla modalità automatica.
+
 Uso:
   python3 etl_agevolazioni.py --out ../dati/agevolazioni.json
+  python3 etl_agevolazioni.py --out ../dati/agevolazioni.json --locale CARTELLA
 """
 
 import argparse
@@ -115,6 +129,50 @@ def carica_righe(cli, url):
     return righe
 
 
+def da_cartella(percorso):
+    """Legge i file scaricati a mano dal portale. Accetta CSV, ZIP e JSON,
+    e prende il file che contiene più righe utilizzabili."""
+    print("[Manuale] leggo i file in %s" % percorso)
+    if not os.path.isdir(percorso):
+        print("    cartella inesistente")
+        return []
+    migliori = []
+    for nome in sorted(os.listdir(percorso)):
+        fp = os.path.join(percorso, nome)
+        if not os.path.isfile(fp):
+            continue
+        est = nome.lower().rsplit(".", 1)[-1]
+        if est not in ("csv", "zip", "json"):
+            continue
+        try:
+            with open(fp, "rb") as f:
+                raw = f.read()
+        except Exception as e:
+            print("    %s: non leggibile (%s)" % (nome, str(e)[:40]))
+            continue
+        righe = []
+        try:
+            if est == "zip":
+                dentro = L.estrai_zip(raw, ".csv")
+                if dentro:
+                    raw = dentro[max(dentro, key=lambda k: len(dentro[k]))]
+                    righe, _ = L.leggi_csv(raw)
+            elif est == "csv":
+                righe, _ = L.leggi_csv(raw)
+            else:
+                j = json.loads(raw.decode("utf-8", "ignore"))
+                righe = j if isinstance(j, list) else (
+                    j.get("data") or j.get("risultati") or j.get("items") or [])
+                righe = [r for r in righe if isinstance(r, dict)]
+        except Exception as e:
+            print("    %s: non interpretabile (%s)" % (nome, str(e)[:50]))
+            continue
+        print("    %s → %d righe" % (nome, len(righe)))
+        if len(righe) > len(migliori):
+            migliori = righe
+    return migliori
+
+
 def normalizza(righe):
     """Da righe grezze a voci pulite. Scarta ciò che non ha un titolo:
     una voce senza titolo non è mostrabile."""
@@ -176,11 +234,28 @@ def main():
     ap = argparse.ArgumentParser(description="ETL agevolazioni — Incentivi.gov.it")
     ap.add_argument("--out", default="../dati/agevolazioni.json")
     ap.add_argument("--cache", default=".cache_etl")
+    ap.add_argument("--locale",
+                    help="cartella con l'export scaricato a mano dal browser")
     args = ap.parse_args()
     cli = L.Client(args.cache)
 
     print("Fonte: Incentivi.gov.it (MIMIT) · licenza IODL 2.0, uso commerciale "
           "ammesso citando la fonte.\n")
+
+    # --- modalità manuale: nessuna richiesta di rete ---
+    if args.locale:
+        righe = da_cartella(args.locale)
+        if not righe:
+            print("\nNessun file utilizzabile trovato in %s" % args.locale)
+            print("Scarica l'export da https://www.incentivi.gov.it/it/open-data "
+                  "e mettilo in quella cartella.")
+            return 1
+        voci = normalizza(righe)
+        if not voci:
+            print("\nSchema non riconosciuto: mi fermo invece di produrre un "
+                  "catalogo sbagliato.")
+            return 1
+        return scrivi_catalogo(voci, args.out)
 
     link = trova_export(cli)
     if not link:
@@ -213,6 +288,10 @@ def main():
               "invece di produrre un catalogo sbagliato.")
         return 1
 
+    return scrivi_catalogo(voci, args.out)
+
+
+def scrivi_catalogo(voci, destinazione):
     n_scadute = segna_scadute(voci)
     attive = [v for v in voci if not v.get("scaduta")]
 
@@ -221,7 +300,7 @@ def main():
         for r in (v["regioni"] or ["(nazionale)"]):
             per_regione[r] = per_regione.get(r, 0) + 1
 
-    L.scrivi_json(args.out, {
+    L.scrivi_json(destinazione, {
         "_generato": L.ora(),
         "aggiornato": datetime.now(timezone.utc).strftime("%d/%m/%Y"),
         "fonte": "Incentivi.gov.it · MIMIT (IODL 2.0)",
@@ -243,7 +322,7 @@ def main():
     print("  già scadute:   %d (escluse dal file)" % n_scadute)
     print("  regioni coperte: %d"
           % len([k for k in per_regione if k != "(nazionale)"]))
-    print("  scritto: %s" % os.path.abspath(args.out))
+    print("  scritto: %s" % os.path.abspath(destinazione))
     return 0
 
 
