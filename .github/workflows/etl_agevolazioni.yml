@@ -1,0 +1,31 @@
+# .github/workflows/etl_agevolazioni.yml
+# Catalogo bandi e agevolazioni da Incentivi.gov.it (IODL 2.0).
+# Un file per esecuzione, download condizionale, stop su 403/429.
+name: ETL Agevolazioni
+on:
+  schedule:
+    - cron: "0 6 * * 2"      # martedì
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: etl-agevolazioni
+jobs:
+  etl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install --quiet certifi
+      - run: cd etl && python3 etl_agevolazioni.py --out ../dati/agevolazioni.json
+      - run: |
+          git config user.name "polis-etl-bot"
+          git config user.email "etl@polis.local"
+          git add -A dati/agevolazioni.json
+          if git diff --cached --quiet; then echo "Nessuna variazione."; else
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git commit -m "ETL agevolazioni $(date -u +%Y-%m-%d)"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
