@@ -3623,6 +3623,12 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
 /* pulsante Casa Polis: sparisce quando c'è qualcosa di aperto sopra */
 body.con-overlay .casa-fab{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease}
 .casa-fab{transition:opacity .18s ease}
+
+.cla-sorg{display:flex;gap:8px;margin-bottom:12px}
+.cla-sorg button{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:10px;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
+.cla-sorg button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cla-avv-sorg{font-size:11.5px;line-height:1.55;color:var(--ink-soft);background:rgba(232,130,61,.10);border-radius:10px;padding:10px 12px;margin-bottom:12px}
+.cla-nome small{font-weight:500;color:var(--ink-soft);font-size:10.5px}
 </style>
 </head>
 <body>
@@ -27263,15 +27269,36 @@ function casaLoop(t){
 (function(){
   'use strict';
 
-  const CLA = { URL:'data/territorio/classifica.json', dati:null, ind:0, modo:'procapite' };
+  /* Due classifiche distinte, e la distinzione è sostanziale:
+     - REGIONI: aggregati che le fonti pubblicano davvero (CPT, BDAP)
+     - COMUNI: capoluoghi confrontati fra loro, dai dati AgID
+     Non vanno mescolate: un capoluogo non rappresenta la sua regione. */
+  const CLA = {
+    URL:'data/territorio/classifica.json',
+    URL_COM:'data/classifica_comuni.json',
+    dati:null, datiCom:null, sorgente:'regioni', ind:0, modo:'procapite'
+  };
 
   async function claCarica(){
-    if(CLA.dati) return CLA.dati;
-    try{
-      const r = await fetch(CLA.URL, {cache:'no-cache'});
-      if(r.ok){ CLA.dati = await r.json(); }
-    }catch(e){}
+    if(CLA.dati===null){
+      try{ const r=await fetch(CLA.URL,{cache:'no-cache'}); CLA.dati = r.ok? await r.json() : false; }
+      catch(e){ CLA.dati=false; }
+    }
+    if(CLA.datiCom===null){
+      try{ const r=await fetch(CLA.URL_COM,{cache:'no-cache'}); CLA.datiCom = r.ok? await r.json() : false; }
+      catch(e){ CLA.datiCom=false; }
+    }
+    // se le regioni non ci sono ma i comuni sì, parto da quelli
+    if((!CLA.dati || !(CLA.dati.indicatori||[]).length) &&
+       CLA.datiCom && (CLA.datiCom.indicatori||[]).length) CLA.sorgente='comuni';
     return CLA.dati;
+  }
+  function claAttuale(){
+    return (CLA.sorgente==='comuni') ? CLA.datiCom : CLA.dati;
+  }
+  function claCambiaSorgente(s){
+    CLA.sorgente=s; CLA.ind=0; claRender();
+    const b=document.getElementById('claBody'); if(b) b.scrollTop=0;
   }
 
   function claFmt(v, unita){
@@ -27306,7 +27333,14 @@ function casaLoop(t){
 
   function claRender(){
     const b=document.getElementById('claBody'); if(!b) return;
-    const d=CLA.dati;
+    const d=claAttuale();
+    const haReg = !!(CLA.dati && (CLA.dati.indicatori||[]).length);
+    const haCom = !!(CLA.datiCom && (CLA.datiCom.indicatori||[]).length);
+    const selettore = (haReg && haCom) ? `
+      <div class="cla-sorg">
+        <button class="${CLA.sorgente==='regioni'?'on':''}" onclick="claCambiaSorgente('regioni')">Regioni</button>
+        <button class="${CLA.sorgente==='comuni'?'on':''}" onclick="claCambiaSorgente('comuni')">Comuni</button>
+      </div>` : '';
     if(!d || !d.indicatori || !d.indicatori.length){
       b.innerHTML=`<div class="cla-note">
         <b>Archivio in costruzione.</b><br><br>
@@ -27325,6 +27359,8 @@ function casaLoop(t){
     const haPro = !!(ind.procapite && ind.procapite.length);
 
     b.innerHTML=`
+      ${selettore}
+      ${d._avvertenza?`<div class="cla-avv-sorg">${claE(d._avvertenza)}</div>`:''}
       <div class="cla-tabs">
         ${d.indicatori.map((x,i)=>`<button class="cla-tab${i===CLA.ind?' on':''}" data-i="${i}">${claE(x.titolo)}</button>`).join('')}
       </div>
@@ -27347,14 +27383,14 @@ function casaLoop(t){
           return `<div class="cla-riga">
             <span class="cla-pos">${i+1}</span>
             <div class="cla-barra"><i style="width:${w}%"></i></div>
-            <span class="cla-nome">${claE(x.nome)}</span>
+            <span class="cla-nome">${claE(x.nome)}${x.regione?`<small> · ${claE(x.regione)}</small>`:''}</span>
             <span class="cla-val">${claFmt(x.valore, ind.unita)}</span>
           </div>`;
         }).join('')}
       </div>
       <div class="cla-unita">Valori in ${claE(unita)}${ind.anno?' · anno '+claE(ind.anno):''}</div>
 
-      ${!ind.completo?`<div class="cla-parziale">Dati disponibili per ${ind.n_regioni} regioni su 20: la classifica è parziale.</div>`:''}
+      ${!ind.completo?`<div class="cla-parziale">Dato disponibile per ${ind.n_regioni} ${CLA.sorgente==='comuni'?'comuni in archivio':'regioni su 20'}: la classifica è parziale e cresce a ogni aggiornamento.</div>`:''}
 
       <div class="cla-limiti">
         <b>Come leggere questo confronto</b>
