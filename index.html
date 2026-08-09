@@ -6366,22 +6366,40 @@ const ISTATCODE = (typeof ISTAT_CODES!=='undefined')?ISTAT_CODES:{};
    da sola leggendo l'indice prodotto dall'ETL, così cresce insieme
    all'archivio senza dover elencare 7.900 comuni a mano. */
 let ISTAT_DA_INDICE = null;
+let CR_INDICE_MANCANTE=false;
 function crCaricaIndiceIstat(){
   if(ISTAT_DA_INDICE) return Promise.resolve(ISTAT_DA_INDICE);
+  const aggiungi=(m,nome,codice)=>{
+    if(!nome||!codice) return;
+    m[nome]=codice;
+    m[String(nome).toLowerCase()]=codice;
+    // molti nomi hanno accenti o apostrofi scritti in modi diversi
+    m[String(nome).toLowerCase().replace(/['\u2019\-]/g,' ').replace(/\s+/g,' ').trim()]=codice;
+  };
+  // 1) l'indice vero e proprio
   return fetch('data/comuni/index.json',{cache:'no-cache'})
-    .then(r=>r.ok?r.json():[])
+    .then(r=>r.ok?r.json():null)
     .then(list=>{
-      const m={};
-      (list||[]).forEach(c=>{
-        if(c && c.i && c.n){
-          m[c.n]=c.i;
-          m[String(c.n).toLowerCase()]=c.i;
-        }
-      });
-      ISTAT_DA_INDICE=m;
-      return m;
+      if(Array.isArray(list) && list.length){
+        const m={};
+        list.forEach(c=>{ if(c) aggiungi(m,c.n,c.i); });
+        ISTAT_DA_INDICE=m;
+        return m;
+      }
+      // 2) ripiego: il riepilogo dell'ETL contiene nome e codice
+      return fetch('data/comuni/_meta.json',{cache:'no-cache'})
+        .then(r=>r.ok?r.json():null)
+        .then(meta=>{
+          const m={};
+          const det=(meta && (meta.dettaglio||meta.comuni))||[];
+          det.forEach(d=>{ if(d) aggiungi(m,d.nome||d.n,d.istat||d.i); });
+          ISTAT_DA_INDICE=m;
+          CR_INDICE_MANCANTE = Object.keys(m).length===0;
+          return m;
+        })
+        .catch(()=>{ ISTAT_DA_INDICE={}; CR_INDICE_MANCANTE=true; return ISTAT_DA_INDICE; });
     })
-    .catch(()=>{ ISTAT_DA_INDICE={}; return ISTAT_DA_INDICE; });
+    .catch(()=>{ ISTAT_DA_INDICE={}; CR_INDICE_MANCANTE=true; return ISTAT_DA_INDICE; });
 }
 crCaricaIndiceIstat();
 
@@ -25966,6 +25984,18 @@ function renderOggi(){
     CR_CUR = rec;
     if(rec.__offline){
       document.getElementById('crBody').innerHTML = `<div class="cr-note">📴 Sei offline. Torna online per consultare l'archivio dei comuni.</div>`;
+      return;
+    }
+    if(rec.__assente && typeof CR_INDICE_MANCANTE!=='undefined' && CR_INDICE_MANCANTE){
+      document.getElementById('crBody').innerHTML = `<div class="cr-note">
+        <b>Manca l'indice dei comuni.</b><br><br>
+        I dati dei comuni sono stati scaricati, ma manca il file
+        <code>data/comuni/index.json</code> che collega il nome del comune al
+        suo file. Senza quello l'app non sa quale file chiedere: sul web non
+        può leggere l'elenco di una cartella.<br><br>
+        Si ricrea con lo script <code>genera_index.py</code>, che lavora sui
+        file già presenti e non scarica nulla.
+      </div>`;
       return;
     }
     if(rec.__assente){
