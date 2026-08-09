@@ -27342,12 +27342,21 @@ function casaLoop(t){
         <button class="${CLA.sorgente==='comuni'?'on':''}" onclick="claCambiaSorgente('comuni')">Comuni</button>
       </div>` : '';
     if(!d || !d.indicatori || !d.indicatori.length){
+      // Messaggio diagnostico: dice quale file manca, così il problema si
+      // risolve senza doverlo indovinare.
+      const mancaReg = !haReg, mancaCom = !haCom;
       b.innerHTML=`<div class="cla-note">
-        <b>Archivio in costruzione.</b><br><br>
-        I dati su opere pubbliche e spesa vengono raccolti dal nostro aggiornamento
-        automatico dalle banche dati ufficiali (BDAP-MOP della Ragioneria dello Stato,
-        Conti Pubblici Territoriali, ISTAT). La classifica comparirà appena il primo
-        aggiornamento sarà completato.</div>`;
+        <b>Classifica non ancora disponibile.</b><br><br>
+        <b>Cosa manca:</b>
+        <ul style="margin:6px 0 10px;padding-left:18px">
+          <li><code>data/territorio/classifica.json</code> — ${mancaReg?'<b>assente</b>':'presente'}
+              <br><span style="opacity:.75">confronto fra regioni, dal workflow “ETL Territorio”</span></li>
+          <li><code>data/classifica_comuni.json</code> — ${mancaCom?'<b>assente</b>':'presente'}
+              <br><span style="opacity:.75">confronto fra comuni, dal workflow “Genera indice comuni”</span></li>
+        </ul>
+        Basta che ne esista uno perché la classifica compaia. Entrambi vengono
+        creati dagli aggiornamenti automatici a partire dai dati già scaricati.
+      </div>`;
       return;
     }
     const ind=d.indicatori[CLA.ind] || d.indicatori[0];
