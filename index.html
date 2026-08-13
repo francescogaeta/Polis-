@@ -3629,6 +3629,30 @@ body.con-overlay .casa-fab{opacity:0;visibility:hidden;pointer-events:none;trans
 .cla-sorg button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .cla-avv-sorg{font-size:11.5px;line-height:1.55;color:var(--ink-soft);background:rgba(232,130,61,.10);border-radius:10px;padding:10px 12px;margin-bottom:12px}
 .cla-nome small{font-weight:500;color:var(--ink-soft);font-size:10.5px}
+
+/* ===== primo accesso ===== */
+.pa-ov{position:fixed;inset:0;z-index:400;background:linear-gradient(160deg,#0d3d8c,#12281f);display:none;overflow-y:auto}
+.pa-ov.open{display:block}
+.pa-in{max-width:460px;margin:0 auto;padding:calc(48px + env(safe-area-inset-top)) 22px 40px;color:#fff;text-align:center}
+.pa-logo{width:56px;height:56px;border-radius:16px;background:#fff;color:#0d3d8c;font-size:30px;font-weight:800;line-height:56px;margin:0 auto 18px}
+.pa-ico{font-size:52px;margin-bottom:10px}
+.pa-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-bottom:4px}
+.pa-in h2{font-size:27px;font-weight:800;margin:0 0 6px;letter-spacing:-.02em}
+.pa-sot{font-size:14px;opacity:.85;margin:0 0 24px}
+.pa-sit{font-size:14px;line-height:1.6;opacity:.9;margin:0 0 18px;text-align:left}
+.pa-punti{display:flex;flex-direction:column;gap:14px;text-align:left;margin-bottom:22px}
+.pa-punti>div{display:flex;gap:13px;align-items:flex-start}
+.pa-punti span{font-size:23px;flex:0 0 auto;line-height:1.2}
+.pa-punti div div{font-size:13px;line-height:1.55;opacity:.92}
+.pa-meta{background:rgba(255,255,255,.10);border-radius:12px;padding:13px;font-size:13px;line-height:1.55;text-align:left;margin-bottom:18px}
+.pa-tit{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;opacity:.75;text-align:left;margin-bottom:8px}
+.pa-passi{text-align:left;margin:0 0 18px;padding-left:20px}
+.pa-passi li{font-size:13.5px;line-height:1.6;margin-bottom:9px;opacity:.94}
+.pa-priv{font-size:12px;line-height:1.6;opacity:.8;background:rgba(255,255,255,.08);border-radius:11px;padding:12px;text-align:left;margin-bottom:20px}
+.pa-nota{font-size:12px;opacity:.75;line-height:1.55;text-align:left;margin:0 0 20px}
+.pa-go{width:100%;background:#fff;color:#0d3d8c;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:800;cursor:pointer}
+.pa-go:active{transform:scale(.98)}
+.pa-skip{width:100%;background:none;border:none;color:rgba(255,255,255,.7);font-size:13.5px;padding:14px;margin-top:6px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -5353,7 +5377,11 @@ function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show'
 function doLogin(){
   $('#login').classList.remove('active');
   $('#shell').classList.add('active');
-  try{ if(typeof tutForseAvvia==='function') tutForseAvvia(); }catch(e){}
+  // Primo accesso: prima si costruisce il profilo, poi tutto il resto.
+  // Il tutorial parte solo dopo, per non sovrapporsi alla registrazione.
+  let primo=false;
+  try{ primo = (typeof paForseAvvia==='function') && paForseAvvia(); }catch(e){}
+  if(!primo){ try{ if(typeof tutForseAvvia==='function') tutForseAvvia(); }catch(e){} }
   buildNav(); buildMap(); updateBell(); checkReportMensile(); checkBudgetNotifiche(); checkVisiteImminenti(); checkScadenzeDocumenti(); segnaPresenza(); updateXpBadge();
   switchView('mappa');
 }
@@ -15941,13 +15969,24 @@ try{ applicaTema(temaCorrente()); }catch(e){}
    Onestà: demo locale — qui scrivi tu; col server la chat sarà
    condivisa e la regola dei 30s varrà per tutti.
    ============================================================ */
-let aulaState={dibId:null, ry:0.0, rx:0.2, staticFaces:null, sagome:[], my:null, drag:null, anim:0, lastT:0, bubble:null, mode:'chat', chatInput:false, info:false};
+let aulaState={dibId:null, ry:0.0, rx:0.62, cam:{x:0,z:0}, passo:0, staticFaces:null, sagome:[], my:null, drag:null, anim:0, lastT:0, bubble:null, mode:'chat', chatInput:false, info:false};
 
 const AULA_CAM=4.2, AULA_FLOOR=-1.38, AULA_NEAR=0.35, AULA_COOLDOWN=30000;
+/* La telecamera ruotava attorno all'origine della stanza: girandola, una
+   parete finiva davanti all'obiettivo e copriva tutto. Ora la telecamera
+   segue l'avatar dall'alto: guardando dall'alto le pareti restano ai bordi
+   e non possono mai frapporsi. */
+const AULA_RX_MIN=0.45, AULA_RX_MAX=1.05;   // sempre inclinata verso il basso
+function aulaCam(){ aulaState.cam=aulaState.cam||{x:0,z:0}; return aulaState.cam; }
+function aulaVista(p){
+  const c=aulaCam();
+  return aulaRotX(aulaRotY([p[0]-c.x, p[1], p[2]-c.z], aulaState.ry), aulaState.rx);
+}
 
 function aulaTransform(faces, s, tx, ty, tz, roty){
   const c=Math.cos(roty||0), si=Math.sin(roty||0);
-  return faces.map(f=>({color:f.color, verts:f.verts.map(v=>{
+  // conserva soft e layer: senza, le curve tornerebbero spigolose
+  return faces.map(f=>({color:f.color, soft:f.soft, layer:f.layer, wall:f.wall, verts:f.verts.map(v=>{
     let x=v[0]*s, y=v[1]*s, z=v[2]*s;
     const x2=x*c+z*si, z2=-x*si+z*c;
     return [x2+tx, y+ty, z2+tz];
@@ -15960,11 +15999,119 @@ function aulaBox(cx,cy,cz,w,h,d,color){
   const f=[[0,1,2,3],[5,4,7,6],[4,0,3,7],[1,5,6,2],[4,5,1,0],[3,2,6,7]];
   return f.map(face=>({verts:face.map(i=>v[i]),color}));
 }
-function aulaSagoma(tx,tz,roty,shirt,skin){
+/* Le sagome erano due soli cubi (busto + testa) sospesi a mezz'aria: senza
+   gambe né appoggio. Ora hanno corpo intero e poggiano sul pavimento, con
+   una statura contenuta come chiesto. Stessa costruzione di Casa Polis. */
+const AULA_SCALA=0.40;      // statura ~0,83 su 2,20 di stanza: figure intere, non ingombranti
+const AULA_SOLA=-2.45;      // (mantenuto per compatibilità)
+
+/* ---------------------------------------------------------------
+   FIGURE DELL'AULA — tonde e lineari.
+   Il modello Avatar3D ha la testa a cupola geodetica: a schermo si
+   vedono tutte le sfaccettature e il risultato è spigoloso. Qui le
+   figure sono costruite con forme piene e continue (sfera a molti
+   segmenti, tronco affusolato), e con una variazione di luce molto
+   contenuta, che è ciò che fa leggere una superficie come curva
+   invece che come un poliedro.
+   --------------------------------------------------------------- */
+
+/* sfera: tanti segmenti = silhouette rotonda, niente spigoli */
+function aulaSfera(cx,cy,cz,r,color,seg,ring){
+  seg=seg||16; ring=ring||9;
+  const p=[], f=[];
+  for(let i=0;i<=ring;i++){
+    const phi=Math.PI*i/ring, sy=Math.cos(phi), sr=Math.sin(phi);
+    for(let j=0;j<seg;j++){
+      const th=2*Math.PI*j/seg;
+      p.push([cx+r*sr*Math.cos(th), cy+r*sy, cz+r*sr*Math.sin(th)]);
+    }
+  }
+  for(let i=0;i<ring;i++) for(let j=0;j<seg;j++){
+    const a=i*seg+j, b=i*seg+(j+1)%seg, c=(i+1)*seg+(j+1)%seg, d=(i+1)*seg+j;
+    f.push({verts:[p[a],p[b],p[c],p[d]], color, soft:true});
+  }
+  return f;
+}
+
+/* tronco affusolato: corpo e arti senza spigoli vivi */
+function aulaTronco(cx,cy,cz,rBasso,rAlto,h,color,seg){
+  seg=seg||14;
+  const f=[], y0=cy-h/2, y1=cy+h/2;
+  for(let j=0;j<seg;j++){
+    const t0=2*Math.PI*j/seg, t1=2*Math.PI*(j+1)/seg;
+    const a=[cx+rBasso*Math.cos(t0),y0,cz+rBasso*Math.sin(t0)];
+    const b=[cx+rBasso*Math.cos(t1),y0,cz+rBasso*Math.sin(t1)];
+    const c=[cx+rAlto*Math.cos(t1), y1,cz+rAlto*Math.sin(t1)];
+    const d=[cx+rAlto*Math.cos(t0), y1,cz+rAlto*Math.sin(t0)];
+    f.push({verts:[a,b,c,d], color, soft:true});
+  }
+  // tappi
+  const su=[], giu=[];
+  for(let j=0;j<seg;j++){
+    const t=2*Math.PI*j/seg;
+    su.push([cx+rAlto*Math.cos(t),y1,cz+rAlto*Math.sin(t)]);
+    giu.push([cx+rBasso*Math.cos(t),y0,cz+rBasso*Math.sin(t)]);
+  }
+  f.push({verts:su, color, soft:true});
+  f.push({verts:giu.slice().reverse(), color, soft:true});
+  return f;
+}
+
+/* Una persona: testa tonda, corpo affusolato, gambe e piedi.
+   Proporzioni volutamente semplici: si legge bene anche in piccolo. */
+function aulaFigura(tratti, fase, cammina){
+  const pelle=(tratti&&tratti.pelle)||'#e8b48f';
+  const capelli=(tratti&&tratti.capelli)||'#3a2a1a';
+  const maglia=(tratti&&tratti.maglia)||'#9d5cff';
+  const pant=(tratti&&tratti.pantaloni)||'#3d4a5c';
+  const scarpe=(tratti&&tratti.scarpe)||'#2b3038';
   let f=[];
-  f=f.concat(aulaBox(0,-0.11,0, 0.17,0.26,0.11, shirt));
-  f=f.concat(aulaBox(0,0.09,0, 0.11,0.11,0.11, skin));
-  return aulaTransform(f,1,tx,-1.14,tz,roty);
+  const sw=cammina?Math.sin(fase):0;
+
+  // gambe e piedi
+  [[-0.16,sw],[0.16,-sw]].forEach(([lx,s])=>{
+    const dz=s*0.14, lift=Math.max(0,s)*0.05;
+    f=f.concat(aulaTronco(lx,-0.95+lift*0.5,dz*0.5, 0.10,0.13, 0.90, pant, 10));
+    f=f.concat(aulaSfera(lx,-1.38+lift+0.07,dz+0.05, 0.09, scarpe, 12, 7));
+  });
+  // corpo affusolato
+  f=f.concat(aulaTronco(0,-0.22,0, 0.24,0.20, 0.66, maglia, 16));
+  // spalle arrotondate
+  f=f.concat(aulaSfera(-0.235,0.05,0, 0.10, maglia, 12, 7));
+  f=f.concat(aulaSfera( 0.235,0.05,0, 0.10, maglia, 12, 7));
+  // braccia
+  [[-0.27,-sw],[0.27,sw]].forEach(([bx,s])=>{
+    f=f.concat(aulaTronco(bx,-0.22,s*0.08, 0.065,0.075, 0.52, maglia, 10));
+    f=f.concat(aulaSfera(bx,-0.50,s*0.12, 0.068, pelle, 10, 6));
+  });
+  // collo e testa
+  f=f.concat(aulaTronco(0,0.16,0, 0.075,0.075, 0.12, pelle, 10));
+  f=f.concat(aulaSfera(0,0.40,0, 0.215, pelle, 18, 11));
+  // capelli: calotta appena più grande, senza spigoli
+  f=f.concat(aulaSfera(0,0.445,-0.012, 0.222, capelli, 18, 6));
+  return f;
+}
+
+function aulaSagoma(tx,tz,roty,shirt,skin,fase,cammina){
+  const tratti={pelle:skin||'#e8b48f', capelli:'#3a2a1a',
+                maglia:shirt||'#9d5cff', capelliStyle:'corti'};
+  let f = aulaFigura(tratti, fase||0, !!cammina);
+  // il punto più basso della figura (sotto la scarpa) è a y=-1.40
+  const base = AULA_FLOOR + 1.40*AULA_SCALA;
+  f = aulaTransform(f, AULA_SCALA, tx, base, tz, roty);
+  f.forEach(x=>{ x.layer=1; });
+  // ombra a terra: dà peso alla figura e rende leggibile dove si trova
+  /* L'ombra era un rettangolo grigio netto, che a terra si notava più della
+     figura. Ora è un ovale tenue: dà appoggio senza attirare l'occhio. */
+  const om=[]; const sg=14, ry0=0.10, rx0=0.15;
+  for(let i=0;i<sg;i++){
+    const a0=2*Math.PI*i/sg, a1=2*Math.PI*(i+1)/sg;
+    om.push({layer:0, color:'#e4e8ee', soft:true, verts:[
+      [tx,AULA_FLOOR+0.004,tz],
+      [tx+Math.cos(a0)*rx0,AULA_FLOOR+0.004,tz+Math.sin(a0)*ry0],
+      [tx+Math.cos(a1)*rx0,AULA_FLOOR+0.004,tz+Math.sin(a1)*ry0]]});
+  }
+  return om.concat(f);
 }
 
 /* ---- renderer dedicato: near-clip + piastrelle = niente sagome che spariscono ---- */
@@ -15983,13 +16130,17 @@ function aulaDraw(canvas,faces,rya,rxa){
   ctx.clearRect(0,0,W,H);
   const light=[0.32,0.62,0.72];
   const scale=Math.min(W,H)*0.42;
+  /* Profondità dell'avatar in coordinate telecamera: tutto ciò che è marcato
+     come parete e sta PIÙ VICINO di lui viene omesso, così non copre mai. */
+  const m0=aulaState.my;
+  const limiteMuro = m0 ? aulaVista([m0.x, AULA_FLOOR+0.5, m0.z])[2]+0.15 : 99;
   const out=[];
   for(let i=0;i<faces.length;i++){
     const f=faces[i];
     const vr=new Array(f.verts.length);
     let clip=false;
     for(let k=0;k<f.verts.length;k++){
-      const p=aulaRotX(aulaRotY(f.verts[k],rya),rxa);
+      const p=aulaVista(f.verts[k]);
       if(AULA_CAM-p[2] < AULA_NEAR){ clip=true; break; }
       vr[k]=p;
     }
@@ -15999,16 +16150,27 @@ function aulaDraw(canvas,faces,rya,rxa){
     let nx=ay*bz-az*by, ny=az*bx-ax*bz, nz=ax*by-ay*bx;
     const nl=Math.hypot(nx,ny,nz)||1; nx/=nl;ny/=nl;nz/=nl;
     if(nz<=-0.15) continue;
-    const lum=0.62+0.38*Math.max(0,nx*light[0]+ny*light[1]+nz*light[2]);
+    const dif=Math.max(0,nx*light[0]+ny*light[1]+nz*light[2]);
+    /* Sulle curve la variazione di luce va tenuta bassa: con un contrasto
+       forte ogni faccetta si stacca e la sfera sembra un poliedro. */
+    const lum = f.soft ? (0.86+0.14*dif) : (0.62+0.38*dif);
+    if(f.wall){
+      let zmax=-99; for(let k=0;k<vr.length;k++) if(vr[k][2]>zmax) zmax=vr[k][2];
+      if(zmax>limiteMuro) continue;   // parete fra telecamera e avatar: omessa
+    }
     let zc=0; const pts=new Array(vr.length);
     for(let k=0;k<vr.length;k++){
       const pz=AULA_CAM-vr[k][2]; const f2=AULA_CAM/pz;
       pts[k]=[W/2+vr[k][0]*scale*f2, H/2-vr[k][1]*scale*f2];
       zc+=vr[k][2];
     }
-    out.push({pts, zc:zc/vr.length, color:aulaShade(f.color,lum), video:f.video});
+    out.push({pts, zc:zc/vr.length, layer:(f.layer||1), color:aulaShade(f.color,lum), video:f.video, soft:f.soft});
   }
-  out.sort((a,b)=>a.zc-b.zc);
+  /* Il pavimento era fatto di 48 piastrelle ordinate per profondità: quelle
+     davanti a una persona venivano dipinte SOPRA le sue gambe, ed è il motivo
+     per cui "non si vedeva il corpo". Ora il pavimento è un livello a sé,
+     disegnato sempre per primo: nulla che ci stia sopra può essere coperto. */
+  out.sort((a,b)=> (a.layer-b.layer) || (a.zc-b.zc));
   const vid=document.getElementById('aulaScreenVid');
   const vidOk=vid && aulaState.screenOn && vid.readyState>=2 && !vid.paused;
   for(let i=0;i<out.length;i++){
@@ -16017,7 +16179,9 @@ function aulaDraw(canvas,faces,rya,rxa){
     ctx.beginPath();ctx.moveTo(p.pts[0][0],p.pts[0][1]);
     for(let k=1;k<p.pts.length;k++)ctx.lineTo(p.pts[k][0],p.pts[k][1]);
     ctx.closePath();ctx.fillStyle=p.color;ctx.fill();
-    ctx.strokeStyle=p.color;ctx.lineWidth=0.5;ctx.stroke();
+    // il tratto chiude le fughe fra le facce: sulle curve va appena più
+    // marcato, così la superficie appare continua e non a scaglie
+    ctx.strokeStyle=p.color;ctx.lineWidth=p.soft?1.0:0.5;ctx.stroke();
   }
 }
 /* disegna il frame video dentro il quadrilatero proiettato: 2 triangoli con mappa affine */
@@ -16046,7 +16210,7 @@ function aulaDrawTri(ctx, img, s0,s1,s2, d0,d1,d2){
   ctx.restore();
 }
 function aulaProject(p,cv){
-  const q=aulaRotX(aulaRotY(p,aulaState.ry),aulaState.rx);
+  const q=aulaVista(p);
   const pz=AULA_CAM-q[2]; if(pz<AULA_NEAR) return null;
   const scale=Math.min(cv.width,cv.height)*0.42, f2=AULA_CAM/pz;
   return [cv.width/2+q[0]*scale*f2, cv.height/2-q[1]*scale*f2];
@@ -16055,20 +16219,29 @@ function aulaProject(p,cv){
 /* ---- scena statica: stanza chiara piastrellata + decorazioni + oggetti ---- */
 function buildAulaStatic(){
   let F=[];
-  const TX=8, TZ=6, X0=-2.44, Z0=-1.92, TW=4.88/TX, TD=3.84/TZ;
-  for(let i=0;i<TX;i++)for(let j=0;j<TZ;j++){
-    const col=((i+j)%2===0)?'#eef1f5':'#e2e7ee';
-    F=F.concat(aulaBox(X0+TW*(i+0.5), -1.41, Z0+TD*(j+0.5), TW,0.06,TD, col));
-  }
-  for(let j=0;j<3;j++) F=F.concat(aulaBox(0,-1.372,-1.15+j*0.85, 0.55,0.012,0.85, '#c0392b'));
-  for(let i=0;i<5;i++) F=F.concat(aulaBox(-1.96+i*0.98,-0.32,-1.9, 0.98,2.2,0.1, '#f7f9fc'));
+  /* PAVIMENTO: un piano unico, esteso oltre l'inquadratura, non 48 cubi.
+     Le piastrelle diventano righe sottili sullo stesso livello, così non
+     possono mai finire davanti a una persona. */
+  const piano=(cx,cy,cz,w,d,color)=>[{layer:0,color,
+    verts:[[cx-w/2,cy,cz-d/2],[cx+w/2,cy,cz-d/2],[cx+w/2,cy,cz+d/2],[cx-w/2,cy,cz+d/2]]}];
+  /* Il pavimento debordava oltre le pareti e si vedeva proseguire nel vuoto.
+     Ora è contenuto nella sala, con un margine minimo dietro i muri. */
+  F=F.concat(piano(0,AULA_FLOOR,0.0, 5.1,4.2, '#eef1f5'));
+  for(let i=1;i<8;i++)  F=F.concat(piano(-2.55+i*0.64,AULA_FLOOR+0.003,0, 0.018,4.2,'#e6eaf1'));
+  for(let j=1;j<7;j++)  F=F.concat(piano(0,AULA_FLOOR+0.003,-2.1+j*0.60, 5.1,0.018,'#e6eaf1'));
+  F=F.concat(piano(0,AULA_FLOOR+0.008,-0.3, 0.55,2.55,'#c0392b'));
+  /* Pareti e colonne sono marcate: quando finiscono FRA la telecamera e
+     l'avatar non vengono disegnate, come nelle stanze viste dall'alto dei
+     giochi. È l'unico modo per non restare mai chiusi fuori dalla scena. */
+  const muro=(fs)=>{ fs.forEach(x=>{x.wall=true;}); return fs; };
+  for(let i=0;i<5;i++) F=F.concat(muro(aulaBox(-1.96+i*0.98,-0.32,-1.9, 0.98,2.2,0.1, '#f7f9fc')));
   for(let j=0;j<4;j++){
-    F=F.concat(aulaBox(-2.42,-0.32,-1.44+j*0.96, 0.1,2.2,0.96, '#f2f4f8'));
-    F=F.concat(aulaBox(2.42,-0.32,-1.44+j*0.96, 0.1,2.2,0.96, '#f2f4f8'));
+    F=F.concat(muro(aulaBox(-2.42,-0.32,-1.44+j*0.96, 0.1,2.2,0.96, '#f2f4f8')));
+    F=F.concat(muro(aulaBox(2.42,-0.32,-1.44+j*0.96, 0.1,2.2,0.96, '#f2f4f8')));
   }
   [[-2.15,-1.6],[2.15,-1.6],[-2.15,1.6],[2.15,1.6]].forEach(p=>{
-    F=F.concat(aulaBox(p[0],-0.35,p[1], 0.22,2.1,0.22, '#e3e8f0'));
-    F=F.concat(aulaBox(p[0],0.72,p[1], 0.3,0.08,0.3, '#d5dbe6'));
+    F=F.concat(muro(aulaBox(p[0],-0.35,p[1], 0.22,2.1,0.22, '#e3e8f0')));
+    F=F.concat(muro(aulaBox(p[0],0.72,p[1], 0.3,0.08,0.3, '#d5dbe6')));
   });
   [[-1.85,-1.45],[1.85,-1.45],[-1.85,1.45],[1.85,1.45]].forEach(p=>{
     F=F.concat(aulaBox(p[0],-1.28,p[1], 0.2,0.16,0.2, '#a9663f'));
@@ -16139,10 +16312,14 @@ function aulaInitSagome(nPart){
   const skins=['#e8b48f','#c9915f','#8d5a3b','#f0c8a0'];
   const out=[];
   for(let i=0;i<nPart;i++){
-    const x=-1.8+Math.random()*3.6, z=-0.9+Math.random()*2.2;
-    out.push({x,z, tx:x, tz:z, rot:Math.random()*6.28,
+    /* Disposti ad arco davanti allo schermo, non addosso alla telecamera:
+       così restano tutti visibili e non si coprono a vicenda. */
+    const ang=Math.PI*(0.18+0.64*(nPart>1?i/(nPart-1):0.5));
+    const x=Math.cos(ang)*2.0;
+    const z=-0.35+Math.sin(ang)*0.30+((i%2)?0.34:0);
+    out.push({x,z, tx:x, tz:z, rot:Math.PI+(Math.random()-0.5)*0.5,
       shirt:shirts[i%shirts.length], skin:skins[i%skins.length],
-      pausa:Math.random()*3000});
+      fase:Math.random()*6.28, pausa:600+Math.random()*3000});
   }
   return out;
 }
@@ -16165,15 +16342,56 @@ function aulaTickSagome(dt){
   const m=aulaState.my;
   if(m){
     const dx=m.tx-m.x, dz=m.tz-m.z, dist=Math.hypot(dx,dz);
-    if(dist>0.03){ const v=0.0006*dt; m.x+=dx/dist*Math.min(v,dist); m.z+=dz/dist*Math.min(v,dist); m.rot=Math.atan2(dx,dz); }
+    if(dist>0.03){
+      const v=0.0014*dt;           // andatura naturale (prima era lentissima)
+      const s=Math.min(v,dist);
+      m.x+=dx/dist*s; m.z+=dz/dist*s; m.rot=Math.atan2(dx,dz);
+      m.cammina=true;
+      aulaState.passo=(aulaState.passo||0)+dt*0.014;   // muove le gambe
+    } else { m.cammina=false; }
+    // la telecamera insegue l'avatar, restando dentro la sala
+    const c=aulaCam(), k=Math.min(1, dt*0.005);
+    c.x += (m.x - c.x)*k;
+    c.z += (m.z - c.z)*k;
+    c.x = Math.max(-1.3, Math.min(1.3, c.x));
+    c.z = Math.max(-1.0, Math.min(1.2, c.z));
   }
 }
 function buildAulaDynamic(){
   let F=[];
-  aulaState.sagome.forEach(s=>{ F=F.concat(aulaSagoma(s.x,s.z,s.rot,s.shirt,s.skin)); });
-  const tratti=(typeof REL!=='undefined'&&REL&&REL.avatar)?REL.avatar:{pelle:'#e8b48f',capelli:'#3a2a1a',maglia:'#9d5cff',capelliStyle:'corti'};
+  aulaState.passo=(aulaState.passo||0);
+  aulaState.sagome.forEach(s=>{
+    F=F.concat(aulaSagoma(s.x,s.z,s.rot,s.shirt,s.skin,
+                          (s.fase||0), !!s.cammina));
+  });
+  const tratti=(typeof REL!=='undefined'&&REL&&REL.avatar)?REL.avatar
+    :{pelle:'#e8b48f',capelli:'#3a2a1a',maglia:'#9d5cff',capelliStyle:'corti'};
   const m=aulaState.my;
-  if(m){ F=F.concat(aulaTransform(Avatar3D.build(tratti), 0.24, m.x, -1.07, m.z, m.rot+Math.PI)); }
+  if(m){
+    /* Puntatore a terra: un anello del colore scelto per l'avatar, così in
+       una sala con altre persone si riconosce a colpo d'occhio dove si è.
+       Sta sul livello del pavimento, quindi non copre mai le figure. */
+    const col=tratti.maglia||'#9d5cff';
+    const seg=22, rE=0.30, rI=0.20, y=AULA_FLOOR+0.010;
+    const puls=1+0.06*Math.sin((aulaState.passo||0)*1.6);
+    for(let i=0;i<seg;i++){
+      const a0=2*Math.PI*i/seg, a1=2*Math.PI*(i+1)/seg;
+      F.push({layer:0, color:col, soft:true, verts:[
+        [m.x+Math.cos(a0)*rI*puls,y,m.z+Math.sin(a0)*rI*puls],
+        [m.x+Math.cos(a0)*rE*puls,y,m.z+Math.sin(a0)*rE*puls],
+        [m.x+Math.cos(a1)*rE*puls,y,m.z+Math.sin(a1)*rE*puls],
+        [m.x+Math.cos(a1)*rI*puls,y,m.z+Math.sin(a1)*rI*puls]]});
+    }
+    // punta che indica la direzione verso cui si è girati
+    const d=m.rot;
+    F.push({layer:0, color:col, soft:true, verts:[
+      [m.x+Math.sin(d)*0.44, y, m.z+Math.cos(d)*0.44],
+      [m.x+Math.sin(d+2.5)*0.20, y, m.z+Math.cos(d+2.5)*0.20],
+      [m.x+Math.sin(d-2.5)*0.20, y, m.z+Math.cos(d-2.5)*0.20]]});
+    F=F.concat(aulaSagoma(m.x, m.z, m.rot+Math.PI,
+                          tratti.maglia, tratti.pelle,
+                          aulaState.passo, !!m.cammina));
+  }
   return F;
 }
 
@@ -16230,7 +16448,8 @@ function aulaUnproject(px,py,cv){
   if(Math.abs(D[1])<1e-6) return null;
   const t=(AULA_FLOOR-C[1])/D[1];
   if(t<=0) return null;
-  return [C[0]+t*D[0], C[2]+t*D[2]];
+  const c=aulaCam();
+  return [C[0]+t*D[0]+c.x, C[2]+t*D[2]+c.z];
 }
 
 /* ============================================================
@@ -16340,8 +16559,13 @@ function aulaSetMode(m){
 function openAula(id){
   ensureCons();
   const d=CONS.dibattiti.find(x=>x.id===id); if(!d) return;
-  const nPart=Math.min(50,(d.voti||0)+((d.commenti||[]).length||0));
-  aulaState.dibId=id; aulaState.ry=0; aulaState.rx=0.2; aulaState.lastT=0;
+  /* Erano fino a 50 figure in pochi metri quadri: una calca in cui non si
+     distingueva nessuno. Cinque bastano a dare il senso dell'assemblea e
+     lasciano vedere la sala, lo schermo e le persone per intero. */
+  const nPart=Math.min(5,(d.voti||0)+((d.commenti||[]).length||0));
+  aulaState.dibId=id; aulaState.ry=0;
+  aulaState.rx=0.62;                 // vista dall'alto: si vede tutta la sala
+  aulaState.cam={x:0,z:0}; aulaState.passo=0; aulaState.lastT=0;
   aulaState.bubble=null; aulaState.mode='chat'; aulaState.chatInput=false; aulaState.info=false;
   aulaState.screenOn=false; aulaState.phase=0;
   aulaState.staticFaces=buildAulaStatic();
@@ -16386,7 +16610,9 @@ function openAula(id){
     if(Math.abs(mx)+Math.abs(my)>8) g.moved=true;
     if(g.moved){
       aulaState.ry=g.ry+mx*0.006;
-      aulaState.rx=Math.max(0.02,Math.min(0.55, g.rx+my*0.004));
+      /* Sotto una certa inclinazione la telecamera si abbassa all'altezza
+         dei muri e la visuale viene coperta: qui resta sempre dall'alto. */
+      aulaState.rx=Math.max(AULA_RX_MIN,Math.min(AULA_RX_MAX, g.rx+my*0.004));
     } };
   cv.onpointerup=(e)=>{ const g=aulaState.drag; aulaState.drag=null;
     if(g && !g.moved && Date.now()-g.t<400){
@@ -28695,6 +28921,284 @@ function asseFiltro(v){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',avvia);
   else avvia();
 })();
+
+
+/* ===== PRIMO ACCESSO: registrazione guidata =====
+   L'app si apriva sul login e poi buttava l'utente nella mappa, senza
+   chiedergli nulla: il sistema delle classi esisteva ma non veniva mai
+   avviato, e il profilo restava vuoto. Qui il primo accesso diventa un
+   percorso: benvenuto → 8 domande → classe assegnata → cosa fare adesso.
+
+   Le risposte servono DUE volte ma si danno UNA volta sola: da qui viene
+   derivato anche il profilo dell'assistente civico ("Cosa potrebbe
+   spettarti"), che altrimenti avrebbe richiesto le stesse informazioni.
+
+   Tutto resta sul dispositivo. */
+const PA_KEY='polis_primo_accesso_v1';
+
+function paGiaFatto(){
+  try{
+    if(localStorage.getItem(PA_KEY)==='1') return true;
+    const c=JSON.parse(localStorage.getItem('polis_classe_v1')||'null');
+    return !!(c && c.profilo && Object.keys(c.profilo).length>=4);
+  }catch(e){ return false; }
+}
+function paSegnaFatto(){ try{ localStorage.setItem(PA_KEY,'1'); }catch(e){} }
+
+/* Le 8 risposte dell'onboarding valgono anche per l'assistente civico:
+   traduco una volta sola, così nessuno risponde due volte alle stesse cose. */
+function paDerivaProfiloCivico(p){
+  if(!p) return;
+  const eta={'18-25':'18_24','26-35':'25_34','36-49':'35_49','50-66':'50_66','67+':'o67'};
+  const sit={'studente':'studio','dipendente':'dipendente','autonomo':'autonomo',
+             'disoccupato':'cerca','pensionato':'pensione'};
+  const isee={'basso':'b1','medio':'b3','alto':'b5','nd':'non_so'};
+  const out={};
+  if(eta[p.eta]) out.eta=eta[p.eta];
+  if(sit[p.lavoro]) out.situazione=sit[p.lavoro];
+  if(isee[p.isee]) out.isee=isee[p.isee];
+  out.figli = (p.figli==='si') ? 'si_minori' : 'no';
+  out.casa  = (p.casa==='si') ? 'cerco' : 'famiglia';
+  try{
+    const gia=JSON.parse(localStorage.getItem('polis_profilo_civico_v1')||'{}');
+    localStorage.setItem('polis_profilo_civico_v1',
+      JSON.stringify(Object.assign({}, out, gia)));  // non sovrascrivo scelte già fatte
+  }catch(e){}
+}
+
+function paBenvenuto(){
+  let ov=document.getElementById('paOv');
+  if(!ov){ ov=document.createElement('div'); ov.id='paOv'; document.body.appendChild(ov); }
+  ov.className='pa-ov open';
+  ov.innerHTML=`
+    <div class="pa-in">
+      <div class="pa-logo">P</div>
+      <h2>Benvenuto in Polis</h2>
+      <p class="pa-sot">La cosa pubblica, spiegata a chi la paga.</p>
+      <div class="pa-punti">
+        <div><span>🧭</span><div><b>Scopri cosa ti spetta</b><br>Misure e agevolazioni che riguardano la tua situazione.</div></div>
+        <div><span>🏛️</span><div><b>Segui chi decide</b><br>Voti in Parlamento e conti pubblici, in parole comprensibili.</div></div>
+        <div><span>🔍</span><div><b>Capisci i documenti</b><br>Leggi, contratti e bollette scomposti e spiegati.</div></div>
+      </div>
+      <p class="pa-priv">Per farlo servono poche informazioni su di te.
+      <b>Restano su questo dispositivo</b>: non vengono inviate a Polis né a nessun altro.</p>
+      <button class="pa-go" onclick="paAvviaProfilo()">Iniziamo · 8 domande</button>
+      <button class="pa-skip" onclick="paSalta()">Lo faccio dopo</button>
+    </div>`;
+}
+function paChiudi(){ const o=document.getElementById('paOv'); if(o) o.classList.remove('open'); }
+function paSalta(){ paSegnaFatto(); paChiudi(); }
+
+function paAvviaProfilo(){
+  paChiudi();
+  if(typeof clOnboarding==='function'){
+    window.__paInCorso=true;
+    clOnboarding();
+    paSorveglia();
+  } else { paSegnaFatto(); }
+}
+
+/* Quando l'onboarding finisce e la classe è stata assegnata, mostro il
+   percorso invece di lasciare l'utente davanti a una schermata qualsiasi. */
+function paSorveglia(){
+  let tentativi=0;
+  const iv=setInterval(()=>{
+    tentativi++;
+    let c=null;
+    try{ c=JSON.parse(localStorage.getItem('polis_classe_v1')||'null'); }catch(e){}
+    const chiuso=!document.querySelector('#clOv.open');
+    if(c && c.profilo && Object.keys(c.profilo).length>=4){
+      paDerivaProfiloCivico(c.profilo);
+      if(chiuso){
+        clearInterval(iv); window.__paInCorso=false; paSegnaFatto();
+        paMostraPercorso(c);
+      }
+    }
+    if(tentativi>600){ clearInterval(iv); window.__paInCorso=false; paSegnaFatto(); }
+  }, 500);
+}
+
+function paMostraPercorso(c){
+  const classi=(typeof CL_CLASSI!=='undefined')?CL_CLASSI:[];
+  const cl=classi.find(x=>x.k===(c&&c.attiva)) || null;
+  let ov=document.getElementById('paOv');
+  if(!ov){ ov=document.createElement('div'); ov.id='paOv'; document.body.appendChild(ov); }
+  ov.className='pa-ov open';
+  const E=(s)=>(typeof esc==='function')?esc(String(s==null?'':s)):String(s==null?'':s);
+  ov.innerHTML=`
+    <div class="pa-in">
+      ${cl?`
+        <div class="pa-ico">${cl.ico||'🧭'}</div>
+        <div class="pa-eyebrow">Il tuo profilo</div>
+        <h2>${E(cl.nome)}</h2>
+        <p class="pa-sit">${E(cl.situazione||'')}</p>
+        ${cl.arrivo?`<div class="pa-meta"><b>Dove vuoi arrivare</b><br>${E(cl.arrivo)}</div>`:''}
+        ${(cl.percorso&&cl.percorso.length)?`
+          <div class="pa-tit">I tuoi primi passi</div>
+          <ol class="pa-passi">${cl.percorso.slice(0,4).map(p=>`<li>${E(p)}</li>`).join('')}</ol>`:''}
+        <p class="pa-nota">Il profilo si aggiorna quando cambia la tua vita:
+        lo trovi nella sezione <b>Classe</b>.</p>
+      `:`
+        <div class="pa-ico">✅</div>
+        <h2>Profilo creato</h2>
+        <p class="pa-sit">Da ora Polis ti mostra per primo ciò che riguarda la tua situazione.</p>
+      `}
+      <button class="pa-go" onclick="paVaiAlPercorso()">Comincia</button>
+    </div>`;
+}
+function paVaiAlPercorso(){
+  paChiudi();
+  try{ if(typeof switchView==='function') switchView('classe'); }catch(e){}
+}
+
+/* Avvio: dopo il login, se il profilo non c'è, parte la registrazione. */
+function paForseAvvia(){
+  if(paGiaFatto()) return false;
+  setTimeout(paBenvenuto, 350);
+  return true;
+}
+
+/* ===== POLIS · BARRA ACCOUNT SEMPRE VISIBILE (inizio) ===== */
+/* PROBLEMA RISOLTO
+   Nella schermata Dibattiti (#consOverlay) la testata ".cd-light-head" è
+   position:absolute; top:0; z-index:6 e si ritrae allo scorrimento.
+   La barra account ".sb-accbar", inserita dal ponte Supabase come primo
+   elemento del flusso, occupava la stessa fascia in alto e restava quindi
+   COPERTA dalla testata: invisibile a pagina in cima, visibile solo dopo
+   aver scorso (quando la testata si ritraeva).
+
+   SOLUZIONE
+   Testata e barra vengono raccolte in un unico contenitore flottante
+   ".cd-topstack". La testata al suo interno torna nel flusso e, quando si
+   ritrae, COLLASSA in altezza invece di scivolare sopra la barra: la barra
+   risale da sola in cima e resta sempre leggibile, in entrambi gli stati.
+
+   Il padding superiore del contenuto è ricalcolato sull'altezza REALE
+   misurata a runtime (offsetHeight), mai su un valore fisso: la fascia di
+   sicurezza di iPhone/iPad varia da dispositivo a dispositivo.
+
+   Il riordino è agganciato sia a renderConsult sia a un MutationObserver,
+   perché l'ordine con cui i vari hook avvolgono renderConsult non è
+   garantito: la barra può comparire dopo il nostro intervento. */
+(function () {
+  'use strict';
+
+  var ID = 'polis-accbar-fix';
+  var altezzaPiena = 0;      // altezza del blocco con testata aperta
+  var inCorso = false;       // guardia anti-rientranza per l'observer
+  var osservatore = null;
+
+  /* ---------- stile ---------- */
+  function stile() {
+    if (document.getElementById(ID)) return;
+    var st = document.createElement('style');
+    st.id = ID;
+    st.textContent = [
+      /* blocco superiore unico: testata + barra account */
+      '#consOverlay .cd-topstack{position:absolute;top:0;left:0;right:0;z-index:7;',
+      '  padding-top:env(safe-area-inset-top);',
+      '  background:rgba(242,246,243,.94);',
+      '  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}',
+      /* la testata torna nel flusso dentro il blocco */
+      '#consOverlay .cd-topstack .cd-light-head{position:static;padding-top:12px;',
+      '  background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;',
+      '  overflow:hidden;max-height:96px;opacity:1;transform:none;',
+      '  transition:max-height .22s ease,opacity .18s ease,padding .22s ease}',
+      /* ritraendosi collassa: non scivola più sopra la barra */
+      '#consOverlay .cd-topstack .cd-light-head.cd-hide{max-height:0;opacity:0;',
+      '  padding-top:0;padding-bottom:0;transform:none;pointer-events:none}',
+      /* barra account: sempre in vista, coerente col tema chiaro */
+      '#consOverlay .cd-topstack .sb-accbar{background:transparent;',
+      '  border-bottom:1px solid rgba(28,43,36,.10);color:#4c5d54;padding:9px 14px}',
+      '#consOverlay .cd-topstack .sb-accbar .sb-off,',
+      '#consOverlay .cd-topstack .sb-accbar .sb-on{color:#1c2b24}',
+      '#consOverlay .cd-topstack .sb-accbar button{border-color:#d5e0d9;color:#1c2b24}',
+      '#consOverlay .cd-topstack .sb-accbar button.pri{background:#16a36e;',
+      '  border-color:#16a36e;color:#fff}'
+    ].join('\n');
+    document.head.appendChild(st);
+  }
+
+  /* ---------- riordino del blocco superiore ---------- */
+  function sistema() {
+    if (inCorso) return;
+    var ov = document.getElementById('consOverlay');
+    if (!ov) return;
+    var head = ov.querySelector('.cd-light-head');
+    if (!head) return;                       // schermata non ancora disegnata
+
+    inCorso = true;
+    try {
+      var pila = ov.querySelector('.cd-topstack');
+      if (!pila) {
+        pila = document.createElement('div');
+        pila.className = 'cd-topstack';
+        head.parentNode.insertBefore(pila, head);
+        pila.appendChild(head);
+        altezzaPiena = 0;                    // nuovo disegno: da rimisurare
+      }
+      /* la barra account, se presente, entra nel blocco subito sotto */
+      var bar = ov.querySelector('.sb-accbar');
+      if (bar && bar.parentNode !== pila) {
+        pila.appendChild(bar);
+        altezzaPiena = 0;
+      }
+      misura(ov, head, pila);
+    } catch (e) {
+      /* mai bloccare il disegno della schermata per un problema di layout */
+    }
+    inCorso = false;
+  }
+
+  /* Padding del contenuto = altezza reale del blocco a testata aperta.
+     Se in quel momento la testata è ritratta l'altezza è falsata: si
+     riusa l'ultima misura valida invece di far saltare il contenuto. */
+  function misura(ov, head, pila) {
+    var light = ov.querySelector('.cd-light');
+    if (!light) return;
+    if (!head.classList.contains('cd-hide')) {
+      var h = pila.offsetHeight;
+      if (h > 0) altezzaPiena = h;
+    }
+    if (altezzaPiena > 0) light.style.paddingTop = (altezzaPiena + 10) + 'px';
+  }
+
+  function osserva() {
+    var ov = document.getElementById('consOverlay');
+    if (!ov || osservatore) return;
+    if (typeof MutationObserver !== 'function') return;
+    osservatore = new MutationObserver(function () { sistema(); });
+    osservatore.observe(ov, { childList: true });
+  }
+
+  /* ---------- aggancio a renderConsult ---------- */
+  function aggancia() {
+    if (typeof window.renderConsult !== 'function' || window.__accbarFix) return false;
+    var orig = window.renderConsult;
+    window.renderConsult = function () {
+      var r = orig.apply(this, arguments);
+      sistema();
+      /* la barra può essere inserita da un hook installato dopo il nostro:
+         un secondo passaggio a fine turno la recupera comunque */
+      setTimeout(sistema, 0);
+      setTimeout(sistema, 250);
+      return r;
+    };
+    window.__accbarFix = true;
+    return true;
+  }
+
+  stile();
+  osserva();
+  if (!aggancia()) {
+    var n = 0;
+    var iv = setInterval(function () {
+      osserva();
+      if (aggancia() || ++n > 40) clearInterval(iv);
+    }, 250);
+  }
+})();
+/* ===== POLIS · BARRA ACCOUNT SEMPRE VISIBILE (fine) ===== */
 
 // allow Enter to login
 document.addEventListener('keydown',e=>{ if(e.key==='Enter' && $('#login').classList.contains('active')) doLogin(); });
