@@ -1,104 +1,34 @@
-name: ETL sedute Assemblea (Camera)
-
+# .github/workflows/etl_assemblee.yml
+# Aggiornamento quotidiano delle sedute di Camera e Senato.
+# Se i portali respingono il runner, il passo fallisce senza rompere nulla:
+# in quel caso si usa la modalità manuale (vedi COME_SCARICARE_A_MANO.md).
+name: ETL Assemblee
 on:
   schedule:
-    - cron: "30 4 * * *"
-    - cron: "0 14 * * *"
+    - cron: "0 7 * * 1-5"    # nei giorni feriali, quando l'Aula lavora
   workflow_dispatch:
-    inputs:
-      modalita:
-        description: "Cosa vuoi fare"
-        required: true
-        default: "normale"
-        type: choice
-        options:
-          - normale
-          - introspezione
-          - completo
-
 permissions:
   contents: write
-
 concurrency:
-  group: etl-assemblea
-  cancel-in-progress: false
-
+  group: etl-assemblee
 jobs:
-  aggiorna:
+  etl:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      # Controllo prima di tutto che il file ci sia: se manca, dirlo chiaramente
-      # invece di lasciare un errore incomprensibile.
-      - name: Controlla che lo script sia al suo posto
-        run: |
-          if [ ! -f "etl_assemblea.py" ]; then
-            echo "::error::Il file etl_assemblea.py NON si trova nella cartella principale del repository."
-            echo ""
-            echo "Ecco cosa c'è invece nella cartella principale:"
-            ls -la
-            echo ""
-            echo "COSA FARE: crea il file 'etl_assemblea.py' nella pagina principale"
-            echo "del repository (Add file > Create new file), non dentro una sottocartella."
-            echo "Il nome deve essere esattamente etl_assemblea.py, tutto minuscolo."
-            exit 1
-          fi
-          echo "Script trovato."
-
-      - name: Installa le librerie necessarie
-        run: pip install --quiet requests cloudscraper
-
-      - name: Mostra i nomi reali dei campi
-        if: github.event.inputs.modalita == 'introspezione'
-        run: |
-          echo "=================================================="
-          echo " NOMI DEI CAMPI USATI DALLA CAMERA"
-          echo " Copia questo risultato e mandalo a chi sviluppa."
-          echo "=================================================="
-          python etl_assemblea.py --introspect
-
+        with: { python-version: "3.12" }
+      - run: pip install --quiet certifi
       - name: Scarica le sedute
-        id: etl
-        if: github.event.inputs.modalita != 'introspezione'
-        run: |
-          set +e
-          if [ "${{ github.event.inputs.modalita }}" = "completo" ]; then
-            python etl_assemblea.py --full
-          else
-            python etl_assemblea.py
-          fi
-          CODICE=$?
-          echo "codice=$CODICE" >> "$GITHUB_OUTPUT"
-          exit 0          # non blocco il workflow: interpreto il codice dopo
         continue-on-error: true
-
-      - name: Spiega cosa è successo
-        if: github.event.inputs.modalita != 'introspezione'
-        run: |
-          C="${{ steps.etl.outputs.codice }}"
-          case "$C" in
-            0) echo "Scarico riuscito." ;;
-            1) echo "::warning::Il sito della Camera non ha risposto (endpoint irraggiungibile o accesso automatico bloccato). I dati precedenti restano al loro posto e l'app continua a funzionare. Se succede per più giorni di fila, va cambiato metodo di scarico." ;;
-            2) echo "::error::Python non ha trovato il file etl_assemblea.py, oppure il file ha un errore di battitura nel codice. Controlla che sia nella cartella principale e che il contenuto sia stato incollato per intero." ;;
-            *) echo "::warning::Lo scarico si è fermato con codice $C. Apri il passaggio 'Scarica le sedute' qui sopra per leggere il messaggio esatto." ;;
-          esac
-
-      - name: Salva i dati aggiornati
-        if: github.event.inputs.modalita != 'introspezione' && steps.etl.outputs.codice == '0'
-        run: |
-          git config user.name  "polis-bot"
-          git config user.email "polis-bot@users.noreply.github.com"
-          git add dati/assemblea.json state_assemblea.json 2>/dev/null || true
-          if git diff --cached --quiet; then
-            echo "Nessuna seduta nuova: normale quando il Parlamento non si riunisce."
-            exit 0
+        run: cd etl && python3 etl_assemblee.py --out ../dati/assemblee.json
+      - run: |
+          git config user.name "polis-etl-bot"
+          git config user.email "etl@polis.local"
+          git add -A dati/assemblee.json || true
+          if git diff --cached --quiet; then echo "Nessuna variazione."; else
+            git pull --rebase --autostash origin ${{ github.ref_name }} || true
+            git commit -m "ETL assemblee $(date -u +%Y-%m-%d)"
+            git push origin HEAD:${{ github.ref_name }}
           fi
-          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
-          git commit -m "Sedute Assemblea: aggiornamento $(date -u +%F)"
-          git push
