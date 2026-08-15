@@ -1,0 +1,76 @@
+name: ETL indicatori regionali
+
+# Aggiorna gli indicatori regionali da fonti ufficiali con licenza verificata
+# per l'uso commerciale (ISTAT CC BY 3.0 IT, Ministero della Salute IODL 2.0).
+#
+# CADENZA: una volta a settimana. Questi dati cambiano al massimo qualche
+# volta l'anno: interrogare le fonti più spesso non aggiungerebbe nulla e
+# consumerebbe il loro limite di chiamate per niente.
+#
+# LIMITI RISPETTATI:
+#   ISTAT dichiara 5 query al minuto per IP e blocca l'indirizzo per 1-2
+#   giorni se il limite viene superato. Lo script attende 13 s fra le
+#   richieste e con --max lavora a lotti. Se ISTAT risponde 403 o 429 lo
+#   script si ferma, lo dichiara, e il lavoro riprende alla corsa successiva:
+#   il blocco non va aggirato in nessun modo.
+
+on:
+  schedule:
+    - cron: '30 4 * * 1'      # ogni lunedì alle 04:30 UTC
+  workflow_dispatch:
+    inputs:
+      max_indicatori:
+        description: 'Quanti indicatori ISTAT provare in questa corsa (0 = tutti)'
+        required: false
+        default: '0'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: etl-regioni
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scarica il repository
+        uses: actions/checkout@v4
+
+      - name: Prepara Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Mostra le fonti ammesse e quelle bloccate
+        working-directory: etl
+        run: python3 fonti_regioni.py
+
+      - name: Indicatori regionali ISTAT
+        working-directory: etl
+        run: |
+          python3 etl_istat_regioni.py \
+            --out ../data/territorio \
+            --max "${{ github.event.inputs.max_indicatori || 0 }}"
+
+      - name: Posti letto per regione (Ministero della Salute)
+        working-directory: etl
+        run: python3 etl_salute_regioni.py --out ../data/territorio
+
+      - name: Ricostruisci la classifica regionale
+        working-directory: etl
+        run: python3 etl_classifica.py --dati ../data/territorio
+
+      - name: Pubblica i dati aggiornati
+        run: |
+          git config user.name  "polis-etl"
+          git config user.email "actions@github.com"
+          git add data/territorio
+          if git diff --staged --quiet; then
+            echo "Nessun dato cambiato: niente da pubblicare."
+            exit 0
+          fi
+          git commit -m "Indicatori regionali aggiornati (fonti ufficiali)"
+          git pull --rebase
+          git push
