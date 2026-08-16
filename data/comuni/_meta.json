@@ -1,1 +1,1 @@
-{"generato":"2026-08-01T19:16:36.027673+00:00","n_comuni":3,"nota":"Dati seed reali (Cruscotto Italia/AgID). Gli altri capoluoghi e i comuni verranno popolati dall'ETL e dal fetch live.","fonte":"Cruscotto Italia · AgID"}
+{"generato":"2026-08-16T04:05:48.931920+00:00","comuni_in_archivio":105,"esiti_ultimo_lotto":{"ok":12,"nuovo":0,"aggiornato":12,"invariato":0,"errore":0},"fermato_dal_limite":null,"fonte":"Cruscotto Italia · AgID","limiti_rispettati":{"intervallo_minimo_s":0.5,"comuni_per_finestra":12,"finestra_s":600}}
