@@ -1,0 +1,218 @@
+{
+  "_versione": 1,
+  "_aggiornato": "2026-08",
+  "_struttura": "Ogni scheda ha quattro blocchi: semplice (che cos'è), problema (la criticità riconosciuta), futuro (previsioni ufficiali già pubblicate, sempre attribuite a chi le ha fatte), manovre (i provvedimenti già approvati). Nessuna previsione è elaborata da Polis.",
+  "_regole": [
+    "Nessun numero senza fonte, anno e data del documento.",
+    "Le previsioni sono solo quelle già pubblicate da istituzioni ufficiali, con il nome di chi le ha fatte: Polis non prevede nulla per conto proprio.",
+    "Dove le istituzioni prevedono cose diverse, si riportano entrambe le posizioni attribuite.",
+    "Le manovre sono descritte senza aggettivi di giudizio. Le valutazioni sono attribuite all'organo che le ha espresse.",
+    "Nessun nesso di causa fra una manovra e un risultato: si riporta al massimo la valutazione ufficiale di chi l'ha analizzata."
+  ],
+  "_prossimi_aggiornamenti": [
+    "22 settembre 2026 — ISTAT, PIL e indebitamento AP (rivede i consuntivi 2025)",
+    "autunno 2026 — MEF, Documento programmatico di finanza pubblica",
+    "entro il 31 dicembre 2026 — Legge di bilancio 2027",
+    "autunno 2026 — MEF, Relazione su economia non osservata ed evasione"
+  ],
+  "schede": {
+    "quadro": {
+      "titolo": "Quadro generale della finanza pubblica",
+      "semplice": "È la fotografia dei conti dello Stato: quanto incassa, quanto spende e la differenza fra le due cose. Nel 2025 le amministrazioni pubbliche hanno incassato 1.082,6 miliardi (47,9% del PIL) e speso 1.152,9 miliardi (51,1% del PIL). La differenza, cioè l'indebitamento netto, è stata di 70,3 miliardi: il 3,1% del PIL.",
+      "problema": "Le spese superano le entrate di circa 70 miliardi l'anno. L'Italia è rimasta sopra la soglia europea del 3% anche nel 2025 e resta nella Procedura per disavanzo eccessivo aperta nel 2024. Nell'area euro la spesa pubblica media è pari al 49,8% del PIL e le entrate al 46,9%.",
+      "futuro": [
+        { "chi": "MEF", "documento": "Documento di finanza pubblica 2026", "data": "22 aprile 2026", "dice": "Deficit tendenziale in calo: 2,8% nel 2027, 2,5% nel 2028, 2,1% nel 2029." },
+        { "chi": "MEF", "documento": "Documento programmatico di finanza pubblica", "data": "2 ottobre 2025", "dice": "Deficit programmatico 2,8% nel 2026, 2,6% nel 2027, 2,3% nel 2028." }
+      ],
+      "manovre": [
+        { "atto": "Legge 30 dicembre 2025, n. 199 (Legge di bilancio 2026)", "cosa": "Intervento complessivo di circa 22 miliardi. Secondo il MEF non comporta un aumento del disavanzo pubblico." },
+        { "atto": "Piano strutturale di bilancio di medio termine 2025-2029", "cosa": "Fissa la traiettoria pluriennale della spesa netta concordata con la Commissione europea." }
+      ],
+      "fonti": [
+        { "ente": "ISTAT", "titolo": "PIL e indebitamento AP, anni 2023-2025", "data": "2 marzo 2026", "url": "https://www.istat.it/wp-content/uploads/2026/03/PIL-E-INDEBITAMENTO-AP_Anni-2023-2025.pdf", "licenza": "CC BY 4.0" },
+        { "ente": "Eurostat", "titolo": "Deficit e debito delle amministrazioni pubbliche", "data": "22 aprile 2026", "licenza": "riuso con attribuzione" },
+        { "ente": "MEF", "titolo": "Documento di finanza pubblica 2026", "data": "22 aprile 2026", "url": "https://www.mef.gov.it/inevidenza/Approvato-il-Documento-di-finanza-pubblica-2026/" }
+      ]
+    },
+    "saldo": {
+      "titolo": "Il saldo",
+      "semplice": "Il saldo misura la distanza fra quello che entra e quello che esce. Nel 2025 l'indebitamento netto è stato del 3,1% del PIL. Il saldo primario, cioè il conto senza gli interessi sul debito, è invece positivo: +16,9 miliardi, lo 0,7% del PIL, in miglioramento dallo 0,5% del 2024.",
+      "problema": "Il saldo primario positivo viene interamente eroso dagli interessi sul debito, 87,1 miliardi nel 2025, pari al 3,9% del PIL. Tolti quelli, lo Stato incasserebbe più di quanto spende.",
+      "futuro": [
+        { "chi": "MEF", "documento": "Documento di finanza pubblica 2026", "data": "22 aprile 2026", "dice": "Saldo primario in miglioramento lungo il percorso di rientro del deficit fino al 2,1% del 2029." },
+        { "chi": "Ufficio parlamentare di bilancio", "documento": "Audizione sul disegno di legge di bilancio 2026", "data": "6 novembre 2025", "dice": "Il rientro sotto il 3% si consolida dal 2026, soprattutto per la riduzione della spesa totale in rapporto al PIL." }
+      ],
+      "manovre": [
+        { "atto": "Piano strutturale di bilancio 2025-2029", "cosa": "Impegna l'Italia a una crescita della spesa primaria netta dell'1,3% l'anno, secondo il percorso richiesto dalla Commissione europea." },
+        { "atto": "Legge 30 dicembre 2024, n. 207 e Legge 30 dicembre 2025, n. 199", "cosa": "Le due leggi di bilancio proseguono il consolidamento dei conti." }
+      ],
+      "fonti": [
+        { "ente": "ISTAT", "titolo": "PIL e indebitamento AP, anni 2023-2025", "data": "2 marzo 2026", "licenza": "CC BY 4.0" },
+        { "ente": "Ufficio parlamentare di bilancio", "titolo": "Audizione sul ddl di bilancio 2026", "data": "6 novembre 2025", "url": "https://www.upbilancio.it/audizione-nellambito-dellesame-del-ddl-di-bilancio-per-il-2026/" }
+      ]
+    },
+    "entrate": {
+      "titolo": "Da dove arrivano le entrate",
+      "semplice": "Lo Stato incassa da imposte dirette (sui redditi, come IRPEF e IRES), imposte indirette (sui consumi, come l'IVA) e contributi sociali versati a INPS e INAIL. La pressione fiscale, cioè imposte e contributi in rapporto al PIL, è stata del 43,1% nel 2025, contro il 42,4% del 2024.",
+      "problema": "È il livello più alto dell'ultimo decennio, ed è salito perché le entrate sono cresciute più del PIL: +4,2% contro +2,5%. Nel 2025 le imposte dirette sono aumentate solo dello 0,7% e i contributi sociali del 10,0%, per la cessazione degli esoneri. Pesa anche il drenaggio fiscale: l'Ufficio parlamentare di bilancio ha stimato che, con 2 punti di inflazione, il maggior prelievo che ne deriva è più alto di circa 370 milioni rispetto al regime precedente.",
+      "futuro": [
+        { "chi": "MEF", "documento": "Documento di finanza pubblica 2026", "data": "22 aprile 2026", "dice": "Pressione fiscale prevista al 42,9% nel 2026, quindi sostanzialmente stabile." }
+      ],
+      "manovre": [
+        { "atto": "Legge 30 dicembre 2025, n. 199 (Legge di bilancio 2026)", "cosa": "Seconda aliquota IRPEF ridotta dal 35% al 33% per lo scaglione fra 28.000 e 50.000 euro, con azzeramento del beneficio sopra i 200.000 euro. Costo stimato 2,9 miliardi nel 2026, circa 13,6 milioni di contribuenti interessati." },
+        { "atto": "D.Lgs. 216/2023 e Legge 30 dicembre 2024, n. 207", "cosa": "Accorpamento delle aliquote IRPEF e innalzamento della detrazione da lavoro dipendente, resi strutturali." }
+      ],
+      "valutazioni": [
+        { "chi": "Ufficio parlamentare di bilancio", "data": "6 novembre 2025", "dice": "Giudica favorevolmente le misure che compensano il drenaggio fiscale, ma segnala che sopra i 200.000 euro solo un terzo dei contribuenti ha detrazioni riducibili, sicché una parte beneficia comunque della riduzione piena." }
+      ],
+      "fonti": [
+        { "ente": "ISTAT", "titolo": "PIL e indebitamento AP, anni 2023-2025", "data": "2 marzo 2026", "licenza": "CC BY 4.0" },
+        { "ente": "MEF", "titolo": "Principali misure della legge di bilancio 2026", "data": "2026", "url": "https://www.mef.gov.it/focus/Principali-misure-della-legge-di-bilancio-2026/" },
+        { "ente": "Ufficio parlamentare di bilancio", "titolo": "Audizione sul ddl di bilancio 2026", "data": "6 novembre 2025" }
+      ]
+    },
+    "uscite": {
+      "titolo": "Dove finiscono le uscite",
+      "semplice": "La spesa pubblica, 1.152,9 miliardi nel 2025, va soprattutto a pensioni e altre prestazioni sociali, sanità, stipendi dei dipendenti pubblici, acquisti di beni e servizi e interessi sul debito. Nel 2024 la spesa previdenziale ha raggiunto 400,4 miliardi; la spesa sanitaria pubblica circa 137,5 miliardi; gli interessi nel 2025 sono stati 87,1 miliardi.",
+      "problema": "Le voci principali sono difficili da comprimere. Nel 2025 le uscite correnti sono cresciute del 3,0%, trainate da stipendi pubblici (+3,2%), acquisti di beni e servizi (+3,6%) e prestazioni sociali in denaro (+3,0%). La spesa pensionistica vale il 15,4% del PIL, fra le più alte d'Europa.",
+      "futuro": [
+        { "chi": "Ragioneria Generale dello Stato", "documento": "Le tendenze di medio-lungo periodo del sistema pensionistico e socio-sanitario, rapporto n. 26/2025", "data": "2025", "dice": "La spesa pensionistica sale dal 15,2% del PIL del 2025 a un picco del 17% nel 2040, poi scende al 16,0% nel 2050 e al 13,9% nel 2070." }
+      ],
+      "manovre": [
+        { "atto": "Legge 30 dicembre 2025, n. 199 (Legge di bilancio 2026)", "cosa": "Rafforzamento del Fondo sanitario, detassazione al 5% degli aumenti da rinnovo contrattuale fino a 33.000 euro di reddito, misure previdenziali." },
+        { "atto": "Riforme pensionistiche del 1995-2011 e misure delle ultime due manovre", "cosa": "La Ragioneria quantifica che il taglio all'indicizzazione degli assegni più alti e il vincolo del metodo contributivo per Quota 103 abbassano l'incidenza della spesa di circa 0,1 punti di PIL nel periodo 2024-2040." }
+      ],
+      "fonti": [
+        { "ente": "ISTAT", "titolo": "Rapporto annuale 2025 e PIL e indebitamento AP", "data": "2025-2026", "licenza": "CC BY 4.0" },
+        { "ente": "Ragioneria Generale dello Stato", "titolo": "Le tendenze di medio-lungo periodo del sistema pensionistico e socio-sanitario", "data": "2025", "url": "https://www.rgs.mef.gov.it/VERSIONE-I/attivita_istituzionali/monitoraggio/spesa_pensionistica/" }
+      ]
+    },
+    "interessi": {
+      "titolo": "Il debito pubblico",
+      "semplice": "È la somma di tutto quello che lo Stato ha preso in prestito nel tempo. A fine 2025 era di 3.095,5 miliardi di euro, pari al 137,1% del PIL. La vita media residua dei titoli è di 7,9 anni e il rendimento medio delle emissioni del 2025 è stato del 2,75%: due elementi che rendono il debito meno esposto agli sbalzi dei tassi.",
+      "problema": "È il secondo rapporto debito/PIL dell'Unione europea dopo la Grecia (146,1%), a fronte di una media dell'area euro dell'87,8%. Costa 87,1 miliardi di interessi l'anno, che è quanto lo Stato spende senza poterlo destinare a servizi. Sul livello ha pesato anche l'effetto di cassa ritardato dei bonus edilizi del 2020-2023.",
+      "futuro": [
+        { "chi": "MEF", "documento": "Documento di finanza pubblica 2026", "data": "22 aprile 2026", "dice": "Il rapporto debito/PIL tocca un picco nel 2026 al 138,6%, per l'effetto residuo dei crediti d'imposta, e poi scende." },
+        { "chi": "MEF", "documento": "Documento programmatico di finanza pubblica", "data": "2 ottobre 2025", "dice": "Debito in riduzione dal 2027, verso il 136,4% nel 2028." },
+        { "chi": "Corte dei conti", "documento": "Audizione sul Documento di finanza pubblica 2026", "data": "28 aprile 2026", "dice": "Giudica il quadro del debito sensibilmente deteriorato rispetto al Piano strutturale di bilancio del 2024.", "verifica": "Posizione ripresa dalla sintesi ufficiale per la stampa: in corso il riscontro sul documento depositato." }
+      ],
+      "manovre": [
+        { "atto": "Emissioni dedicate ai piccoli risparmiatori (BTP Valore, BTP Italia)", "cosa": "Allargano la quota di debito detenuta da famiglie italiane." },
+        { "atto": "Regolamento (UE) 2024/1263 e Piano strutturale di bilancio", "cosa": "Il vincolo europeo di riduzione del debito opera attraverso il percorso concordato di crescita della spesa netta." }
+      ],
+      "fonti": [
+        { "ente": "Banca d'Italia", "titolo": "Finanza pubblica: fabbisogno e debito", "data": "16 febbraio 2026", "url": "https://www.bancaditalia.it/pubblicazioni/finanza-pubblica/index.html", "licenza": "riuso con attribuzione" },
+        { "ente": "Eurostat", "titolo": "Deficit e debito delle amministrazioni pubbliche", "data": "22 aprile 2026", "licenza": "riuso con attribuzione" },
+        { "ente": "MEF", "titolo": "Documento di finanza pubblica 2026", "data": "22 aprile 2026" }
+      ],
+      "limiti": "La composizione per tipo di detentore (banche, famiglie, investitori esteri) non è riportata perché le percentuali che circolano derivano da rielaborazioni di terzi: per pubblicarla Polis attende i valori disaggregati dalla Base Dati Statistica della Banca d'Italia."
+    },
+    "pil": {
+      "titolo": "Deficit e PIL",
+      "semplice": "Il PIL è la ricchezza prodotta in un anno, e sia il deficit sia il debito si misurano in rapporto ad esso. Nel 2025 il PIL è cresciuto dello 0,5% in volume, il deficit è stato il 3,1% del PIL e il debito il 137,1%.",
+      "problema": "Quando il PIL cresce poco, ridurre i rapporti deficit/PIL e debito/PIL diventa più difficile anche se i conti migliorano: il denominatore non aiuta. Nel 2025 la domanda estera netta ha sottratto 0,7 punti alla crescita.",
+      "futuro": [
+        { "chi": "MEF", "documento": "Documento di finanza pubblica 2026", "data": "22 aprile 2026", "dice": "PIL reale +0,6% nel 2026, rivisto al ribasso dal +0,7% precedente, e +0,8% l'anno nel 2028-2029." },
+        { "chi": "Ufficio parlamentare di bilancio", "documento": "Audizione sul ddl di bilancio 2026", "data": "6 novembre 2025", "dice": "Valida il quadro tendenziale ma segnala rischi orientati al ribasso; stima che la manovra aggiunga 0,2 punti di PIL nel 2027 e 0,1 nel 2028, con effetto lievemente negativo nel 2026." }
+      ],
+      "manovre": [
+        { "atto": "PNRR e Legge 30 dicembre 2025, n. 199", "cosa": "Incentivi agli investimenti delle imprese: maggiorazione degli ammortamenti, rifinanziamento di Industria 4.0 per 1,3 miliardi, Nuova Sabatini." },
+        { "atto": "Regolamento (UE) 2024/1263", "cosa": "Esclude dal calcolo della spesa il cofinanziamento nazionale dei programmi europei, per non penalizzare gli investimenti." }
+      ],
+      "fonti": [
+        { "ente": "ISTAT", "titolo": "PIL e indebitamento AP, anni 2023-2025", "data": "2 marzo 2026", "licenza": "CC BY 4.0" },
+        { "ente": "MEF", "titolo": "Documento di finanza pubblica 2026 e DPFP", "data": "2025-2026" },
+        { "ente": "Ufficio parlamentare di bilancio", "titolo": "Audizione sul ddl di bilancio 2026", "data": "6 novembre 2025" }
+      ]
+    },
+    "redditi": {
+      "titolo": "I redditi delle famiglie",
+      "semplice": "Il reddito disponibile è quello che resta alle famiglie dopo imposte e contributi, contando anche pensioni e trasferimenti ricevuti. Nel 2024 il reddito medio annuo delle famiglie è stato di 39.501 euro, con un aumento reale del 4,1%. Imposte e trasferimenti riducono la disuguaglianza: l'indice di Gini scende dal 47,28% dei redditi primari al 31,17% di quelli disponibili.",
+      "problema": "Il prelievo sul lavoro resta alto: secondo l'OCSE il cuneo fiscale italiano era il 47,1% del costo del lavoro nel 2024 per un lavoratore singolo senza figli, contro una media OCSE del 34,9% (nell'edizione successiva scende al 45,8%). Restano forti divari territoriali: nel 2024 il rischio di povertà o esclusione riguarda il 38,4% delle persone nel Mezzogiorno contro l'11,3% del Nord-est.",
+      "futuro": [
+        { "chi": "ISTAT", "documento": "La redistribuzione del reddito in Italia, anno 2025", "data": "2025", "dice": "Le misure fiscali e sociali del 2025 migliorano lievemente l'equità: l'indice di Gini scende dal 31,41% al 31,17%." }
+      ],
+      "manovre": [
+        { "atto": "Legge 30 dicembre 2024, n. 207", "cosa": "Rende strutturali l'accorpamento delle aliquote IRPEF e la maggiore detrazione da lavoro dipendente." },
+        { "atto": "Legge 30 dicembre 2025, n. 199", "cosa": "Riduzione della seconda aliquota IRPEF al 33%, detassazione al 5% degli aumenti contrattuali fino a 33.000 euro, rafforzamento del bonus mamme, 500 milioni l'anno per la carta «Dedicata a te» nel 2026-2027." }
+      ],
+      "valutazioni": [
+        { "chi": "Ufficio parlamentare di bilancio", "data": "6 novembre 2025", "dice": "Osserva che la manovra 2026 supera la logica degli interventi temporanei sul cuneo fiscale, con coperture strutturali." }
+      ],
+      "fonti": [
+        { "ente": "ISTAT", "titolo": "Condizioni di vita e reddito delle famiglie, anni 2024-2025", "data": "2025", "licenza": "CC BY 4.0" },
+        { "ente": "ISTAT", "titolo": "La redistribuzione del reddito in Italia, anno 2025", "data": "2025", "url": "https://www.istat.it/comunicato-stampa/la-redistribuzione-del-reddito-in-italia-anno-2025/" },
+        { "ente": "OCSE", "titolo": "Taxing Wages 2025", "data": "2025", "licenza": "CC BY 4.0" }
+      ]
+    },
+    "sanita": {
+      "titolo": "La sanità pubblica",
+      "semplice": "È il Servizio sanitario nazionale, finanziato con risorse pubbliche. Nel 2025 la spesa sanitaria complessiva è stata di 190,1 miliardi, l'8,4% del PIL: 140,8 miliardi di parte pubblica (74,1%) e 42,4 miliardi pagati direttamente dalle famiglie (22,3%).",
+      "problema": "Nel 2024 il 9,9% della popolazione, circa 5,8 milioni di persone, ha rinunciato a visite o accertamenti pur avendone bisogno: erano 4,5 milioni nel 2023. La motivazione principale sono le liste d'attesa, indicata dal 6,8% della popolazione contro il 2,8% del 2019. L'OCSE rileva che l'Italia spende 5.164 dollari a testa contro una media di 5.967, e ha 6,9 infermieri ogni mille abitanti contro una media di 9,2, pur avendo più medici della media (5,4 contro 3,9). Secondo Eurostat è il Paese dell'Unione con la quota più alta di medici oltre i 65 anni: il 26,7% nel 2023.",
+      "futuro": [
+        { "chi": "Ragioneria Generale dello Stato", "documento": "Le tendenze di medio-lungo periodo del sistema pensionistico e socio-sanitario", "data": "2025", "dice": "La spesa sanitaria pubblica cresce gradualmente in rapporto al PIL per effetto dell'invecchiamento, raggiungendo il 7% del PIL intorno al 2050 nello scenario nazionale di base." }
+      ],
+      "manovre": [
+        { "atto": "Legge 30 dicembre 2025, n. 199", "cosa": "2,4 miliardi aggiuntivi per la sanità nel 2026 e 2,65 miliardi dal 2027, destinati soprattutto ad assunzioni e trattamenti del personale; imposta sostitutiva al 5% sul lavoro straordinario degli infermieri." },
+        { "atto": "Piano nazionale per la gestione delle liste d'attesa e investimenti sanitari del PNRR", "cosa": "Comprende le Case della Comunità e gli interventi sull'assistenza territoriale." }
+      ],
+      "fonti": [
+        { "ente": "ISTAT", "titolo": "Audizione alla XII Commissione Affari sociali della Camera", "data": "2025-2026", "licenza": "CC BY 4.0" },
+        { "ente": "OCSE", "titolo": "Profilo della sanità 2025: Italia", "data": "dicembre 2025", "licenza": "CC BY 4.0" },
+        { "ente": "Eurostat", "titolo": "Statistiche sul personale sanitario", "data": "2023", "licenza": "riuso con attribuzione" }
+      ]
+    },
+    "nero": {
+      "titolo": "Lavoro nero ed economia sommersa",
+      "semplice": "L'economia non osservata comprende le attività legali non dichiarate e quelle illegali. Nel 2022 valeva 201,6 miliardi, il 10,1% del PIL: 182 miliardi di sommerso e 19,8 di attività illegali. Il tasso di irregolarità del lavoro era del 12,5%, pari a circa 2,99 milioni di posizioni irregolari.",
+      "problema": "Le imposte e i contributi non versati — il cosiddetto tax gap — valevano nel 2022 fra 98,1 e 102,5 miliardi di euro: fra 89,7 e 90,9 miliardi di gap tributario e fra 8,4 e 11,6 di gap contributivo. Sono risorse che mancano ai servizi pubblici e che ricadono su chi le tasse le paga.",
+      "futuro": [
+        { "chi": "MEF", "documento": "Relazione sull'economia non osservata e sull'evasione fiscale e contributiva 2025", "data": "23 ottobre 2025", "dice": "Conferma il calo della propensione all'evasione dal 2018; fra il 2019 e il 2022 la riduzione registrata è dell'11,9%, a fronte dell'obiettivo PNRR del 15% al 2024 rispetto al 2019." }
+      ],
+      "manovre": [
+        { "atto": "Riforma fiscale: legge delega e decreti attuativi", "cosa": "Strumenti di adempimento spontaneo e concordato preventivo biennale." },
+        { "atto": "Obbligo di fatturazione elettronica", "cosa": "Estende la tracciabilità delle operazioni fra imprese e verso i consumatori." }
+      ],
+      "fonti": [
+        { "ente": "ISTAT", "titolo": "Economia non osservata nei conti nazionali, anni 2019-2022", "data": "ottobre 2024", "url": "https://www.istat.it/wp-content/uploads/2024/10/Report-Economia-non-osservata_2022-1.pdf", "licenza": "CC BY 4.0" },
+        { "ente": "MEF", "titolo": "Relazione sull'economia non osservata e sull'evasione fiscale e contributiva 2025", "data": "23 ottobre 2025", "url": "https://www.mef.gov.it/export/sites/MEF/documenti-pubblicazioni/rapporti-relazioni/documenti/Relazione-evasione-fiscale-e-contributiva-2025_2310_ore1230.pdf" }
+      ],
+      "limiti": "I dati su sommerso ed evasione si riferiscono al 2022: è l'ultimo anno per cui ISTAT e MEF hanno pubblicato le stime complete. Non vengono aggiornati a stima."
+    },
+    "opere": {
+      "titolo": "Le opere pubbliche",
+      "semplice": "Sono strade, scuole, ospedali, ferrovie. Il loro avanzamento è seguito dalla Ragioneria attraverso la Banca dati delle amministrazioni pubbliche — Monitoraggio opere pubbliche, istituita dal D.Lgs. 229/2011, che segue l'intero ciclo dell'opera. Nel 2025 gli investimenti fissi lordi delle amministrazioni pubbliche sono cresciuti del 9,6%.",
+      "problema": "I tempi di realizzazione sono lunghi. Secondo la Corte dei conti la durata media dei progetti d'investimento conclusi si è allungata da circa 458 giorni a gennaio 2025 a circa 533 giorni a fine ottobre 2025, e i lavori pubblici assorbono il 44% dei finanziamenti PNRR ma registrano pagamenti al 37% e solo il 10% dei progetti conclusi.",
+      "futuro": [
+        { "chi": "Corte dei conti", "documento": "Relazione sullo stato di attuazione del PNRR, I semestre 2025", "data": "5 dicembre 2025", "dice": "Ritiene presumibile che i tempi si allunghino ulteriormente, man mano che arrivano in esecuzione gli investimenti più consistenti.", "verifica": "Ripreso dalla sintesi ufficiale per la stampa: in corso il riscontro sul documento depositato." },
+        { "chi": "Corte dei conti", "documento": "Relazione sullo stato di attuazione del PNRR, II semestre 2025", "data": "27 maggio 2026", "dice": "Stima che circa 24,2 miliardi di spesa, riferiti a 66 misure, slittino oltre il 2026.", "verifica": "Ripreso dalla sintesi ufficiale per la stampa: in corso il riscontro sul documento depositato." }
+      ],
+      "manovre": [
+        { "atto": "Revisione del PNRR approvata dalla Cabina di regia", "data": "26 settembre 2025", "cosa": "Rimodulazione per complessivi 14,15 miliardi, usata in parte come copertura della manovra 2026." },
+        { "atto": "Piano nazionale complementare", "cosa": "Finanzia interventi collegati al PNRR con risorse nazionali." }
+      ],
+      "fonti": [
+        { "ente": "Ragioneria Generale dello Stato", "titolo": "OpenBDAP — Monitoraggio opere pubbliche", "data": "dati al 31 dicembre 2024", "url": "https://openbdap.rgs.mef.gov.it/" },
+        { "ente": "ISTAT", "titolo": "PIL e indebitamento AP, anni 2023-2025", "data": "2 marzo 2026", "licenza": "CC BY 4.0" },
+        { "ente": "Corte dei conti", "titolo": "Relazioni sullo stato di attuazione del PNRR", "data": "2025-2026" }
+      ]
+    },
+    "personale": {
+      "titolo": "Il personale della pubblica amministrazione",
+      "semplice": "Sono i dipendenti pubblici: scuola, sanità, enti locali, ministeri, forze dell'ordine. Secondo il Conto annuale della Ragioneria erano 3.388.794 nel 2024, l'1,8% in più dell'anno prima, con un'età media di 49 anni e 4 mesi.",
+      "problema": "L'invecchiamento: il 54% dei dipendenti pubblici ha più di cinquant'anni e oltre 121.000 ne hanno già compiuti 65. Il blocco del ricambio nei decenni scorsi ha ridotto gli ingressi: fra il 2001 e il 2020 l'occupazione pubblica è scesa del 7%, da circa 3,5 a 3,24 milioni di persone.",
+      "futuro": [
+        { "chi": "Ragioneria Generale dello Stato", "documento": "Conto annuale 2024", "data": "1 luglio 2025", "dice": "Segnala un ricambio in atto: gli under 30 salgono a circa 210.000, il 33% in più in un anno, per effetto dei concorsi legati al PNRR." }
+      ],
+      "manovre": [
+        { "atto": "Assunzioni collegate al PNRR", "cosa": "Concorsi per il rafforzamento delle amministrazioni titolari degli interventi." },
+        { "atto": "Legge 30 dicembre 2024, n. 207 e Legge 30 dicembre 2025, n. 199", "cosa": "Risorse per i rinnovi contrattuali e imposta sostitutiva al 5% sugli incrementi retributivi da rinnovo." }
+      ],
+      "fonti": [
+        { "ente": "Ragioneria Generale dello Stato", "titolo": "Conto annuale 2024", "data": "1 luglio 2025", "url": "https://contoannuale.rgs.mef.gov.it/" },
+        { "ente": "ISTAT", "titolo": "Rapporto sulle istituzioni pubbliche 2024", "data": "2024", "licenza": "CC BY 4.0" }
+      ],
+      "limiti": "Non esistono proiezioni ufficiali pluriennali sul numero dei dipendenti pubblici: il dato si aggiorna con il Conto annuale successivo, non viene stimato."
+    }
+  }
+}
