@@ -29058,6 +29058,1577 @@ function paForseAvvia(){
   return true;
 }
 
+/* ===== POLIS · BARRA ACCOUNT SEMPRE VISIBILE (inizio) ===== */
+/* PROBLEMA RISOLTO
+   Nella schermata Dibattiti (#consOverlay) la testata ".cd-light-head" è
+   position:absolute; top:0; z-index:6 e si ritrae allo scorrimento.
+   La barra account ".sb-accbar", inserita dal ponte Supabase come primo
+   elemento del flusso, occupava la stessa fascia in alto e restava quindi
+   COPERTA dalla testata: invisibile a pagina in cima, visibile solo dopo
+   aver scorso (quando la testata si ritraeva).
+
+   SOLUZIONE
+   Testata e barra vengono raccolte in un unico contenitore flottante
+   ".cd-topstack". La testata al suo interno torna nel flusso e, quando si
+   ritrae, COLLASSA in altezza invece di scivolare sopra la barra: la barra
+   risale da sola in cima e resta sempre leggibile, in entrambi gli stati.
+
+   Il padding superiore del contenuto è ricalcolato sull'altezza REALE
+   misurata a runtime (offsetHeight), mai su un valore fisso: la fascia di
+   sicurezza di iPhone/iPad varia da dispositivo a dispositivo.
+
+   Il riordino è agganciato sia a renderConsult sia a un MutationObserver,
+   perché l'ordine con cui i vari hook avvolgono renderConsult non è
+   garantito: la barra può comparire dopo il nostro intervento. */
+(function () {
+  'use strict';
+
+  var ID = 'polis-accbar-fix';
+  var altezzaPiena = 0;      // altezza del blocco con testata aperta
+  var inCorso = false;       // guardia anti-rientranza per l'observer
+  var osservatore = null;
+
+  /* ---------- stile ---------- */
+  function stile() {
+    if (document.getElementById(ID)) return;
+    var st = document.createElement('style');
+    st.id = ID;
+    st.textContent = [
+      /* blocco superiore unico: testata + barra account */
+      '#consOverlay .cd-topstack{position:absolute;top:0;left:0;right:0;z-index:7;',
+      '  padding-top:env(safe-area-inset-top);',
+      '  background:rgba(242,246,243,.94);',
+      '  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}',
+      /* la testata torna nel flusso dentro il blocco */
+      '#consOverlay .cd-topstack .cd-light-head{position:static;padding-top:12px;',
+      '  background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;',
+      '  overflow:hidden;max-height:96px;opacity:1;transform:none;',
+      '  transition:max-height .22s ease,opacity .18s ease,padding .22s ease}',
+      /* ritraendosi collassa: non scivola più sopra la barra */
+      '#consOverlay .cd-topstack .cd-light-head.cd-hide{max-height:0;opacity:0;',
+      '  padding-top:0;padding-bottom:0;transform:none;pointer-events:none}',
+      /* barra account: sempre in vista, coerente col tema chiaro */
+      '#consOverlay .cd-topstack .sb-accbar{background:transparent;',
+      '  border-bottom:1px solid rgba(28,43,36,.10);color:#4c5d54;padding:9px 14px}',
+      '#consOverlay .cd-topstack .sb-accbar .sb-off,',
+      '#consOverlay .cd-topstack .sb-accbar .sb-on{color:#1c2b24}',
+      '#consOverlay .cd-topstack .sb-accbar button{border-color:#d5e0d9;color:#1c2b24}',
+      '#consOverlay .cd-topstack .sb-accbar button.pri{background:#16a36e;',
+      '  border-color:#16a36e;color:#fff}'
+    ].join('\n');
+    document.head.appendChild(st);
+  }
+
+  /* ---------- riordino del blocco superiore ---------- */
+  function sistema() {
+    if (inCorso) return;
+    var ov = document.getElementById('consOverlay');
+    if (!ov) return;
+    var head = ov.querySelector('.cd-light-head');
+    if (!head) return;                       // schermata non ancora disegnata
+
+    inCorso = true;
+    try {
+      var pila = ov.querySelector('.cd-topstack');
+      if (!pila) {
+        pila = document.createElement('div');
+        pila.className = 'cd-topstack';
+        head.parentNode.insertBefore(pila, head);
+        pila.appendChild(head);
+        altezzaPiena = 0;                    // nuovo disegno: da rimisurare
+      }
+      /* la barra account, se presente, entra nel blocco subito sotto */
+      var bar = ov.querySelector('.sb-accbar');
+      if (bar && bar.parentNode !== pila) {
+        pila.appendChild(bar);
+        altezzaPiena = 0;
+      }
+      misura(ov, head, pila);
+    } catch (e) {
+      /* mai bloccare il disegno della schermata per un problema di layout */
+    }
+    inCorso = false;
+  }
+
+  /* Padding del contenuto = altezza reale del blocco a testata aperta.
+     Se in quel momento la testata è ritratta l'altezza è falsata: si
+     riusa l'ultima misura valida invece di far saltare il contenuto. */
+  function misura(ov, head, pila) {
+    var light = ov.querySelector('.cd-light');
+    if (!light) return;
+    if (!head.classList.contains('cd-hide')) {
+      var h = pila.offsetHeight;
+      if (h > 0) altezzaPiena = h;
+    }
+    if (altezzaPiena > 0) light.style.paddingTop = (altezzaPiena + 10) + 'px';
+  }
+
+  function osserva() {
+    var ov = document.getElementById('consOverlay');
+    if (!ov || osservatore) return;
+    if (typeof MutationObserver !== 'function') return;
+    osservatore = new MutationObserver(function () { sistema(); });
+    osservatore.observe(ov, { childList: true });
+  }
+
+  /* ---------- aggancio a renderConsult ---------- */
+  function aggancia() {
+    if (typeof window.renderConsult !== 'function' || window.__accbarFix) return false;
+    var orig = window.renderConsult;
+    window.renderConsult = function () {
+      var r = orig.apply(this, arguments);
+      sistema();
+      /* la barra può essere inserita da un hook installato dopo il nostro:
+         un secondo passaggio a fine turno la recupera comunque */
+      setTimeout(sistema, 0);
+      setTimeout(sistema, 250);
+      return r;
+    };
+    window.__accbarFix = true;
+    return true;
+  }
+
+  stile();
+  osserva();
+  if (!aggancia()) {
+    var n = 0;
+    var iv = setInterval(function () {
+      osserva();
+      if (aggancia() || ++n > 40) clearInterval(iv);
+    }, 250);
+  }
+})();
+/* ===== POLIS · BARRA ACCOUNT SEMPRE VISIBILE (fine) ===== */
+
+/* ===== POLIS · COMUNI SU PIÙ FRONTI (inizio) ===== */
+/* ============================================================
+   Terza scheda del pannello 🏆 (mappa → trofeo): confronto fra i
+   comuni presenti in archivio su NOVE FRONTI, con la regione usata
+   come filtro e come etichetta.
+
+   Legge data/classifica_comuni.json prodotto da etl_classifica_comuni.py
+   (versione 2). Non contatta nessuna fonte esterna.
+
+   PERCHÉ NON C'È UNA CLASSIFICA DELLE REGIONI COSTRUITA DAI COMUNI
+   ---------------------------------------------------------------
+   Cruscotto Italia pubblica i dati comune per comune e le sue regole
+   d'uso vietano di ricostruire medie e classifiche territoriali
+   sommando i comuni di un territorio. Sarebbe anche falso: i comuni in
+   archivio sono soprattutto capoluoghi, e Milano non è la Lombardia.
+   Qui la regione filtra e orienta; non diventa mai il soggetto del
+   confronto. Le classifiche regionali vere restano nelle altre due
+   schede, che usano fonti che i dati regionali li pubblicano davvero
+   (Ministero della Salute, OpenCivitas SOSE-MEF, SIOPE).
+
+   VERSO DELL'INDICATORE
+   ---------------------
+   Ogni indicatore dichiara se è meglio in alto, meglio in basso o se un
+   verso migliore non esiste. Senza questa distinzione "primo per rifiuti
+   prodotti" sembrerebbe un merito.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var CRF = {
+    URL: 'data/classifica_comuni.json',
+    dati: null,          // null = mai chiesto, false = non disponibile
+    inCorso: false,
+    fronte: null,
+    ind: 0,
+    regione: null,       // null = tutte
+    comune: null         // istat del comune di cui si vede il profilo
+  };
+
+  function esc2(s) {
+    return (typeof esc === 'function') ? esc(String(s == null ? '' : s))
+      : String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+      });
+  }
+
+  /* ---------- caricamento ---------- */
+  function carica() {
+    if (CRF.dati !== null || CRF.inCorso) return Promise.resolve(CRF.dati);
+    CRF.inCorso = true;
+    return fetch(CRF.URL, { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : false; })
+      .catch(function () { return false; })
+      .then(function (d) {
+        CRF.dati = d || false;
+        CRF.inCorso = false;
+        if (CRF.dati && CRF.dati.fronti && CRF.dati.fronti.length && !CRF.fronte) {
+          CRF.fronte = CRF.dati.fronti[0].chiave;
+        }
+        ridisegna();
+        return CRF.dati;
+      });
+  }
+  function precarica() { if (CRF.dati === null) carica(); }
+
+  function ridisegna() {
+    var box = document.getElementById('benTabBox');
+    if (!box) return;
+    var att = document.querySelector('.ben-tab.sel');
+    if (!att || att.dataset.t !== 'comuni') return;   // scheda non in vista
+    box.innerHTML = blocco();
+  }
+
+  /* ---------- formattazione ---------- */
+  function fmt(v, unita) {
+    if (v == null) return '—';
+    var u = String(unita || '');
+    if (u.indexOf('%') === 0 || u === '%') {
+      return Number(v).toLocaleString('it-IT', { maximumFractionDigits: 1 }) + '%';
+    }
+    if (u.indexOf('euro') === 0) {
+      var n = Math.round(v);
+      if (Math.abs(n) >= 1e9) return (n / 1e9).toFixed(1).replace('.', ',') + ' mld €';
+      if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(1).replace('.', ',') + ' mln €';
+      return n.toLocaleString('it-IT') + ' €';
+    }
+    return Number(v).toLocaleString('it-IT', { maximumFractionDigits: 2 });
+  }
+
+  /* ---------- selezione ---------- */
+  function indicatoriDelFronte() {
+    if (!CRF.dati || !CRF.dati.indicatori) return [];
+    return CRF.dati.indicatori.filter(function (i) { return i.fronte === CRF.fronte; });
+  }
+  function listaFiltrata(ind) {
+    var l = ind.assoluto || [];
+    if (CRF.regione) {
+      l = l.filter(function (x) { return x.regione === CRF.regione; });
+    }
+    return l;
+  }
+
+  /* ---------- profilo di un comune su tutti i fronti ---------- */
+  function profilo(istat) {
+    var out = [];
+    (CRF.dati.indicatori || []).forEach(function (ind) {
+      var l = ind.assoluto || [];
+      for (var i = 0; i < l.length; i++) {
+        if (l[i].istat === istat) {
+          out.push({
+            fronte: ind.fronte, titolo: ind.titolo, unita: ind.unita,
+            verso: ind.verso, pos: i + 1, su: l.length, valore: l[i].valore
+          });
+          break;
+        }
+      }
+    });
+    return out;
+  }
+
+  function nomeComune(istat) {
+    var r = (CRF.dati.regioni || {});
+    for (var k in r) {
+      var c = r[k].comuni || [];
+      for (var i = 0; i < c.length; i++) if (c[i].istat === istat) return c[i].nome;
+    }
+    return istat;
+  }
+  function regioneComune(istat) {
+    var r = (CRF.dati.regioni || {});
+    for (var k in r) {
+      var c = r[k].comuni || [];
+      for (var i = 0; i < c.length; i++) if (c[i].istat === istat) return k;
+    }
+    return '';
+  }
+
+  function bloccoProfilo() {
+    var p = profilo(CRF.comune);
+    if (!p.length) return '';
+    var nomiFronte = {};
+    (CRF.dati.fronti || []).forEach(function (f) { nomiFronte[f.chiave] = f.icona + ' ' + f.nome; });
+    var perFronte = {};
+    p.forEach(function (x) { (perFronte[x.fronte] = perFronte[x.fronte] || []).push(x); });
+
+    var sezioni = Object.keys(perFronte).map(function (k) {
+      var righe = perFronte[k].map(function (x) {
+        var medaglia = (x.verso === 'neutro') ? '' :
+          (x.pos === 1 ? 'oro' : x.pos <= 3 ? 'arg' : '');
+        var pos = (x.verso === 'neutro')
+          ? (x.pos + '° per valore su ' + x.su)
+          : (x.pos + '° su ' + x.su);
+        return '<div class="crf-prow">' +
+          '<span class="crf-ptit">' + esc2(x.titolo) + '</span>' +
+          '<span class="crf-pval">' + fmt(x.valore, x.unita) + '</span>' +
+          '<span class="crf-ppos ' + medaglia + '">' + pos + '</span></div>';
+      }).join('');
+      return '<div class="crf-pgroup"><b>' + esc2(nomiFronte[k] || k) + '</b>' + righe + '</div>';
+    }).join('');
+
+    return '<div class="crf-profilo">' +
+      '<div class="crf-phead"><b>' + esc2(nomeComune(CRF.comune)) + '</b>' +
+      '<small>' + esc2(regioneComune(CRF.comune)) + ' · posizione fra i ' +
+      CRF.dati.n_comuni + ' comuni in archivio</small>' +
+      '<button class="crf-x" data-crf-chiudi="1">✕</button></div>' +
+      sezioni +
+      '<div class="crf-nota">La posizione è calcolata solo fra i comuni già in ' +
+      'archivio, non fra tutti i comuni italiani. Dove non esiste un verso ' +
+      'migliore la posizione indica solo il valore più alto.</div></div>';
+  }
+
+  /* ---------- blocco principale ---------- */
+  function blocco() {
+    if (CRF.dati === null) { precarica(); return '<div class="empty">Carico i dati dei comuni…</div>'; }
+    if (CRF.dati === false || !(CRF.dati.indicatori || []).length) {
+      return '<div class="crf-nota"><b>Confronto non ancora disponibile.</b><br><br>' +
+        'Manca <code>data/classifica_comuni.json</code>, che viene creato ' +
+        'dall\'aggiornamento automatico «Genera indice comuni» a partire dai ' +
+        'comuni già scaricati da Cruscotto Italia. L\'archivio cresce di un ' +
+        'lotto per volta, nel rispetto del limite della fonte.</div>';
+    }
+    var d = CRF.dati;
+    if (!CRF.fronte && (d.fronti || []).length) CRF.fronte = d.fronti[0].chiave;
+
+    var inds = indicatoriDelFronte();
+    if (!inds.length) return '<div class="empty">Nessun indicatore su questo fronte.</div>';
+    if (CRF.ind >= inds.length) CRF.ind = 0;
+    var ind = inds[CRF.ind];
+
+    var lista = listaFiltrata(ind);
+    var max = 1;
+    lista.forEach(function (x) { max = Math.max(max, Math.abs(x.valore)); });
+
+    var regioni = Object.keys(d.regioni || {});
+    var versoTxt = ind.verso === 'alto' ? '↑ meglio in alto'
+      : ind.verso === 'basso' ? '↓ meglio in basso'
+        : '• nessun verso migliore';
+
+    var righe = lista.length ? lista.map(function (x, i) {
+      var w = Math.max(2, Math.round(Math.abs(x.valore) / max * 100));
+      var evid = (CRF.comune === x.istat) ? ' on' : '';
+      return '<button class="crf-riga' + evid + '" data-crf-comune="' + esc2(x.istat) + '">' +
+        '<span class="crf-pos">' + (i + 1) + '</span>' +
+        '<span class="crf-body"><span class="crf-nome">' + esc2(x.nome) +
+        '<small> · ' + esc2(x.regione) + '</small></span>' +
+        '<span class="crf-barra"><i style="width:' + w + '%"></i></span></span>' +
+        '<span class="crf-val">' + fmt(x.valore, ind.unita) + '</span></button>';
+    }).join('') : '<div class="empty">Nessun comune di questa regione ha il dato per questo indicatore.</div>';
+
+    var archivio = regioni.map(function (r) {
+      var v = d.regioni[r];
+      var nomi = (v.comuni || []).map(function (c) { return esc2(c.nome); }).join(', ');
+      return '<div class="crf-arow"><span class="crf-areg">' + esc2(r) + '</span>' +
+        '<span class="crf-an">' + v.n_comuni + (v.n_comuni === 1 ? ' comune' : ' comuni') + '</span>' +
+        '<span class="crf-acom">' + nomi + '</span></div>';
+    }).join('');
+
+    return '<div class="crf-wrap">' +
+      '<div class="crf-intro"><b>' + d.n_comuni + ' comuni in archivio</b> · aggiornato al ' +
+      esc2(d.aggiornato || '—') + '. L\'archivio cresce a ogni aggiornamento: ogni ' +
+      'nuovo comune entra automaticamente in tutti i fronti.</div>' +
+
+      (CRF.comune ? bloccoProfilo() : '') +
+
+      '<div class="crf-lab">Fronte del confronto</div>' +
+      '<div class="crf-pills">' + (d.fronti || []).map(function (f) {
+        return '<button class="crf-pill' + (f.chiave === CRF.fronte ? ' on' : '') +
+          '" data-crf-fronte="' + esc2(f.chiave) + '">' + f.icona + ' ' + esc2(f.nome) + '</button>';
+      }).join('') + '</div>' +
+
+      '<div class="crf-lab">Indicatore</div>' +
+      '<div class="crf-pills">' + inds.map(function (x, i) {
+        return '<button class="crf-pill sec' + (i === CRF.ind ? ' on' : '') +
+          '" data-crf-ind="' + i + '">' + esc2(x.titolo) + '</button>';
+      }).join('') + '</div>' +
+
+      '<div class="crf-lab">Regione</div>' +
+      '<div class="crf-pills">' +
+      '<button class="crf-pill sec' + (CRF.regione ? '' : ' on') + '" data-crf-reg="">Tutte</button>' +
+      regioni.map(function (r) {
+        return '<button class="crf-pill sec' + (CRF.regione === r ? ' on' : '') +
+          '" data-crf-reg="' + esc2(r) + '">' + esc2(r) + '</button>';
+      }).join('') + '</div>' +
+
+      '<div class="crf-head"><h4>' + esc2(ind.titolo) + '</h4>' +
+      '<span class="crf-verso ' + ind.verso + '">' + versoTxt + '</span></div>' +
+      (ind.impatto_cittadino ? '<div class="crf-imp">👤 <b>Per te:</b> ' +
+        esc2(ind.impatto_cittadino) + '</div>' : '') +
+
+      '<div class="crf-lista">' + righe + '</div>' +
+      '<div class="crf-unita">Valori in ' + esc2(ind.unita) +
+      (ind.anno ? ' · ' + esc2(ind.anno) : '') +
+      ' · tocca un comune per vedere come si colloca su tutti i fronti</div>' +
+
+      '<div class="crf-limiti"><b>Come leggere questo confronto</b><ul>' +
+      (ind.limiti || []).map(function (l) { return '<li>' + esc2(l) + '</li>'; }).join('') +
+      '</ul></div>' +
+
+      '<div class="crf-lab">Come cresce l\'archivio</div>' +
+      '<div class="crf-arch">' + archivio + '</div>' +
+      '<div class="crf-nota">' + esc2(d._avvertenza || '') + '</div>' +
+      '<div class="crf-fonte">Fonte dell\'indicatore: ' + esc2(ind.fonte) +
+      '. Polis non modifica i valori pubblicati.</div>' +
+      '</div>';
+  }
+
+  /* ---------- interazioni (delega: il pannello viene ridisegnato ogni volta) ---------- */
+  document.addEventListener('click', function (ev) {
+    var t = ev.target && ev.target.closest ? ev.target.closest('[data-crf-fronte],[data-crf-ind],[data-crf-reg],[data-crf-comune],[data-crf-chiudi]') : null;
+    if (!t) return;
+    if (!document.getElementById('benTabBox') || !document.getElementById('benTabBox').contains(t)) return;
+    if (t.hasAttribute('data-crf-fronte')) { CRF.fronte = t.getAttribute('data-crf-fronte'); CRF.ind = 0; }
+    else if (t.hasAttribute('data-crf-ind')) { CRF.ind = parseInt(t.getAttribute('data-crf-ind'), 10) || 0; }
+    else if (t.hasAttribute('data-crf-reg')) { CRF.regione = t.getAttribute('data-crf-reg') || null; }
+    else if (t.hasAttribute('data-crf-chiudi')) { CRF.comune = null; }
+    else if (t.hasAttribute('data-crf-comune')) {
+      var i = t.getAttribute('data-crf-comune');
+      CRF.comune = (CRF.comune === i) ? null : i;
+    }
+    ridisegna();
+    var b = document.getElementById('benTabBox');
+    if (b && CRF.comune) b.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }, false);
+
+  /* ---------- aggancio al pannello del trofeo ---------- */
+  function aggancia() {
+    if (typeof window.benTab !== 'function' ||
+      typeof window.openClassificaRegioni !== 'function' ||
+      window.__crfHook) return false;
+
+    var origTab = window.benTab;
+    window.benTab = function (quale) {
+      if (quale === 'comuni') {
+        var box = document.getElementById('benTabBox');
+        document.querySelectorAll('.ben-tab').forEach(function (b) {
+          b.classList.toggle('sel', b.dataset.t === 'comuni');
+        });
+        if (box) box.innerHTML = blocco();
+        return;
+      }
+      return origTab.apply(this, arguments);
+    };
+
+    var origOpen = window.openClassificaRegioni;
+    window.openClassificaRegioni = function () {
+      var r = origOpen.apply(this, arguments);
+      try {
+        var tabs = document.querySelector('#classificaSheet .ben-tabs');
+        if (tabs && !tabs.querySelector('[data-t="comuni"]')) {
+          var b = document.createElement('button');
+          b.className = 'ben-tab';
+          b.setAttribute('data-t', 'comuni');
+          b.textContent = 'Comuni · più fronti';
+          b.addEventListener('click', function () { window.benTab('comuni'); });
+          tabs.appendChild(b);
+        }
+        precarica();
+      } catch (e) { }
+      return r;
+    };
+
+    window.__crfHook = true;
+    return true;
+  }
+
+  /* ---------- stile ---------- */
+  (function stile() {
+    var st = document.createElement('style');
+    st.textContent = [
+      /* le schede diventano tre: scorrono invece di stringersi */
+      '.ben-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}',
+      '.ben-tabs::-webkit-scrollbar{display:none}',
+      '.ben-tabs .ben-tab{flex:0 0 auto;white-space:nowrap;padding:9px 12px}',
+      '.crf-wrap{padding:0 2px 14px}',
+      '.crf-intro,.crf-nota,.crf-fonte{font-size:11.5px;line-height:1.5;opacity:.85;margin:8px 0}',
+      '.crf-intro{opacity:1;background:rgba(31,111,235,.07);border-radius:11px;padding:9px 11px}',
+      '.crf-lab{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;opacity:.6;margin:12px 0 5px;font-weight:700}',
+      '.crf-pills{display:flex;gap:6px;overflow-x:auto;padding-bottom:3px;-webkit-overflow-scrolling:touch;scrollbar-width:none}',
+      '.crf-pills::-webkit-scrollbar{display:none}',
+      '.crf-pill{flex:0 0 auto;white-space:nowrap;border:1px solid var(--line,#d7e2da);background:transparent;',
+      '  color:inherit;border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:600}',
+      '.crf-pill.sec{font-size:12px;padding:6px 11px}',
+      '.crf-pill.on{background:var(--blue,#1f6feb);color:#fff;border-color:transparent}',
+      '.crf-head{display:flex;align-items:center;gap:8px;margin:14px 0 2px;flex-wrap:wrap}',
+      '.crf-head h4{margin:0;font-size:15px}',
+      '.crf-verso{font-size:10.5px;font-weight:700;border-radius:7px;padding:3px 7px;background:rgba(0,0,0,.06)}',
+      '.crf-verso.alto{background:rgba(22,163,110,.14);color:#0f6b47}',
+      '.crf-verso.basso{background:rgba(214,110,40,.14);color:#9a5010}',
+      '.crf-imp{font-size:12px;opacity:.85;margin:4px 0 8px}',
+      '.crf-lista{display:flex;flex-direction:column;gap:5px;margin-top:6px}',
+      '.crf-riga{display:flex;align-items:center;gap:9px;width:100%;text-align:left;',
+      '  background:transparent;border:1px solid transparent;border-radius:11px;padding:6px 7px;color:inherit}',
+      '.crf-riga.on{border-color:var(--blue,#1f6feb);background:rgba(31,111,235,.06)}',
+      '.crf-pos{min-width:22px;font-size:12px;font-weight:700;opacity:.6;text-align:right}',
+      '.crf-body{flex:1;min-width:0}',
+      '.crf-nome{display:block;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+      '.crf-nome small{font-weight:400;opacity:.6}',
+      '.crf-barra{display:block;height:6px;border-radius:4px;background:rgba(0,0,0,.08);margin-top:4px;overflow:hidden}',
+      '.crf-barra i{display:block;height:100%;background:var(--blue,#1f6feb)}',
+      '.crf-val{font-size:12.5px;font-weight:700;white-space:nowrap}',
+      '.crf-unita{font-size:11px;opacity:.65;margin-top:8px}',
+      '.crf-limiti{margin-top:12px;font-size:11.5px;opacity:.85;border-top:1px solid var(--line,#e0e8e3);padding-top:9px}',
+      '.crf-limiti ul{margin:5px 0 0;padding-left:17px}',
+      '.crf-limiti li{margin-bottom:3px}',
+      '.crf-arch{display:flex;flex-direction:column;gap:5px}',
+      '.crf-arow{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline;font-size:12px;',
+      '  border:1px solid var(--line,#e0e8e3);border-radius:10px;padding:7px 9px}',
+      '.crf-areg{font-weight:700}',
+      '.crf-an{font-size:11px;opacity:.65}',
+      '.crf-acom{flex-basis:100%;font-size:11px;opacity:.75}',
+      '.crf-profilo{border:1px solid var(--blue,#1f6feb);border-radius:13px;padding:10px 11px;margin:8px 0 4px;',
+      '  background:rgba(31,111,235,.05)}',
+      '.crf-phead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}',
+      '.crf-phead b{font-size:15px}',
+      '.crf-phead small{opacity:.7;font-size:11px}',
+      '.crf-x{margin-left:auto;border:none;background:transparent;color:inherit;font-size:15px;opacity:.6}',
+      '.crf-pgroup{margin-top:7px;font-size:12px}',
+      '.crf-pgroup>b{font-size:11.5px;opacity:.8}',
+      '.crf-prow{display:flex;align-items:baseline;gap:8px;padding:3px 0}',
+      '.crf-ptit{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.9}',
+      '.crf-pval{font-weight:700;font-size:12px;white-space:nowrap}',
+      '.crf-ppos{font-size:11px;opacity:.6;white-space:nowrap;min-width:62px;text-align:right}',
+      '.crf-ppos.oro{color:#b8860b;opacity:1;font-weight:700}',
+      '.crf-ppos.arg{color:#5b6675;opacity:1;font-weight:600}'
+    ].join('\n');
+    document.head.appendChild(st);
+  })();
+
+  if (!aggancia()) {
+    var n = 0;
+    var iv = setInterval(function () { if (aggancia() || ++n > 40) clearInterval(iv); }, 250);
+  }
+
+  window.crfRicarica = function () { CRF.dati = null; carica(); };
+})();
+/* ===== POLIS · COMUNI SU PIÙ FRONTI (fine) ===== */
+
+/* ===== POLIS · IL FORO (inizio) ===== */
+/* ============================================================
+   POLIS · IL FORO — menu guidato della sezione Politica
+   ------------------------------------------------------------
+   Entrando in Politica non si arriva più su una schermata a caso:
+   si arriva davanti a un edificio. Ogni apertura della facciata è
+   una parte della sezione, numerata e spiegata: si capisce l'ordine
+   in cui muoversi e a cosa serve ciascuna stanza prima di entrarci.
+
+   L'ala di destra è il corridoio dei gruppi: una stanza per ogni
+   forza politica. Dentro, le informazioni che l'app già ha sono
+   distribuite in punti su cui si tocca (hotspot): chi la rappresenta,
+   il programma depositato, come vota in aula, i bilanci.
+
+   TRE VINCOLI RISPETTATI
+   ----------------------
+   1. NEUTRALITÀ. Le stanze sono identiche per tutte le forze: stessa
+      pianta, stessi hotspot, stesso spazio. L'ordine è alfabetico,
+      non per consenso o dimensione. Nessun logo di partito: i loghi
+      sono marchi registrati e darebbero risalto diverso a ciascuno.
+   2. NIENTE DATI INVENTATI. Le stanze nascono dalle liste depositate
+      al Ministero dell'Interno e dai gruppi parlamentari pubblicati
+      da Camera e Senato. Se un dato manca, l'hotspot lo dichiara e
+      rimanda alla fonte ufficiale: non lo si riempie a stima.
+      In particolare l'archivio dei deputati NON contiene il gruppo di
+      appartenenza, quindi la stanza non elenca nomi di eletti per
+      partito: sarebbe un'attribuzione nostra, non un dato.
+   3. LA METAFORA NON DECIDE I CONTENUTI. L'edificio è il modo di
+      muoversi, non un giudizio: nessuna stanza è più grande, più in
+      alto o più illuminata di un'altra.
+
+   Tecnica: SVG per la scena, pulsanti HTML posizionati in percentuale
+   sopra di essa. Niente coordinate fisse in pixel: la facciata si
+   adatta allo schermo e gli hotspot restano ancorati dove devono.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var FORO = {
+    URL_PROG: 'data/politica/programmi.json',
+    URL_VOTI: 'data/politica/votazioni.json',
+    prog: null, voti: null, caricando: false,
+    vista: 'foro',      // 'foro' | 'corridoio' | 'stanza'
+    stanza: null,       // chiave della forza politica
+    punto: null         // hotspot aperto dentro la stanza
+  };
+
+  function E(s) {
+    return (typeof esc === 'function') ? esc(String(s == null ? '' : s))
+      : String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+      });
+  }
+  function chiave(s) {
+    return String(s || '').toLowerCase()
+      .replace(/[^a-zà-ù0-9]+/g, '').slice(0, 40);
+  }
+
+  /* ---------------- le ali dell'edificio ---------------- */
+  /* ordine: è il percorso consigliato, dichiarato all'utente */
+  var ALI = [
+    { n: 1, id: 'istituzioni', nome: 'Mappa istituzioni', tinta: 'blu',
+      ico: 'M12 21s-6-5-6-10a6 6 0 1 1 12 0c0 5-6 10-6 10z M12 9.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3',
+      scopo: 'Chi fa cosa nello Stato',
+      cosa: 'Il cerchio degli organi: Parlamento, Governo, Presidente, Corte costituzionale. Si parte da qui perché senza sapere chi decide, il resto non si colloca.' },
+    { n: 2, id: 'assemblea', nome: "L'aula", tinta: 'verde',
+      ico: 'M3 21h18 M5 21V11 M9 21V11 M15 21V11 M19 21V11 M2 11h20L12 4z',
+      scopo: 'Cosa si discute in questi giorni',
+      cosa: 'Le sedute di Camera e Senato, filtrabili su ciò che riguarda te. È il presente: quello che sta succedendo mentre lo leggi.' },
+    { n: 3, id: 'leggi', nome: 'Leggi e decreti', tinta: 'verde',
+      ico: 'M7 3h8l4 4v14H7z M15 3v4h4 M10 12h6 M10 16h6',
+      scopo: 'Cosa è già stato deciso',
+      cosa: 'Testi in vigore, decreti d\'urgenza, disegni di legge in cammino. È la memoria della legislatura.' },
+    { n: 4, id: '__gruppi', nome: 'Gruppi politici', tinta: 'verde',
+      ico: 'M16 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20 M9.5 5.4a3.3 3.3 0 1 1 0 6.6 3.3 3.3 0 0 1 0-6.6 M21 20v-1.6a3.4 3.4 0 0 0-2.6-3.3 M15.6 5.6a3.3 3.3 0 0 1 0 6.4',
+      scopo: 'Una stanza per ogni forza politica',
+      cosa: 'Programmi depositati, voti in aula, bilanci. Stessa pianta per tutti, in ordine alfabetico.' },
+    { n: 5, id: 'impatto', nome: 'Impatto sul Paese', tinta: 'blu',
+      ico: 'M4 20V9 M10 20V4 M16 20v-7 M21 20H3',
+      scopo: 'Cosa è successo dopo',
+      cosa: 'I dodici domini del benessere ISTAT accanto alle leggi. Mostra la sequenza temporale, mai un rapporto di causa: che una cosa venga dopo un\'altra non significa che ne derivi.' },
+    { n: 6, id: '__conti', nome: 'Conti pubblici', tinta: 'blu',
+      ico: 'M12 3v18 M6 7h12 M12 7l-4 7h8z M6 7l-3 7h6z',
+      scopo: 'Dove vanno i soldi',
+      cosa: 'Bilancio dello Stato, debito, società partecipate e il confronto fra regioni. È l\'altra metà della politica: le decisioni costano.' }
+  ];
+
+  /* ---------------- caricamento ---------------- */
+  function carica() {
+    if (FORO.caricando || (FORO.prog !== null && FORO.voti !== null)) return;
+    FORO.caricando = true;
+    var uno = function (u) {
+      return fetch(u, { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r.json() : {}; })
+        .catch(function () { return {}; });
+    };
+    Promise.all([uno(FORO.URL_PROG), uno(FORO.URL_VOTI)]).then(function (r) {
+      FORO.prog = r[0] || {};
+      FORO.voti = r[1] || {};
+      FORO.caricando = false;
+      ridisegna();
+    });
+  }
+
+  /* Le forze politiche: liste depositate + gruppi parlamentari.
+     Ordine alfabetico, mai per dimensione: l'ordine è già un messaggio. */
+  function forze() {
+    var m = {};
+    ((FORO.prog && FORO.prog.liste) || []).forEach(function (l) {
+      if (!l || !l.nome) return;
+      var k = chiave(l.nome);
+      m[k] = m[k] || { chiave: k, nome: l.nome };
+      m[k].capo = l.capo || m[k].capo;
+      m[k].programma = l.programma || m[k].programma;
+      m[k].statuto = l.statuto || m[k].statuto;
+    });
+    ((FORO.voti && FORO.voti.gruppi) || []).forEach(function (g) {
+      if (!g || !g.nome) return;
+      var k = chiave(g.nome);
+      m[k] = m[k] || { chiave: k, nome: g.nome };
+      m[k].gruppo = g.nome;
+      m[k].componenti = g.componenti;
+      m[k].ramo = g.ramo;
+    });
+    var out = Object.keys(m).map(function (k) { return m[k]; });
+    out.sort(function (a, b) { return a.nome.localeCompare(b.nome, 'it'); });
+    return out;
+  }
+
+  /* ---------------- la facciata ---------------- */
+  function facciataSVG() {
+    var col = '';
+    for (var i = 0; i < 6; i++) {
+      var x = 176 + i * 76;
+      col += '<g class="fo-col">' +
+        '<rect x="' + (x - 6) + '" y="236" width="40" height="11" rx="3"/>' +
+        '<rect x="' + x + '" y="247" width="28" height="126" rx="3"/>' +
+        '<rect x="' + (x - 6) + '" y="373" width="40" height="11" rx="3"/>' +
+        '<line x1="' + (x + 9) + '" y1="254" x2="' + (x + 9) + '" y2="367"/>' +
+        '<line x1="' + (x + 19) + '" y1="254" x2="' + (x + 19) + '" y2="367"/>' +
+        '</g>';
+    }
+    return '<svg viewBox="0 0 800 440" class="fo-svg" xmlns="http://www.w3.org/2000/svg" ' +
+      'role="img" aria-label="Illustrazione di un tempio classico con cupola">' +
+      '<defs><linearGradient id="foPietra" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e9edf3"/>' +
+      '</linearGradient>' +
+      '<linearGradient id="foCupola" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe6ef"/>' +
+      '</linearGradient></defs>' +
+      '<g class="fo-scena">' +
+      /* cupola */
+      '<path class="fo-cup" d="M256 176 a144 132 0 0 1 288 0 Z"/>' +
+      '<path class="fo-cup-l" d="M330 176 a92 128 0 0 1 140 0"/>' +
+      '<path class="fo-cup-l" d="M296 176 a132 130 0 0 1 208 0"/>' +
+      '<rect class="fo-trab" x="244" y="176" width="312" height="16" rx="4"/>' +
+      '<rect class="fo-trab" x="232" y="192" width="336" height="16" rx="4"/>' +
+      /* corpo e trabeazione */
+      '<rect class="fo-trab" x="150" y="208" width="500" height="20" rx="4"/>' +
+      '<rect class="fo-trab" x="140" y="228" width="520" height="12" rx="3"/>' +
+      /* timpano */
+      '<path class="fo-timp" d="M186 224 L400 96 L614 224 Z"/>' +
+      '<path class="fo-timp-in" d="M226 216 L400 112 L574 216 Z"/>' +
+      col +
+      /* gradini */
+      '<rect class="fo-grad" x="150" y="384" width="500" height="14" rx="4"/>' +
+      '<rect class="fo-grad" x="132" y="398" width="536" height="14" rx="4"/>' +
+      '<rect class="fo-grad" x="114" y="412" width="572" height="16" rx="5"/>' +
+      '</g></svg>';
+  }
+
+  function vistaForo() {
+    var tessere = ALI.map(function (a) {
+      return '<button class="fo-card" data-foro-ala="' + a.id + '">' +
+        '<span class="fo-cn">' + a.n + '</span>' +
+        '<span class="fo-ic ' + a.tinta + '">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+        'stroke-linecap="round" stroke-linejoin="round"><path d="' + a.ico + '"/></svg></span>' +
+        '<span class="fo-ct">' + E(a.nome) + '</span>' +
+        '<span class="fo-cs">' + E(a.scopo) + '</span></button>';
+    }).join('');
+
+    var guida = ALI.map(function (a) {
+      return '<div class="fo-g"><b>' + a.n + '. ' + E(a.nome) + '</b>' +
+        '<span>' + E(a.cosa) + '</span></div>';
+    }).join('');
+
+    return '<div class="fo-wrap">' +
+      '<div class="fo-edificio">' + facciataSVG() + '</div>' +
+      '<div class="fo-cards">' + tessere + '</div>' +
+      '<details class="fo-guida"><summary>Da dove conviene partire</summary>' +
+      '<p class="fo-intro">I numeri sono un percorso, non un vincolo: si parte da chi ' +
+      'decide, si passa a cosa sta succedendo, poi a cosa è già stato deciso, a chi lo ' +
+      'ha proposto e infine a cosa è successo dopo.</p>' + guida + '</details>' +
+      '<div class="fo-nota">L\'edificio è il modo di muoversi, non un giudizio: nessuna ' +
+      'stanza è più grande o più in vista di un\'altra.</div>' +
+      '</div>';
+  }
+
+  /* ---------------- il corridoio ---------------- */
+  function vistaCorridoio() {
+    if (FORO.prog === null) { carica(); return '<div class="fo-load">Apro il corridoio…</div>'; }
+    var f = forze();
+    var porte = f.length ? f.map(function (x) {
+      return '<button class="fo-porta-b" data-foro-stanza="' + E(x.chiave) + '">' +
+        '<span class="fo-parch"></span>' +
+        '<span class="fo-pn">' + E(x.nome) + '</span>' +
+        '<span class="fo-pm">' +
+        (x.componenti ? E(x.componenti) + ' eletti' : 'lista depositata') +
+        '</span></button>';
+    }).join('') : '';
+
+    return '<div class="fo-wrap">' +
+      '<div class="fo-top"><button class="fo-back" data-foro-vai="foro">‹ Il Foro</button>' +
+      '<b>Il corridoio dei gruppi</b></div>' +
+      '<p class="fo-intro">Una stanza per ogni forza politica, in ordine alfabetico. ' +
+      'Tutte le stanze hanno la stessa pianta e gli stessi punti da toccare: ' +
+      'lo spazio non cambia in base ai voti presi.</p>' +
+      (f.length ? '<div class="fo-porte">' + porte + '</div>'
+        : '<div class="fo-vuoto"><b>Corridoio ancora in costruzione.</b><br><br>' +
+        'Le stanze nascono dalle liste depositate al Ministero dell\'Interno e dai ' +
+        'gruppi pubblicati da Camera e Senato, raccolti dall\'aggiornamento automatico. ' +
+        'Finché quei file non ci sono, qui non compare nessun nome: inventarli ' +
+        'sarebbe peggio che lasciare la stanza vuota.<br><br>' +
+        '<a href="https://dait.interno.gov.it/elezioni/trasparenza" target="_blank" rel="noopener">Elezioni trasparenti · Ministero dell\'Interno ↗</a><br>' +
+        '<a href="https://www.camera.it/leg19/1084" target="_blank" rel="noopener">Gruppi alla Camera ↗</a><br>' +
+        '<a href="https://www.senato.it/composizione/gruppi-parlamentari/riepilogo-della-composizione" target="_blank" rel="noopener">Gruppi al Senato ↗</a></div>') +
+      '</div>';
+  }
+
+  /* ---------------- la stanza ---------------- */
+  function stanzaSVG() {
+    return '<svg viewBox="0 0 800 400" class="fo-svg" xmlns="http://www.w3.org/2000/svg" ' +
+      'role="img" aria-label="Interno di una stanza con colonne, stendardo e seggi">' +
+      '<g class="fo-scena">' +
+      '<rect class="fo-muro" x="0" y="0" width="800" height="300" rx="6"/>' +
+      '<path class="fo-pav" d="M0 300 L800 300 L800 400 L0 400 Z"/>' +
+      '<line class="fo-pl" x1="120" y1="300" x2="40" y2="400"/>' +
+      '<line class="fo-pl" x1="300" y1="300" x2="270" y2="400"/>' +
+      '<line class="fo-pl" x1="500" y1="300" x2="530" y2="400"/>' +
+      '<line class="fo-pl" x1="680" y1="300" x2="760" y2="400"/>' +
+      /* colonne laterali */
+      '<g class="fo-col"><rect x="46" y="40" width="34" height="260" rx="4"/>' +
+      '<rect x="40" y="30" width="46" height="12" rx="3"/></g>' +
+      '<g class="fo-col"><rect x="720" y="40" width="34" height="260" rx="4"/>' +
+      '<rect x="714" y="30" width="46" height="12" rx="3"/></g>' +
+      /* stendardo neutro (nessun logo di partito) */
+      '<rect class="fo-stend" x="330" y="34" width="140" height="120" rx="8"/>' +
+      '<line class="fo-pl" x1="360" y1="70" x2="440" y2="70"/>' +
+      '<line class="fo-pl" x1="360" y1="92" x2="424" y2="92"/>' +
+      '<line class="fo-pl" x1="360" y1="114" x2="440" y2="114"/>' +
+      /* seggi */
+      '<g class="fo-seggi">' +
+      '<rect x="150" y="212" width="150" height="14" rx="6"/>' +
+      '<rect x="160" y="226" width="16" height="46" rx="4"/>' +
+      '<rect x="274" y="226" width="16" height="46" rx="4"/>' +
+      '<rect x="500" y="212" width="150" height="14" rx="6"/>' +
+      '<rect x="510" y="226" width="16" height="46" rx="4"/>' +
+      '<rect x="624" y="226" width="16" height="46" rx="4"/>' +
+      '</g>' +
+      /* leggio e cassa */
+      '<g class="fo-ogg"><path d="M370 250 l60 0 l-8 46 l-44 0 Z"/>' +
+      '<rect x="392" y="296" width="16" height="26" rx="3"/></g>' +
+      '<g class="fo-ogg"><rect x="600" y="316" width="96" height="52" rx="6"/>' +
+      '<line class="fo-pl" x1="600" y1="336" x2="696" y2="336"/></g>' +
+      '</g></svg>';
+  }
+
+  /* i punti da toccare dentro la stanza */
+  var PUNTI = [
+    { id: 'chi', ico: '👤', tit: 'Chi la rappresenta', left: 27, top: 56 },
+    { id: 'programma', ico: '📄', tit: 'Programma depositato', left: 50, top: 24 },
+    { id: 'voti', ico: '🗳️', tit: 'Come vota in aula', left: 50, top: 68 },
+    { id: 'bilanci', ico: '💶', tit: 'Bilanci e trasparenza', left: 81, top: 84 },
+    { id: 'regole', ico: '⚖️', tit: 'Perché tutte le stanze sono uguali', left: 72, top: 56 }
+  ];
+
+  function contenutoPunto(id, x) {
+    if (id === 'chi') {
+      return '<b>Chi la rappresenta</b>' +
+        (x.capo ? '<p>Capo della forza politica indicato nel deposito della lista: <b>' +
+          E(x.capo) + '</b>.<br><small>Fonte: Ministero dell\'Interno, «Elezioni trasparenti».</small></p>'
+          : '<p>Il capo della forza politica non risulta fra i dati depositati che abbiamo raccolto.</p>') +
+        (x.componenti ? '<p>Il gruppo parlamentare conta <b>' + E(x.componenti) +
+          '</b> eletti' + (x.ramo ? ' (' + E(x.ramo) + ')' : '') + '.</p>' : '') +
+        '<p class="fo-lim">L\'archivio dei parlamentari che l\'app scarica da Camera e ' +
+        'Senato non contiene il gruppo di appartenenza: per questo qui non trovi ' +
+        'l\'elenco nominativo degli eletti di questa forza. Attribuirli noi ' +
+        'significherebbe scrivere un dato che nessuna fonte ci ha dato.</p>' +
+        '<a class="fo-link" href="https://www.camera.it/leg19/1084" target="_blank" rel="noopener">Composizione dei gruppi alla Camera ↗</a>' +
+        '<a class="fo-link" href="https://www.senato.it/composizione/gruppi-parlamentari/riepilogo-della-composizione" target="_blank" rel="noopener">Composizione dei gruppi al Senato ↗</a>';
+    }
+    if (id === 'programma') {
+      return '<b>Programma depositato</b>' +
+        '<p>Ogni forza che si presenta alle elezioni deposita il programma presso il ' +
+        'Ministero dell\'Interno, che lo pubblica per legge.</p>' +
+        (x.programma ? '<a class="fo-link" href="' + E(x.programma) + '" target="_blank" rel="noopener">📄 Apri il programma originale ↗</a>'
+          : '<p class="fo-lim">Per questa forza non abbiamo ancora il collegamento al ' +
+          'documento depositato.</p>') +
+        (x.statuto ? '<a class="fo-link" href="' + E(x.statuto) + '" target="_blank" rel="noopener">📜 Statuto ↗</a>' : '') +
+        '<p class="fo-lim">Polis rimanda al documento originale e non ne riproduce il ' +
+        'testo: il programma è opera del partito, che ne detiene i diritti. Così lo ' +
+        'leggi come è stato scritto, senza riassunti nostri.</p>';
+    }
+    if (id === 'voti') {
+      return '<b>Come vota in aula</b>' +
+        '<p>Il modo più solido per capire cosa sostiene davvero una forza politica è ' +
+        'guardare come vota: sono fatti registrati, non dichiarazioni scelte da noi.</p>' +
+        (x.componenti ? '<p>Gruppo parlamentare: <b>' + E(x.gruppo || x.nome) + '</b> · ' +
+          E(x.componenti) + ' eletti.</p>' : '') +
+        '<button class="fo-link fo-azione" data-foro-apri="voti">🗳️ Apri le votazioni</button>' +
+        '<p class="fo-lim">Le votazioni arrivano dai dati aperti di Camera e Senato. ' +
+        'Non selezioniamo interviste né dichiarazioni: sceglierle sarebbe una scelta ' +
+        'editoriale nostra.</p>';
+    }
+    if (id === 'bilanci') {
+      return '<b>Bilanci e trasparenza</b>' +
+        '<p>I partiti iscritti al registro nazionale pubblicano statuto e rendiconto ' +
+        'annuale; il controllo spetta alla Commissione di garanzia istituita presso ' +
+        'la Camera.</p>' +
+        '<button class="fo-link fo-azione" data-foro-apri="bilanci">💶 Apri i documenti di bilancio</button>' +
+        '<p class="fo-lim">Sapere da dove arrivano i soldi di un partito, e come li ' +
+        'spende, è la forma più concreta di trasparenza politica.</p>';
+    }
+    return '<b>Perché tutte le stanze sono uguali</b>' +
+      '<p>Stessa pianta, stessi punti da toccare, stesso spazio per ogni forza ' +
+      'politica. L\'ordine del corridoio è alfabetico, non per consenso: anche ' +
+      'l\'ordine è un messaggio, e questo è il solo che non favorisce nessuno.</p>' +
+      '<p>Non trovi loghi di partito: sono marchi registrati e, riprodotti, darebbero ' +
+      'a ciascuno un risalto visivo diverso.</p>';
+  }
+
+  function vistaStanza() {
+    var f = forze();
+    var x = null;
+    for (var i = 0; i < f.length; i++) if (f[i].chiave === FORO.stanza) x = f[i];
+    if (!x) { FORO.vista = 'corridoio'; return vistaCorridoio(); }
+
+    var hot = PUNTI.map(function (p) {
+      return '<button class="fo-hot fo-hot-s' + (FORO.punto === p.id ? ' on' : '') +
+        '" style="left:' + p.left + '%;top:' + p.top + '%" data-foro-punto="' + p.id + '" ' +
+        'aria-label="' + E(p.tit) + '"><span>' + p.ico + '</span></button>';
+    }).join('');
+
+    var pannello = '';
+    if (FORO.punto) {
+      pannello = '<div class="fo-pan">' + contenutoPunto(FORO.punto, x) +
+        '<button class="fo-chiudi" data-foro-punto="">Chiudi</button></div>';
+    }
+
+    return '<div class="fo-wrap">' +
+      '<div class="fo-top"><button class="fo-back" data-foro-vai="corridoio">‹ Corridoio</button>' +
+      '<b>' + E(x.nome) + '</b></div>' +
+      '<div class="fo-edificio fo-room">' + stanzaSVG() + hot + '</div>' +
+      '<div class="fo-legenda">' + PUNTI.map(function (p) {
+        return '<button class="fo-lg' + (FORO.punto === p.id ? ' on' : '') +
+          '" data-foro-punto="' + p.id + '">' + p.ico + ' ' + E(p.tit) + '</button>';
+      }).join('') + '</div>' +
+      pannello +
+      '<div class="fo-nota">I punti raccolgono informazioni che l\'app già ha, prese da ' +
+      'documenti ufficiali. Dove un dato manca, il punto lo dice.</div>' +
+      '</div>';
+  }
+
+  /* ---------------- disegno ---------------- */
+  function html() {
+    if (FORO.vista === 'stanza') return vistaStanza();
+    if (FORO.vista === 'corridoio') return vistaCorridoio();
+    return vistaForo();
+  }
+
+  function ridisegna() {
+    if (typeof currentSub === 'undefined' || currentSub.politica !== 'foro') return;
+    var b = document.getElementById('politicaBody');
+    if (b) b.innerHTML = html();
+  }
+
+  /* ---------------- interazioni ---------------- */
+  document.addEventListener('click', function (ev) {
+    var t = ev.target && ev.target.closest
+      ? ev.target.closest('[data-foro-ala],[data-foro-stanza],[data-foro-vai],[data-foro-punto],[data-foro-apri]')
+      : null;
+    if (!t) return;
+    var body = document.getElementById('politicaBody');
+    if (!body || !body.contains(t)) return;
+
+    if (t.hasAttribute('data-foro-ala')) {
+      var ala = t.getAttribute('data-foro-ala');
+      if (ala === '__gruppi') { FORO.vista = 'corridoio'; FORO.punto = null; ridisegna(); carica(); return; }
+      if (ala === '__conti') { if (typeof switchView === 'function') switchView('conti'); return; }
+      if (typeof switchSub === 'function') switchSub('politica', ala);
+      return;
+    }
+    if (t.hasAttribute('data-foro-stanza')) {
+      FORO.stanza = t.getAttribute('data-foro-stanza');
+      FORO.vista = 'stanza'; FORO.punto = null; ridisegna(); return;
+    }
+    if (t.hasAttribute('data-foro-vai')) {
+      FORO.vista = t.getAttribute('data-foro-vai'); FORO.punto = null; ridisegna(); return;
+    }
+    if (t.hasAttribute('data-foro-apri')) {
+      var dove = t.getAttribute('data-foro-apri');
+      if (typeof ptApri === 'function') {
+        ptApri();
+        if (typeof ptTab === 'function') setTimeout(function () { ptTab(dove); }, 260);
+      }
+      return;
+    }
+    if (t.hasAttribute('data-foro-punto')) {
+      var p = t.getAttribute('data-foro-punto');
+      FORO.punto = (p && FORO.punto !== p) ? p : null;
+      ridisegna();
+      return;
+    }
+  }, false);
+
+  /* ---------------- aggancio alla sezione Politica ---------------- */
+  function aggancia() {
+    if (typeof SUBNAV === 'undefined' || !SUBNAV.politica ||
+      typeof RENDER === 'undefined' || !RENDER.politica || window.__foroHook) return false;
+
+    if (!SUBNAV.politica.some(function (s) { return s.id === 'foro'; })) {
+      SUBNAV.politica.unshift({
+        id: 'foro', label: 'Il Foro',
+        icon: 'M3 21h18 M5 21V10 M9 21V10 M15 21V10 M19 21V10 M2 10h20L12 3z'
+      });
+    }
+    if (typeof currentSub !== 'undefined') currentSub.politica = 'foro';
+
+    var orig = RENDER.politica;
+    RENDER.politica = function () {
+      var sub = (typeof currentSub !== 'undefined' && currentSub.politica) || 'foro';
+      if (sub !== 'foro') return orig.apply(this, arguments);
+
+      if (typeof subnavSezione !== 'undefined' && subnavSezione !== 'politica' &&
+        typeof buildSubNav === 'function') buildSubNav('politica');
+      var b = document.getElementById('politicaBody');
+      if (b) b.innerHTML = html();
+      var shell = document.getElementById('shell');
+      if (shell) shell.classList.remove('ring-mode');   // il Foro non è a tutto schermo
+      carica();
+    };
+
+    window.__foroHook = true;
+    return true;
+  }
+
+  /* ---------------- stile ---------------- */
+  (function stile() {
+    var st = document.createElement('style');
+    st.textContent = [
+      '.fo-wrap{padding-bottom:16px}',
+      '.fo-edificio{position:relative;margin:2px 0 12px;border-radius:18px;overflow:hidden;',
+      '  background:linear-gradient(180deg,#f4f7fb,#eef2f7)}',
+      '.fo-cup{fill:url(#foCupola);stroke:rgba(24,38,60,.55);stroke-width:2.2}',
+      '.fo-cup-l{fill:none;stroke:rgba(24,38,60,.30);stroke-width:1.8}',
+      /* tessere: icona in riquadro tinto, titolo sotto */
+      '.fo-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(98px,1fr));gap:9px}',
+      '.fo-card{position:relative;background:var(--surface,#fff);border:1px solid rgba(24,38,60,.07);',
+      '  border-radius:17px;padding:14px 9px 12px;display:flex;flex-direction:column;align-items:center;',
+      '  gap:7px;color:inherit;box-shadow:0 2px 10px rgba(24,38,60,.06);cursor:pointer}',
+      '.fo-card:active{transform:scale(.975)}',
+      '.fo-ic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center}',
+      '.fo-ic svg{width:25px;height:25px}',
+      '.fo-ic.blu{background:rgba(31,111,235,.11);color:#1f6feb}',
+      '.fo-ic.verde{background:rgba(22,163,110,.12);color:#128a5c}',
+      '.fo-ct{font-size:12.5px;font-weight:600;line-height:1.25;text-align:center}',
+      '.fo-cs{font-size:10.5px;opacity:.55;line-height:1.3;text-align:center}',
+      '.fo-cn{position:absolute;top:8px;left:9px;font-size:10px;font-weight:700;opacity:.32}',
+      '.fo-guida{margin-top:12px;border:1px solid var(--line,#e0e8e3);border-radius:14px;padding:10px 12px}',
+      '.fo-guida summary{font-size:12.5px;font-weight:600;cursor:pointer}',
+      '.fo-g{margin-top:8px;font-size:11.5px;line-height:1.45}',
+      '.fo-g b{display:block}',
+      '.fo-g span{opacity:.75}',
+      '.fo-svg{display:block;width:100%;height:auto}',
+      '.fo-scena .fo-timp{fill:url(#foPietra);stroke:rgba(24,38,30,.16)}',
+      '.fo-scena .fo-timp-in{fill:rgba(24,38,30,.05);stroke:none}',
+      '.fo-scritta{fill:#5b6675;font-size:34px;font-weight:700;letter-spacing:.22em}',
+      '.fo-trab{fill:url(#foPietra);stroke:rgba(24,38,30,.14)}',
+      '.fo-col rect{fill:url(#foPietra);stroke:rgba(24,38,30,.13)}',
+      '.fo-col line{stroke:rgba(24,38,30,.10);stroke-width:1.5}',
+      '.fo-porta{fill:rgba(20,32,26,.60)}',
+      '.fo-grad{fill:url(#foPietra);stroke:rgba(24,38,30,.10)}',
+      '.fo-muro{fill:url(#foPietra);stroke:rgba(24,38,30,.10)}',
+      '.fo-pav{fill:rgba(24,38,30,.10)}',
+      '.fo-pl{stroke:rgba(24,38,30,.16);stroke-width:1.6}',
+      '.fo-stend{fill:rgba(31,111,235,.14);stroke:rgba(31,111,235,.35)}',
+      '.fo-seggi rect{fill:rgba(24,38,30,.22)}',
+      '.fo-ogg path,.fo-ogg rect{fill:rgba(24,38,30,.26)}',
+      /* hotspot */
+      '.fo-hot{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;',
+      '  border-radius:50%;border:2px solid #fff;background:var(--blue,#1f6feb);color:#fff;',
+      '  font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;',
+      '  box-shadow:0 3px 10px rgba(0,0,0,.28);cursor:pointer;padding:0}',
+      '.fo-hot:active{transform:translate(-50%,-50%) scale(.94)}',
+      '.fo-hot.on{background:#0f6b47}',
+      '.fo-hot-s{background:rgba(255,255,255,.96);color:#12241c;border-color:rgba(31,111,235,.55)}',
+      '.fo-hot-s.on{background:var(--blue,#1f6feb);color:#fff}',
+      '.fo-num{line-height:1}',
+      /* elenco guidato */
+      '.fo-elenco{display:flex;flex-direction:column;gap:7px;margin-top:10px}',
+      '.fo-voce{display:flex;align-items:flex-start;gap:10px;text-align:left;width:100%;',
+      '  background:transparent;border:1px solid var(--line,#e0e8e3);border-radius:13px;',
+      '  padding:10px 11px;color:inherit}',
+      '.fo-vn{flex:0 0 24px;height:24px;border-radius:50%;background:var(--blue,#1f6feb);',
+      '  color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}',
+      '.fo-vt{flex:1;min-width:0}',
+      '.fo-vt b{display:block;font-size:14px}',
+      '.fo-vt i{display:block;font-style:normal;font-size:11.5px;opacity:.7;margin:1px 0 3px}',
+      '.fo-vt small{display:block;font-size:11.5px;opacity:.8;line-height:1.45}',
+      '.fo-va{opacity:.4;font-size:18px;align-self:center}',
+      /* corridoio */
+      '.fo-top{display:flex;align-items:center;gap:10px;margin:4px 0 8px}',
+      '.fo-top b{font-size:15px}',
+      '.fo-back{background:transparent;border:1px solid var(--line,#e0e8e3);border-radius:10px;',
+      '  padding:6px 10px;font-size:12px;color:inherit}',
+      '.fo-intro,.fo-nota{font-size:11.5px;opacity:.8;line-height:1.5;margin:6px 0}',
+      '.fo-porte{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px}',
+      '.fo-porta-b{border:1px solid var(--line,#e0e8e3);border-radius:14px;padding:10px;',
+      '  background:transparent;color:inherit;text-align:left;display:flex;flex-direction:column;gap:6px}',
+      '.fo-parch{display:block;height:44px;border-radius:22px 22px 4px 4px;',
+      '  background:linear-gradient(180deg,rgba(20,32,26,.55),rgba(20,32,26,.30))}',
+      '.fo-pn{font-size:13px;font-weight:600;line-height:1.25}',
+      '.fo-pm{font-size:11px;opacity:.6}',
+      '.fo-vuoto,.fo-load{font-size:12.5px;line-height:1.55;border:1px solid var(--line,#e0e8e3);',
+      '  border-radius:13px;padding:12px}',
+      '.fo-vuoto a{display:inline-block;margin-top:4px;color:var(--blue,#1f6feb)}',
+      /* stanza */
+      '.fo-legenda{display:flex;gap:6px;overflow-x:auto;margin-top:8px;padding-bottom:3px;scrollbar-width:none}',
+      '.fo-legenda::-webkit-scrollbar{display:none}',
+      '.fo-lg{flex:0 0 auto;white-space:nowrap;border:1px solid var(--line,#e0e8e3);border-radius:999px;',
+      '  padding:7px 11px;font-size:12px;background:transparent;color:inherit}',
+      '.fo-lg.on{background:var(--blue,#1f6feb);color:#fff;border-color:transparent}',
+      '.fo-pan{margin-top:9px;border:1px solid var(--blue,#1f6feb);border-radius:14px;padding:12px;',
+      '  background:rgba(31,111,235,.05);font-size:12.5px;line-height:1.55}',
+      '.fo-pan b{font-size:14px;display:block;margin-bottom:5px}',
+      '.fo-pan p{margin:6px 0}',
+      '.fo-lim{opacity:.75;font-size:11.5px}',
+      '.fo-link{display:block;margin:6px 0;color:var(--blue,#1f6feb);font-weight:600;font-size:12.5px;',
+      '  text-decoration:none;background:transparent;border:none;padding:0;text-align:left}',
+      '.fo-azione{cursor:pointer}',
+      '.fo-chiudi{margin-top:8px;border:1px solid var(--line,#e0e8e3);background:transparent;',
+      '  color:inherit;border-radius:10px;padding:6px 12px;font-size:12px}'
+    ].join('\n');
+    document.head.appendChild(st);
+  })();
+
+  if (!aggancia()) {
+    var n = 0;
+    var iv = setInterval(function () { if (aggancia() || ++n > 40) clearInterval(iv); }, 250);
+  }
+
+  window.foroApri = function () {
+    if (typeof currentSub !== 'undefined') currentSub.politica = 'foro';
+    FORO.vista = 'foro'; FORO.punto = null;
+    if (typeof RENDER !== 'undefined' && RENDER.politica) RENDER.politica();
+  };
+})();
+/* ===== POLIS · IL FORO (fine) ===== */
+
+/* ===== POLIS · BARRA ABBASSABILE E CASA IN SECONDO PIANO (inizio) ===== */
+/* ============================================================
+   Due comportamenti che nascono dallo stesso problema: quando si
+   leggono informazioni, gli elementi di navigazione devono farsi
+   da parte invece di occupare lo schermo.
+
+   1. LA BARRA IN BASSO SI PUÒ ABBASSARE.
+      Una maniglia sopra la barra la fa scendere: lo spazio va tutto
+      al contenuto. La maniglia resta, sottile, per farla risalire.
+      La scelta viene ricordata fra una sessione e l'altra.
+      L'altezza della barra non è scritta a mano da nessuna parte:
+      viene misurata a runtime, perché cambia con la fascia di
+      sicurezza dei diversi iPhone e iPad.
+
+   2. CASA POLIS PASSA IN SECONDO PIANO.
+      Il pulsante flottante spariva del tutto solo con gli overlay
+      modali. Ma copriva comunque le informazioni non modali: le
+      tessere del Foro, il pannello di una regione, l'elenco dei
+      comuni. Ora ha tre stati:
+        · in evidenza  → mappa libera, niente aperto
+        · in secondo piano → si legge qualcosa: si smorza, si
+          rimpicciolisce e passa SOTTO ai contenuti (z-index basso),
+          restando comunque toccabile
+        · nascosto     → overlay modale aperto (comportamento già
+          esistente, qui conservato)
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var CHIAVE = 'polis_barra_giu_v1';
+
+  /* ---------------- 1. barra abbassabile ---------------- */
+  function creaManiglia() {
+    var nav = document.getElementById('nav');
+    if (!nav || document.getElementById('navGrip')) return false;
+
+    var grip = document.createElement('button');
+    grip.id = 'navGrip';
+    grip.className = 'nav-grip';
+    grip.setAttribute('aria-label', 'Abbassa o rialza la barra di navigazione');
+    grip.innerHTML = '<span class="ng-linea"></span>';
+    nav.parentNode.insertBefore(grip, nav);
+
+    grip.addEventListener('click', function () { alterna(); });
+
+    /* trascinamento: scendere abbassa, salire rialza */
+    var y0 = null;
+    grip.addEventListener('touchstart', function (e) {
+      y0 = e.touches && e.touches[0] ? e.touches[0].clientY : null;
+    }, { passive: true });
+    grip.addEventListener('touchend', function (e) {
+      if (y0 == null) return;
+      var y1 = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : y0;
+      var d = y1 - y0;
+      if (Math.abs(d) > 18) { applica(d > 0); e.preventDefault(); }
+      y0 = null;
+    }, { passive: false });
+
+    try { applica(window.localStorage.getItem(CHIAVE) === '1'); } catch (e) { applica(false); }
+    return true;
+  }
+
+  function giu() { return document.body.classList.contains('barra-giu'); }
+  function alterna() { applica(!giu()); }
+
+  function applica(abbassa) {
+    var nav = document.getElementById('nav');
+    if (nav && !abbassa) {
+      /* altezza reale misurata ora: dipende dalla fascia di sicurezza
+         del dispositivo, non va mai fissata nel foglio di stile */
+      nav.style.removeProperty('height');
+    }
+    document.body.classList.toggle('barra-giu', !!abbassa);
+    var grip = document.getElementById('navGrip');
+    if (grip) grip.setAttribute('aria-expanded', abbassa ? 'false' : 'true');
+    try { window.localStorage.setItem(CHIAVE, abbassa ? '1' : '0'); } catch (e) { }
+  }
+
+  /* ---------------- 2. Casa Polis in secondo piano ---------------- */
+  /* Elementi che, se presenti a schermo, significano «sto leggendo
+     qualcosa»: il pulsante non deve stargli sopra. */
+  var INFORMATIVI = '.fo-wrap, .cr-wrap, .crf-wrap, #sheet, .sheet, ' +
+    '.cons-body, .detail-body, .cla-wrap, .pt-tabs';
+
+  function visibile(el) {
+    if (!el) return false;
+    var r = el.getBoundingClientRect();
+    if (r.width < 2 || r.height < 2) return false;
+    var st = window.getComputedStyle(el);
+    if (!st) return false;
+    if (st.display === 'none' || st.visibility === 'hidden') return false;
+    return parseFloat(st.opacity || '1') > 0.05;
+  }
+
+  function aggiornaCasa() {
+    var fab = document.querySelector('.casa-fab');
+    if (!fab) return;
+    var leggo = false;
+    try {
+      var n = document.querySelectorAll(INFORMATIVI);
+      for (var i = 0; i < n.length && !leggo; i++) leggo = visibile(n[i]);
+    } catch (e) { }
+    /* anche il semplice scorrimento del contenuto vuol dire che si sta
+       leggendo: il pulsante non deve coprire ciò che scorre sotto */
+    if (!leggo) {
+      var att = document.querySelector('.view.active');
+      var sc = att ? att.querySelector('[class*="scroll"], .pad') : null;
+      var cont = (att && att.scrollTop > 24) || (sc && sc.parentElement &&
+        sc.parentElement.scrollTop > 24);
+      if (cont) leggo = true;
+    }
+    document.body.classList.toggle('casa-dietro', !!leggo);
+  }
+
+  /* ---------------- stile ---------------- */
+  (function stile() {
+    var st = document.createElement('style');
+    st.textContent = [
+      /* maniglia */
+      '.nav-grip{flex:0 0 auto;height:18px;width:100%;display:flex;align-items:center;',
+      '  justify-content:center;background:transparent;border:none;padding:0;cursor:pointer;',
+      '  position:relative;z-index:31}',
+      '.ng-linea{width:44px;height:4px;border-radius:3px;background:rgba(24,38,60,.22);',
+      '  transition:background .18s ease,width .18s ease}',
+      '.nav-grip:active .ng-linea{background:rgba(24,38,60,.42);width:54px}',
+      /* barra: l\'altezza è quella del foglio di stile, qui solo la transizione */
+      '.nav{transition:height .24s ease,opacity .18s ease,padding .24s ease}',
+      'body.barra-giu .nav{height:0;opacity:0;padding-bottom:0;overflow:hidden;',
+      '  pointer-events:none;border-top-color:transparent}',
+      'body.barra-giu .nav-grip{height:26px;padding-bottom:env(safe-area-inset-bottom)}',
+      'body.barra-giu .ng-linea{background:rgba(24,38,60,.34);width:54px}',
+      /* Casa Polis: tre stati */
+      '.casa-fab{transition:opacity .2s ease,transform .2s ease,box-shadow .2s ease}',
+      'body.casa-dietro .casa-fab{opacity:.42;z-index:1;box-shadow:none;',
+      '  transform:translateX(-50%) scale(.88)}',
+      'body.casa-dietro .casa-fab:active{opacity:1}',
+      'body.con-overlay .casa-fab{opacity:0;visibility:hidden;pointer-events:none}'
+    ].join('\n');
+    document.head.appendChild(st);
+  })();
+
+  /* ---------------- avvio ---------------- */
+  function avvia() {
+    creaManiglia();
+    aggiornaCasa();
+    try {
+      new MutationObserver(function () {
+        creaManiglia();          // la barra viene ricostruita a ogni cambio sezione
+        aggiornaCasa();
+      }).observe(document.body, { childList: true, subtree: true });
+    } catch (e) { }
+    document.addEventListener('scroll', aggiornaCasa, true);
+    setInterval(aggiornaCasa, 500);   // rete di sicurezza
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', avvia);
+  } else { avvia(); }
+
+  window.barraAlterna = alterna;
+})();
+/* ===== POLIS · BARRA ABBASSABILE E CASA IN SECONDO PIANO (fine) ===== */
+
+/* ===== POLIS · SPIEGAZIONE E DISCUSSIONE (inizio) ===== */
+/* ============================================================
+   Da qui in avanti ogni argomento complesso di Polis si presenta
+   con la stessa struttura, sempre nello stesso ordine:
+
+     1. CHE COS'È          spiegazione semplice con l'ultimo dato ufficiale
+     2. IL PROBLEMA        la criticità riconosciuta, quantificata
+     3. COSA PREVEDONO     previsioni già pubblicate da istituzioni,
+                           ciascuna con nome, documento e data
+     4. COSA È STATO FATTO i provvedimenti approvati, con gli estremi
+                           normativi e le valutazioni ufficiali attribuite
+
+   e si chiude con un pulsante che apre una discussione già agganciata
+   ai dati che si stanno guardando.
+
+   TRE REGOLE SCRITTE NEL CODICE, NON SOLO NEI TESTI
+   -------------------------------------------------
+   · Polis non prevede nulla per conto proprio. Il blocco sul futuro
+     mostra solo previsioni firmate da un'istituzione. Una voce senza
+     il campo «chi» non viene disegnata: meglio un blocco vuoto e
+     dichiarato che una proiezione senza padre.
+   · Nessun nesso di causa. Le valutazioni sugli effetti delle misure
+     sono attribuite all'organo che le esprime e mostrate come tali.
+   · Quello che non è stato verificato lo si dice. Le voci che portano
+     il campo «da_confermare» vengono mostrate con l'avvertenza
+     visibile, non ripulite.
+
+   Il contenuto sta in data/paese/spiegazioni.json: si aggiorna senza
+   toccare l'app. Se per un argomento la scheda non c'è, il modulo non
+   inventa nulla e non disegna niente.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var SP = {
+    URL: 'data/paese/spiegazioni.json',
+    dati: null,
+    caricando: false,
+    aperti: {}      // quali blocchi l'utente ha aperto, per chiave
+  };
+
+  /* Dove compaiono le schede. Ogni voce dice: in quale sezione, dentro
+     quale contenitore, e come si ricava la chiave dell'argomento dallo
+     stato dell'app. Aggiungere un argomento significa aggiungere una
+     riga qui e una scheda nel JSON. */
+  var PUNTI = [
+    {
+      sezione: 'conti', box: 'contiBody',
+      chiave: function () { return (typeof paTab !== 'undefined') ? paTab : null; }
+    },
+    {
+      sezione: 'ragioneria', box: 'ragioneriaBody',
+      chiave: function () {
+        var s = (typeof currentSub !== 'undefined' && currentSub.ragioneria) || 'hub';
+        return (s === 'opere' || s === 'personale') ? s : null;
+      }
+    }
+  ];
+
+  function E(s) {
+    return (typeof esc === 'function') ? esc(String(s == null ? '' : s))
+      : String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+      });
+  }
+
+  function carica() {
+    if (SP.dati !== null || SP.caricando) return;
+    SP.caricando = true;
+    fetch(SP.URL, { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : false; })
+      .catch(function () { return false; })
+      .then(function (d) {
+        SP.dati = d || false;
+        SP.caricando = false;
+        applica();
+      });
+  }
+
+  function scheda(chiave) {
+    if (!chiave || !SP.dati || !SP.dati.schede) return null;
+    return SP.dati.schede[chiave] || null;
+  }
+
+  /* ---------------- disegno della scheda ---------------- */
+  function blocco(chiave, titolo, corpo, ico, aperto) {
+    if (!corpo) return '';
+    return '<details class="sp-b"' + (aperto ? ' open' : '') +
+      ' data-sp-blocco="' + E(chiave) + '">' +
+      '<summary><span class="sp-ico">' + ico + '</span>' + E(titolo) + '</summary>' +
+      '<div class="sp-c">' + corpo + '</div></details>';
+  }
+
+  function futuroHTML(voci) {
+    var buone = (voci || []).filter(function (v) { return v && v.chi && v.dice; });
+    if (!buone.length) {
+      return '<p class="sp-vuoto">Non risultano previsioni ufficiali pubblicate su ' +
+        'questo punto. Il blocco resta vuoto: Polis non elabora proiezioni proprie.</p>';
+    }
+    return buone.map(function (v) {
+      return '<div class="sp-prev">' +
+        '<div class="sp-chi">' + E(v.chi) + '</div>' +
+        '<p>' + E(v.dice) + '</p>' +
+        '<div class="sp-doc">' + E(v.documento || '') +
+        (v.data ? ' · ' + E(v.data) : '') + '</div>' +
+        (v.verifica || v.da_confermare ? '<div class="sp-dubbio">⚠︎ ' +
+          E(v.verifica || v.da_confermare) + '</div>' : '') +
+        '</div>';
+    }).join('') +
+      '<p class="sp-attr">Ogni previsione è di chi la firma, non di Polis. Dove le ' +
+      'istituzioni prevedono cose diverse, sono riportate entrambe.</p>';
+  }
+
+  function manovreHTML(voci) {
+    if (!(voci || []).length) {
+      return '<p class="sp-vuoto">Non risultano provvedimenti approvati su questo ' +
+        'punto, o non li abbiamo ancora verificati.</p>';
+    }
+    return voci.map(function (m) {
+      return '<div class="sp-man">' +
+        '<div class="sp-atto">' + E(m.atto || '') + '</div>' +
+        '<p>' + E(m.cosa || '') + '</p>' +
+        (m.valutazione ? '<div class="sp-val"><b>' +
+          E(m.valutazione.organo || 'Valutazione ufficiale') + '</b> ' +
+          E(m.valutazione.dice || m.valutazione.testo || '') +
+          (m.valutazione.data ? ' <i>(' + E(m.valutazione.data) + ')</i>' : '') +
+          '</div>' : '') +
+        (m.verifica || m.da_confermare ? '<div class="sp-dubbio">⚠︎ ' +
+          E(m.verifica || m.da_confermare) + '</div>' : '') +
+        '</div>';
+    }).join('') +
+      '<p class="sp-attr">I provvedimenti sono descritti senza giudizio. Le ' +
+      'valutazioni riportate appartengono all\'organo che le ha espresse, e non ' +
+      'affermano che una misura abbia causato un risultato.</p>';
+  }
+
+  function fontiHTML(fonti) {
+    if (!(fonti || []).length) return '';
+    return '<div class="sp-fonti"><b>Fonti</b>' + fonti.map(function (f) {
+      var t = E(f.ente || '') + ' · ' + E(f.titolo || '') +
+        (f.data ? ' · ' + E(f.data) : '') +
+        (f.licenza ? ' · ' + E(f.licenza) : '');
+      return f.url
+        ? '<a href="' + E(f.url) + '" target="_blank" rel="noopener">' + t + ' ↗</a>'
+        : '<span>' + t + '</span>';
+    }).join('') + '</div>';
+  }
+
+  function schedaHTML(chiave) {
+    var s = scheda(chiave);
+    if (!s) return '';
+    var ap = SP.aperti[chiave] || {};
+    return '<section class="sp-wrap" data-sp-chiave="' + E(chiave) + '">' +
+      '<div class="sp-head"><h3>Capire questo dato</h3>' +
+      '<span class="sp-sub">' + E(s.titolo || '') + '</span></div>' +
+
+      blocco(chiave + '|1', 'Che cos\'è', '<p>' + E(s.semplice || '') + '</p>', '📘', ap['1'] !== false) +
+      blocco(chiave + '|2', 'Il problema principale', '<p>' + E(s.problema || '') + '</p>', '⚠️', !!ap['2']) +
+      blocco(chiave + '|3', 'Cosa prevedono le istituzioni', futuroHTML(s.futuro), '🔭', !!ap['3']) +
+      blocco(chiave + '|4', 'Cosa è stato deciso', manovreHTML(s.manovre), '🏛️', !!ap['4']) +
+
+      (s.limiti ? '<div class="sp-lim">' + E(s.limiti) + '</div>' : '') +
+      fontiHTML(s.fonti) +
+
+      '<button class="sp-disc" data-sp-discuti="' + E(chiave) + '">' +
+      '💬 Apri una discussione su questi dati</button>' +
+      '<p class="sp-disc-n">La discussione parte già con il contesto e il problema ' +
+      'di questa scheda, così si discute sugli stessi numeri.</p>' +
+      '</section>';
+  }
+
+  /* ---------------- inserimento nelle schermate ---------------- */
+  function applica() {
+    if (!SP.dati) { carica(); return; }
+    PUNTI.forEach(function (p) {
+      var box = document.getElementById(p.box);
+      if (!box) return;
+      var vista = document.getElementById('v-' + p.sezione);
+      if (vista && !vista.classList.contains('active')) return;
+
+      var chiave = null;
+      try { chiave = p.chiave(); } catch (e) { }
+      var gia = box.querySelector('.sp-wrap');
+
+      if (!chiave || !scheda(chiave)) {          // nessun contenuto: non si inventa
+        if (gia) gia.parentNode.removeChild(gia);
+        return;
+      }
+      if (gia && gia.getAttribute('data-sp-chiave') === chiave) return;  // già giusta
+      if (gia) gia.parentNode.removeChild(gia);
+
+      var d = document.createElement('div');
+      d.innerHTML = schedaHTML(chiave);
+      var el = d.firstChild;
+      if (el) box.appendChild(el);
+    });
+  }
+
+  /* ---------------- discussione agganciata ai dati ---------------- */
+  /* I campi del modulo dibattito accettano 300 caratteri. Tagliare a
+     caratteri spezzerebbe una frase a metà: si taglia all'ultimo punto
+     utile, e solo se non ne esiste uno si ripiega sull'ultimo spazio. */
+  function accorcia(testo, max) {
+    var t = String(testo || '').trim();
+    if (t.length <= max) return t;
+    var pezzo = t.slice(0, max);
+    var punto = Math.max(pezzo.lastIndexOf('. '), pezzo.lastIndexOf('; '));
+    if (punto > max * 0.5) return pezzo.slice(0, punto + 1);
+    var spazio = pezzo.lastIndexOf(' ');
+    return (spazio > 0 ? pezzo.slice(0, spazio) : pezzo) + '…';
+  }
+
+  function discuti(chiave) {
+    var s = scheda(chiave);
+    if (!s) return;
+    if (typeof consNuovo !== 'function') return;
+
+    consNuovo();                                  // apre e azzera la bozza
+    try {
+      if (typeof dibDraft !== 'undefined' && dibDraft) {
+        dibDraft.titolo = String(s.titolo || '').slice(0, 90);
+        dibDraft.contesto = accorcia(s.semplice, 300);
+        dibDraft.problema = accorcia(s.problema, 300);
+        if (s.cat) dibDraft.cat = s.cat;
+        if (typeof renderConsCreate === 'function') renderConsCreate();
+      }
+    } catch (e) { }
+  }
+
+  /* ---------------- interazioni ---------------- */
+  document.addEventListener('click', function (ev) {
+    var t = ev.target && ev.target.closest
+      ? ev.target.closest('[data-sp-discuti]') : null;
+    if (t) { discuti(t.getAttribute('data-sp-discuti')); return; }
+  }, false);
+
+  /* ricorda quali blocchi l'utente tiene aperti, per non richiuderli a ogni disegno */
+  document.addEventListener('toggle', function (ev) {
+    var d = ev.target;
+    if (!d || !d.hasAttribute || !d.hasAttribute('data-sp-blocco')) return;
+    var p = d.getAttribute('data-sp-blocco').split('|');
+    SP.aperti[p[0]] = SP.aperti[p[0]] || {};
+    SP.aperti[p[0]][p[1]] = d.open;
+  }, true);
+
+  /* ---------------- stile ---------------- */
+  (function stile() {
+    var st = document.createElement('style');
+    st.textContent = [
+      '.sp-wrap{margin:20px 0 6px;border:1px solid var(--line,#e4e8ee);border-radius:16px;',
+      '  padding:14px;background:var(--surface,#fff)}',
+      '.sp-head{margin-bottom:8px}',
+      '.sp-head h3{margin:0;font-size:15px}',
+      '.sp-sub{font-size:11.5px;opacity:.6}',
+      '.sp-b{border-top:1px solid var(--line,#e4e8ee);padding:9px 0}',
+      '.sp-b:first-of-type{border-top:none}',
+      '.sp-b summary{font-size:13.5px;font-weight:600;cursor:pointer;list-style:none;',
+      '  display:flex;align-items:center;gap:8px}',
+      '.sp-b summary::-webkit-details-marker{display:none}',
+      '.sp-b summary::after{content:"›";margin-left:auto;opacity:.4;font-size:17px;',
+      '  transition:transform .18s ease}',
+      '.sp-b[open] summary::after{transform:rotate(90deg)}',
+      '.sp-ico{font-size:15px}',
+      '.sp-c{font-size:12.5px;line-height:1.6;padding:7px 0 2px}',
+      '.sp-c p{margin:6px 0}',
+      '.sp-prev,.sp-man{border-left:2px solid rgba(31,111,235,.35);padding:2px 0 2px 10px;margin:9px 0}',
+      '.sp-chi,.sp-atto{font-size:12px;font-weight:700}',
+      '.sp-doc{font-size:10.5px;opacity:.6}',
+      '.sp-val{font-size:11.5px;opacity:.85;background:rgba(24,38,60,.04);border-radius:9px;',
+      '  padding:7px 9px;margin-top:5px}',
+      '.sp-dubbio{font-size:11px;color:#9a5010;background:rgba(214,110,40,.10);',
+      '  border-radius:8px;padding:6px 8px;margin-top:5px;line-height:1.45}',
+      '.sp-vuoto,.sp-attr,.sp-lim{font-size:11.5px;opacity:.7;line-height:1.5}',
+      '.sp-attr{margin-top:8px;font-style:italic}',
+      '.sp-lim{margin:9px 0;background:rgba(24,38,60,.04);border-radius:9px;padding:8px 10px;opacity:.85}',
+      '.sp-fonti{margin-top:10px;font-size:10.5px;line-height:1.6;opacity:.75;',
+      '  border-top:1px solid var(--line,#e4e8ee);padding-top:8px}',
+      '.sp-fonti b{display:block;font-size:11px;opacity:.9;margin-bottom:3px}',
+      '.sp-fonti a,.sp-fonti span{display:block;color:inherit;text-decoration:none}',
+      '.sp-fonti a{color:var(--blue,#1f6feb)}',
+      '.sp-disc{width:100%;margin-top:12px;border:none;border-radius:13px;padding:13px;',
+      '  background:linear-gradient(135deg,#1f6feb,#0d3d8c);color:#fff;font-size:14px;',
+      '  font-weight:700;cursor:pointer}',
+      '.sp-disc:active{transform:scale(.985)}',
+      '.sp-disc-n{font-size:10.5px;opacity:.6;margin:6px 0 0;line-height:1.45;text-align:center}'
+    ].join('\n');
+    document.head.appendChild(st);
+  })();
+
+  /* ---------------- avvio ---------------- */
+  function avvia() {
+    carica();
+    try {
+      new MutationObserver(function () { applica(); })
+        .observe(document.body, { childList: true, subtree: true });
+    } catch (e) { }
+    setInterval(applica, 700);      // rete di sicurezza sui cambi di scheda
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', avvia);
+  } else { avvia(); }
+
+  /* API per le sezioni future: basta una riga in PUNTI e una scheda nel JSON */
+  window.spiegaBlocco = schedaHTML;
+  window.spiegaDiscuti = discuti;
+  window.spiegaPunti = PUNTI;
+})();
+/* ===== POLIS · SPIEGAZIONE E DISCUSSIONE (fine) ===== */
+
 // allow Enter to login
 document.addEventListener('keydown',e=>{ if(e.key==='Enter' && $('#login').classList.contains('active')) doLogin(); });
 
