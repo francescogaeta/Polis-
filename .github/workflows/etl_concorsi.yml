@@ -1,0 +1,63 @@
+name: ETL concorsi pubblici
+
+# Scarica i concorsi e gli avvisi aperti dal Portale del reclutamento inPA
+# (CC BY 3.0, Dipartimento della Funzione Pubblica).
+#
+# CADENZA: una volta al giorno. I bandi escono ogni giorno e hanno
+# scadenze di 30 giorni: una lettura quotidiana basta e non pesa sul portale.
+#
+# LIMITI RISPETTATI:
+#   - robots.txt letto a ogni avvio; /wp-json/ è escluso e non viene chiesto
+#   - 3 secondi fra le richieste, al massimo 150 pagine per esecuzione
+#   - solo bandi nuovi o cambiati (confronto con la sitemap)
+#   - su 403/429 lo script si ferma e lo dichiara: niente tentativi ripetuti
+
+on:
+  schedule:
+    - cron: '17 5 * * *'      # ogni giorno alle 05:17 UTC
+  workflow_dispatch:
+    inputs:
+      max_pagine:
+        description: 'Pagine di bando al massimo in questa corsa'
+        required: false
+        default: '150'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: etl-concorsi
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Scarica il repository
+        uses: actions/checkout@v4
+
+      - name: Prepara Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Concorsi e avvisi aperti da inPA
+        working-directory: etl
+        run: |
+          python3 etl_inpa.py \
+            --out ../data/opportunita \
+            --max "${{ github.event.inputs.max_pagine || 150 }}"
+
+      - name: Pubblica i dati aggiornati
+        run: |
+          git config user.name  "polis-etl"
+          git config user.email "actions@github.com"
+          git add data/opportunita
+          if git diff --staged --quiet; then
+            echo "Nessun bando cambiato: niente da pubblicare."
+            exit 0
+          fi
+          git commit -m "Concorsi pubblici aggiornati (inPA)"
+          git pull --rebase
+          git push
